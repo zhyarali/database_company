@@ -1,0 +1,105 @@
+@font-face {
+    font-family: 'Speda-Regular';
+    src: url(../fonts/Speda-Regular.ttf);
+}
+*{
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Speda-Regular';
+}
+body{
+    font-family: 'Speda-Regular';
+}
+
+
+.bg-first{
+    background: #141E30;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #243B55, #141E30);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #243B55, #141E30); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    color: aliceblue;    
+}
+/* .fa,.fas,.fab,.fal,.far,.fad{
+    color: #ffc700 !important;
+} */
+
+
+.bg-gradient-first{
+    background: #141E30;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #243B55, #141E30);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #243B55, #141E30); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+.s-70{
+    font-size: 60px !important;
+}
+.s-20{
+    font-size: 20px !important;
+}
+
+.s-16{
+    font-size: 16px !important;
+}
+
+.s-14{
+    font-size: 14px !important;
+}
+.s-25{
+    font-size: 25px !important;
+}
+.bg-cards{
+    background-color: #0000000d;
+}
+.btn-dark{
+    background: #141E30;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #243B55, #141E30);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #243B55, #141E30); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+.fade{
+    background-color: #fff0 !important;
+}
+button{
+    font-family: 'Speda-Regular';
+}
+.btn-success{
+background-color: #0ccb78f7 !important;
+}
+
+
+.search-input{
+    outline: none !important;
+    border: none !important;
+    border:1px solid #141E30 !important;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    padding: 3px !important;
+    border-radius: 10px !important;
+    margin-right: 10px !important;
+}
+
+.cursor{
+    cursor: pointer !important;
+}
+
+
+.list-group-item.active {
+    z-index: 2;
+    color: #fff;
+    background-color: #19273c !important;
+    border-color: #19273c !important;
+}
+
+
+
+.debt_danger{
+    background: rgba(255, 0, 0, 0.226) !important;
+}
+
+.debt_success{
+    background: rgba(0, 155, 65, 0.37) !important;
+}
+
+table tr .driver-info{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif !important;
+}
+

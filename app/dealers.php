@@ -1,0 +1,342 @@
+<?php require_once('header.php'); ?>
+
+
+<style>
+    .table tbody tr:last-child td {
+  border-width: 1px !important;
+}
+.table{
+    border-radius:10px !important;
+}
+.table th{
+    /* background:red !important; */
+    /* font-size:12px !important; */
+}
+</style>
+
+
+<div class="container-fluid mt-4">
+<button onclick="window.history.back()" class="btn btn-sm btn-info shadow" >
+ <span class="fa fa-arrow-right"></span>
+ گەڕانەوە
+  </button>
+</div>
+
+
+<div class="container-fluid  mt-2 d-flex justify-content-around">
+    <a data-toggle="modal" data-target="#add" class="btn  btn-success s-16"><i class="fa fa-dollar-sign"></i> 
+        زیادکردنی فرۆشیارەکان</a>
+
+        <div onclick="window.print()" class="btn s-16  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن</div>
+</div>
+
+
+<div class="container-fluid mt-2">
+
+
+<div class="row col-lg-12 col-12 m-auto p-4 table-responsive">
+
+<table class="table table-bordered text-center">
+<thead>
+    <tr>
+      <th scope="col">ناو</th>
+      <th scope="col">ناونیشان</th>
+      <th scope="col">شوێنی کارکردن</th>
+      <th scope="col">ژمارە مۆبایل</th>
+      <th scope="col">تێبینی</th>
+      <th scope="col">Action</th>
+    </tr>
+</thead>    
+
+<tbody>
+  <tr>
+      <?php
+        $dealers=show("SELECT * FROM dealers");
+        foreach ($dealers as $dealer) {
+            $id=$dealer['id'];
+            $name=$dealer['name'];
+            $address=$dealer['address'];
+            $phone=$dealer['phone'];
+            $work_place=$dealer['work_place'];
+            $note=$dealer['note'];?>
+
+            <td><?=$name;?></td>
+            <td><?=$address;?></td>
+            <td><?=$work_place;?></td>
+            <td><?=$phone;?></td>
+            <td><?=$note;?></td>
+
+      <td>
+          <i class="fa fa-trash s-20 cursor" data-toggle="modal"
+              data-target="#delete<?php echo $dealer['id'] ?>"></i>
+          <i class="fa fa-edit s-20 cursor" data-toggle="modal"
+              data-target="#edit<?php echo $dealer['id'] ?>"></i>
+          <!-- <i class="fa fa-print cursor s-20" data-toggle="modal" data-target="#print" ></i>            -->
+      </td>
+
+        <!-- edit -->
+
+<div class="modal fade" id="edit<?php echo $dealer['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content" style="background-color: white;border-radius: 15px;">
+      <div class="modal-body text-center">
+        <div class="container-fluid">
+          <div class="row row-cols-1 row-cols-md-3">
+            <div class="col-md-12 mb-3 mx-auto">
+              <div class="h-100">
+                <i class="fa fa-times-circle" style="float:left;color: black" data-dismiss="modal"></i>
+                <div class="card-body">
+                  <h5 class="container col-md-6 mt-3  text-center">
+                    زیادکردنی فرۆشیار  
+                  </h5>
+                  <br>
+                  <form class="mt-5" dir="rtl" method="POST" enctype="multipart/form-data">
+
+
+                  <div class="form-group">
+                     <input type="hidden" placeholder=" " name="id"
+                    value="<?=$id;?>" 
+                    class="form-control col-md-10 mx-auto">
+                </div>
+
+                    <div class="form-group">
+                      <input type="text" placeholder="ناوی فرۆشیار" class="form-control col-md-10 mx-auto"
+                        name="name" required="" value="<?=$name;?>">
+                    </div>
+
+                    <div class="form-group">
+                      <input type="text" placeholder="ناونیشان" class="form-control col-md-10 mx-auto"
+                        name="address" required="" value="<?=$address;?>">
+                    </div>
+
+                    <div class="form-group">
+                      <input type="text" placeholder="شوێنی کارکردن" class="form-control col-md-10 mx-auto"
+                        name="work_place" required="" value="<?=$work_place;?>">
+                    </div>
+
+                    <div class="form-group">
+                      <input type="text" placeholder="ژمارە مۆبایل" class="form-control col-md-10 mx-auto"
+                        name="phone" required="" value="<?=$phone;?>">
+                    </div>
+
+                    <div class="form-group">
+                      <textarea name="note"  placeholder="تێبینی" id="" cols="20" rows="5" class="form-control col-md-10 mx-auto"><?=$note;?></textarea>
+                    </div>
+
+                    
+                  
+                    <br>
+                    <button type="submit" name="edit" class="btn btn-sm btn-dark  s-20">
+                      <i class="fal fa-plus s-20"></i>
+                      گۆڕانکاری </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- edit -->
+
+
+
+ <!-- delete modal -->
+ <div class="modal fade" id="delete<?php echo $dealer['id'] ?>" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal" role="document">
+                        <div class="modal-content" style="background-color: white;border-radius: 15px;">
+                            <div class="modal-body text-center">
+                                <div class="container-fluid">
+                                    <div class="row row-cols-1 row-cols-md-3">
+                                        <div class="col-md-12 mb-3 mx-auto">
+                                            <div class="h-100">
+                                                <i class="fa fa-times-circle" style="float:left;color: black"
+                                                    data-dismiss="modal"></i>
+                                                <div class="card-body">
+                                                    <h5 class="container col-md-10 mt-3  text-center">
+                                                        دڵنیای لە سڕینەوەی ئەم کڕینە لەناو سیستەمەکەت ؟
+                                                    </h5>
+                                                    <br>
+                                                    <form dir="rtl" method="POST">
+                                                        <div class="form-group">
+                                                            <input type="hidden" placeholder="  ناو  " name="id"
+                                                                value="<?=$id;?>"
+                                                                class="form-control col-md-10 mx-auto">
+                                                        </div>
+                                                   
+                                                        <button type="submit" name="del"
+                                                            class="btn btn-danger btn-block"> سڕینەوە </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- end delete -->
+
+
+
+
+
+  </tr>
+
+  <?php } ?>
+
+</tbody>
+
+</table>
+</div>  
+
+</div>
+
+
+
+
+
+
+<!-- Add  modal -->
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content" style="background-color: white;border-radius: 15px;">
+      <div class="modal-body text-center">
+        <div class="container-fluid">
+          <div class="row row-cols-1 row-cols-md-3">
+            <div class="col-md-12 mb-3 mx-auto">
+              <div class="h-100">
+                <i class="fa fa-times-circle" style="float:left;color: black" data-dismiss="modal"></i>
+                <div class="card-body">
+                  <h5 class="container col-md-6 mt-3  text-center">
+                    زیادکردنی فرۆشیار  
+                  </h5>
+                  <br>
+                  <form class="mt-5" dir="rtl" method="POST" enctype="multipart/form-data">
+
+                    <div class="form-group">
+                      <input type="text" placeholder="ناوی فرۆشیار" class="form-control col-md-10 mx-auto"
+                        name="name" required="">
+                    </div>
+
+                    <div class="form-group">
+                      <input type="text" placeholder="ناونیشان" class="form-control col-md-10 mx-auto"
+                        name="address" required="">
+                    </div>
+
+                    <div class="form-group">
+                      <input type="text" placeholder="شوێنی کارکردن" class="form-control col-md-10 mx-auto"
+                        name="work_place" required="">
+                    </div>
+
+                    <div class="form-group">
+                      <input type="text" placeholder="ژمارە مۆبایل" class="form-control col-md-10 mx-auto"
+                        name="phone" required="">
+                    </div>
+
+                    <div class="form-group">
+                      <textarea name="note" placeholder="تێبینی" id="" cols="20" rows="5" class="form-control col-md-10 mx-auto"></textarea>
+                    </div>
+
+                    
+                  
+                    <br>
+                    <button type="submit" name="add" class="btn btn-sm btn-dark  s-20">
+                      <i class="fal fa-plus s-20"></i>
+                      زیادکردن </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<?php
+
+
+if (isset($_SESSION["add_success"])) {
+    msg('سەرکەتووبوو','سەرکەوتووانە زانیارییەکان تۆمارکرا ','success');
+     unset($_SESSION["add_success"]);
+ }
+
+ if (isset($_SESSION["edit_success"])) {
+    msg('سەرکەتووبوو','سەرکەوتووانە  گۆڕانکاری لەزانیارییەکان کرا ','success');
+     unset($_SESSION["edit_success"]);
+ }
+
+ if (isset($_SESSION["delete"])) {
+    msg('ئاگاداری','سەرکەوتووانە سڕایەوە ','warning');
+    unset($_SESSION["delete"]);
+ }
+
+
+
+//  add
+
+
+if (post('add')) {
+    $name = secure($_POST['name']);
+    $address = secure($_POST['address']);
+    $work_place = secure($_POST['work_place']);
+    $phone = secure($_POST['phone']);
+    $note = secure($_POST['note']);
+  
+    execute("INSERT INTO dealers (`name`,`phone`,`address`,`work_place`,`note`) 
+    VALUES('$name','$phone','$address','$work_place','$note') ");
+  
+  $_SESSION["add_success"] = "";
+    direct('dealers.php');
+  
+  }
+
+
+
+if (post('edit')) {
+    $id = secure($_POST['id']);
+    $name = secure($_POST['name']);
+    $address = secure($_POST['address']);
+    $work_place = secure($_POST['work_place']);
+    $phone = secure($_POST['phone']);
+    $note = secure($_POST['note']);
+  
+  
+    execute("UPDATE `dealers` SET `name`='$name',`phone`='$phone',`address`='$address',`work_place`='$work_place',`note`='$note' WHERE `id`='$id' ");
+  
+    $_SESSION["edit_success"] = "";
+    direct('dealers.php');
+  
+  }
+
+
+//   delete
+if (post('del')) {
+    $id = secure($_POST['id']);
+    $sql = execute(" DELETE  FROM dealers WHERE id = '$id'");
+    $_SESSION["delete"] = "";
+    direct('dealers.php');
+    
+}
+  
+
+
+?>
+
+
+<?php require_once('footer.php'); ?>
+
+
+

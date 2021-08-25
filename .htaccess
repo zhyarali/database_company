@@ -1,0 +1,6 @@
+Options -Indexes
+
+
+ErrorDocument 404 /app/index.php
+
+
