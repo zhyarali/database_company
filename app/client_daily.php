@@ -15,11 +15,14 @@
 
 
 <div class="container-fluid  mt-3 d-flex justify-content-around">
-    <a data-toggle="modal" data-target="#add" class="btn  btn-success"><i class="fa fa-dollar-sign"></i> موچە
-        دیاریبکە</a>
-
-        <a href="view_report.php?client_daily=<?=$id?>" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن</a>
-
+<?php if ($is_admin==1) {?>
+    <a data-toggle="modal" data-target="#edit_info<?=$id?>" class="btn  btn-success"><i class="fa fa-user"></i> گۆڕانکاری لە زانیاری کارمەند</a>
+<?php } ?>
+        <!-- <a href="view_report.php?client_daily=<?=$id?>" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن</a> -->
+        <form method="post" action="view_report.php">
+            <input type="hidden" name="client_id" value="<?=$id?>">
+         <button type="submit" class="btn btn-dark" name="client_daily" style="border:none;" > <i class="fas fa-print"></i> پرنتکردن</button>
+      </form> 
 
 </div>
 
@@ -29,28 +32,121 @@
     <div class="row col-lg-3 col-12 m-auto" style="zoom:90%">
         <div class="card border shadow-none m-auto " style="width: 25rem;border-radius:8px">
             <ul class="list-group list-group-flush text-center">
+            <li class="list-group-item">
+                <img  src='<?php echo $image==null ? "../assets/img/client/default.jpg" :"../assets/img/client/$image" ?> ' width="120" style="border-radius:10px" class="shadow" alt="profile" >
+                </li>
                 <li class="list-group-item"><strong>ناو : </strong> <?=$name?></li>
                 <li class="list-group-item"><strong>ژمارە مۆبایل : </strong> <?=$phone?></li>
                 <li class="list-group-item"><strong>بەرواری دەستپێکردن : </strong><?=$date?></li>
                 <li class="list-group-item"><strong>شوێنی کار : </strong><?=$team_name?></li>
                 <li class="list-group-item"><strong>جۆری کارکردن : </strong>ڕۆژانە</li>
+                <li class="list-group-item"><strong>بڕی پارەی کارکردنی ڕۆژانە : </strong><?=$bry_para?></li>
 
             </ul>
         </div>
     </div>
 
-    <div class="row col-lg-9 col-12 m-auto p-4 table-responsive" style="zoom:90%"> 
 
-        <table class="table table-bordered text-center">
+    <div class="modal fade" id="edit_info<?=$id?>" tabindex="-1"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+      <div class="modal-content" style="background-color: white;border-radius: 15px;">
+        <div class="modal-body text-right">
+         <div class="container-fluid">
+  <div class="row row-cols-1 row-cols-md-3">
+    <div class="col-md-12 mb-3 mx-auto">
+      <div class="h-100">
+        <i class="fa fa-times-circle" style="float:left;color: black"  data-dismiss="modal"></i>
+        <div class="card-body">
+          <h5 class="container  mt-3  text-center">
+               گۆڕانکاری بکە لەزانیارییەکان
+        </h5>
+        <br>
+        <form method="POST" enctype="multipart/form-data">
+
+
+        <div class="form-group">
+                <input type="hidden"   name="id" value="<?=$id;?> "class="form-control col-md-10 mx-auto">
+                </div> 
+         
+                <label>ناوی سیانی</label>
+                <div class="form-group">
+                <input type="text"   name="name" value="<?=$name;?> "class="form-control col-md-10 mx-auto">
+                </div> 
+
+                <label>وێنە</label>
+                <div class="form-group">
+                <input type="file"   name="image" value="<?=$image?>"  class="form-control col-md-10 mx-auto">
+                </div> 
+
+                <label>ژمارە مۆبایل</label>
+                <div class="form-group">
+                <input type="text"  name="phone"  value="<?=$phone?>"   class="form-control col-md-10 mx-auto">
+                </div> 
+
+                <div class="form-group">
+                    <select name="currency_type"  class="form-control col-md-10 mx-auto"> 
+                        <option value="dinar"  <?php echo $currency_type=='دینار' ? 'selected' : '' ?> >دینار</option>
+                        <option value="dollar" <?php echo $currency_type=='دۆلار' ? 'selected' : '' ?>>دۆلار</option>
+                        <option value="tman"   <?php echo $currency_type=='تمەن' ? 'selected' : '' ?>>تمەن</option>
+                    </select>
+                    </div>
+
+                <label>شوێنی کارکردن</label>
+                <div class="form-group">
+                    <select name="work_place"  class="form-control col-md-10 mx-auto">
+                        <option <?php if($work_place=="1") echo 'selected="selected"'; ?> value="1">ستافی A</option>
+                        <option <?php if($work_place=="2") echo 'selected="selected"'; ?> value="2">ستافی B</option>
+                        <option <?php if($work_place=="3") echo 'selected="selected"'; ?> value="3">ستافی C</option>
+                        <option <?php if($work_place=="کۆمپانیا") echo 'selected="selected"'; ?> value="کۆمپانیا">کۆمپانیا</option>
+                    </select>
+                </div> 
+
+                <label>جۆری کارکردن</label>
+                <div class="form-group">
+                    <select id="client_status" name="status"  class="form-control col-md-10 mx-auto">
+                        <option id="client_monthly" <?php if($status=="0") echo 'selected="selected"'; ?>  value="0">مانگانە</option>
+                        <option id="client_daily" <?php if($status=="1") echo 'selected="selected"'; ?> value="1">ڕۆژانە</option>
+                    </select>
+                </div>
+
+                <div id="daily_amount">
+                <label>بڕی پارەی کارکردنی ڕۆژانە</label>
+                <div class="form-group">
+                  <input type="text"  name="bry_para" value="<?=$bry_para?>"   class="form-control col-md-10 mx-auto">
+                </div>
+              </div>
+                 
+            
+                
+            
+    <button type="submit" name="edit_client" class="btn btn-dark btn-block">نوێکردنەوەی زانیارییەکان</button>
+  </form>
+      </div>
+      </div>
+       </div>
+  </div>
+  </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <div class="row col-lg-9 col-12 m-auto p-4 table-responsive" > 
+
+        <table class="table table-bordered text-center" style="zoom:65%">
             <!-- <caption>List of users</caption> -->
             <thead>
                 <tr>
                     <th scope="col">بەروار</th>
                     <th scope="col">سەعاتی کارکردن</th>
                     <th scope="col">نرخی سەعاتی کارکردن</th>
-                    <th scope="col">سەعاتی ئیزافە</th>
+                    <th scope="col">سەعاتی زیادە</th>
+                    <th scope="col">بڕی پاداشت</th>
                     <th scope="col">غەرامە</th>
                     <th scope="col">کۆی گشتی مووچە</th>
+                    <th>جۆری دراو</th>
+                    <th scope="col">ئیشی کردووە بۆ</th>
                     <th scope="col">Action</th>
 
 
@@ -67,21 +163,34 @@
             $work_extra=$join['work_extra'];
             $budget=$join['budget'];
             $punish=$join['punish'];
+            $reward=$join['reward'];
             $date=$join['date'];
             $clientid=$join['clientid'];
+            $work_for=$join['work_for'];
      ?>
                 <tr>
                     <td><?=$date?></td>
                     <td><?=$work_hour?></td>
                     <td><?=$work_hour_amount?></td>
                     <td><?=$work_extra?></td>
+                    <td><?=$reward?></td>
                     <td><?=$punish?></td>
                     <td><?=$budget?></td>
-                    <td>
+                    <td><?=$currency_type?></td>
+                    <td><?=$work_for?></td>
+                    
+                    <td class="d-flex justify-content-around">
+                    <?php if ($is_admin==1) {?>
                         <i class="fa fa-edit  s-20 cursor" style="color:#14cd7c" data-toggle="modal"
                             data-target="#edit<?php echo $join['id_daily'] ?>"></i>
                         <i class="fa fa-trash text-dark s-20 cursor" data-toggle="modal"
                             data-target="#del<?php echo $join['id_daily'] ?>"></i>
+                    <?php } ?>
+                        <form method="post" action="view_report.php">
+                                <input type="hidden" name="client_id" value="<?=$id?>">
+                                <input type="hidden" name="con_id" value="<?=$daily_id?>">
+                                <button type="submit" name="client_daily" style="border:none;background:none" > <i class="fas fa-print s-20"></i> </button>
+                        </form>  
                     </td>
                 </tr>
 
@@ -89,7 +198,7 @@
                 <!-- edit modal -->
                 <div class="modal fade" id="edit<?php echo $join['id_daily'] ?>" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                         <div class="modal-content" style="background-color: white;border-radius: 15px;">
                             <div class="modal-body text-right">
                                 <div class="container-fluid">
@@ -116,28 +225,34 @@
                                                                 <input type="number" value="<?=$work_hour?>" name="work_hour" class="form-control col-md-10 mx-auto">
                                                             </div>
 
-                                                            <label>نرخ بۆ هەر سەعاتێکی کارکردن</label>
+                                                            <!-- <label>نرخ بۆ هەر سەعاتێکی کارکردن</label>
                                                             <div class="form-group">
                                                                 <input type="number" value="<?=$work_hour_amount?>" name="work_hour_amount" class="form-control col-md-10 mx-auto">
-                                                            </div>
+                                                            </div> -->
 
                                                             <label>ئەو سەعاتانەی زیادە کاریکردووە</label>
                                                             <div class="form-group">
                                                                 <input type="number" value="<?=$work_extra?>" name="work_extra" class="form-control col-md-10 mx-auto">
                                                             </div>
 
+                                                            <label>بڕی پاداشت</label>
+                                                            <div class="form-group">
+                                                              <input type="number" name="reward" value="<?=$reward?>" class="form-control col-md-10 mx-auto" >
+                                                            </div>
 
                                                             <label>بڕی غەڕامە</label>
                                                             <div class="form-group">
                                                                 <input type="number" value="<?=$punish?>" name="punish" class="form-control col-md-10 mx-auto">
                                                             </div>
 
-                                                            <label>بەروار</label>
-                                                            <div class="form-group">
-                                                                <input type="date" name="date"
-                                                                value="<?=$date?>"
-                                                                    class="form-control col-md-10 mx-auto" aria-required="true"  required="">
-                                                            </div>
+                                                <label>بۆ کێ ئیشی کردووە</label>
+                                                    <div class="form-group">
+                                                    <select name="work_for"  class="form-control col-md-10 mx-auto" required>
+                                                        <option <?php if($work_for=="کۆمپانیا") echo 'selected="selected"'; ?>  value="کۆمپانیا">کۆمپانیا</option>
+                                                        <option <?php if($work_for=="کڕیار") echo 'selected="selected"'; ?>  value="کڕیار">کڕیار</option>
+                                                        <option <?php if($work_for==">فرۆشیار") echo 'selected="selected"'; ?>  value="فرۆشیار">فرۆشیار</option>
+                                                    </select>
+                                                    </div>
 
                                                         <button type="submit" name="edit_budget_daily"
                                                             class="btn btn-dark btn-block"> نوێکردنەوەی زانیارییەکان
@@ -170,7 +285,7 @@
                                                     data-dismiss="modal"></i>
                                                 <div class="card-body">
                                                     <h5 class="container col-md-10 mt-3  text-center">
-                                                        دڵنیای لە سڕینەوەی ئەم کڕینە لەناو سیستەمەکەت ؟
+                                                        دڵنیای لە سڕینەوەی ئەم موچەیەی ئەم کارمەندە  ؟
                                                     </h5>
                                                     <br>
                                                     <form dir="rtl" method="POST">
@@ -227,7 +342,7 @@
                     <th scope="col">بڕی گێڕاوە</th>
                     <th scope="col">بڕی ماوە</th>
                     <th scope="col"> بەروار تەواوبوون</th>
-                    <th scope="col">Action</th>
+                    <?php if ($is_admin==1) {?><th scope="col">Action</th><?php } ?>
                 </tr>
             </thead>
             <tbody>
@@ -256,12 +371,14 @@
                     <td><?=$gerawa?></td>
                     <td><?=$mawa?></td>
                     <td><?=$date_debt_end?></td>
+                    <?php if ($is_admin==1) {?>
                     <td>
                         <i class="fa fa-edit  s-20 cursor" style="color:#14cd7c" data-toggle="modal"
                             data-target="#edit<?php echo $debt['id_debt'] ?>"></i>
                         <i class="fa fa-trash text-dark s-20 cursor" data-toggle="modal"
                             data-target="#del<?php echo $debt['id_debt'] ?>"></i>
                     </td>
+                    <?php } ?>
 
                 </tr>
 
@@ -403,10 +520,12 @@
         </table>
     </div>
 
+    <?php if ($is_admin==1) {?>
     <div class="col-xl-5  m-auto col-12">
         <a data-toggle="modal" data-target="#add_debt" class="btn btn-dark m-4"><i class="fa fa-hand-holding-usd"></i>
             پێدانی قەرز</a>
     </div>
+    <?php } ?>
 </div>
 
 

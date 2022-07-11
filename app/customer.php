@@ -16,10 +16,10 @@
 
 
 <div class="container-fluid mt-4">
-<button onclick="window.history.back()" class="btn btn-sm btn-info shadow" >
- <span class="fa fa-arrow-right"></span>
+<a href="sale.php" class="btn btn-sm btn-info shadow" >
+ <span class="fa fa-arsrow-right"></span>
  گەڕانەوە
-  </button>
+  </a>
 </div>
 
 
@@ -43,6 +43,7 @@
       <th scope="col">ناونیشان</th>
       <th scope="col">شوێنی کارکردن</th>
       <th scope="col">ژمارە مۆبایل</th>
+      <th>جۆری دراو</th>
       <th scope="col">تێبینی</th>
       <th scope="col">Action</th>
     </tr>
@@ -58,12 +59,28 @@
             $address=$customer['address'];
             $phone=$customer['phone'];
             $work_place=$customer['work_place'];
-            $note=$customer['note'];?>
+            $note=$customer['note'];
 
-            <td><?=$name;?></td>
+            $currency_type=$customer['currency_type'];
+            if ($currency_type=='dinar') {
+              $currency_type='دینار';
+            }
+          
+            if ($currency_type=='dollar') {
+              $currency_type='دۆلار';
+            }
+          
+            if ($currency_type=='tman') {
+              $currency_type='تمەن';
+            }
+
+            ?>
+
+            <td><a href="customer_detail.php?id=<?=$id;?>"><?=$name;?></a></td>
             <td><?=$address;?></td>
             <td><?=$work_place;?></td>
             <td><?=$phone;?></td>
+            <td><?=$currency_type;?></td>
             <td><?=$note;?></td>
 
       <td>
@@ -112,6 +129,17 @@
                     <div class="form-group">
                       <input type="text" placeholder="شوێنی کارکردن" class="form-control col-md-10 mx-auto"
                         name="work_place" required="" value="<?=$work_place;?>">
+                    </div>
+
+                    <div class="form-group">
+                      <div class="mb-3">
+                        <label for="sform" class="form-label float-end">جۆری دراو</label>
+                        <select name="currency_type" class="form-control" name="" id="sform">
+                          <option value="dinar" <?php echo $currency_type=='دینار' ? 'selected' : '' ?>>دینار</option>
+                          <option value="dollar" <?php echo $currency_type=='دۆلار' ? 'selected' : '' ?>>دۆلار</option>
+                          <option value="tman" <?php echo $currency_type=='تمەن' ? 'selected' : '' ?>>تمەن</option>
+                        </select>
+                      </div>
                     </div>
 
                     <div class="form-group">
@@ -240,6 +268,17 @@
                     </div>
 
                     <div class="form-group">
+                      <div class="mb-3">
+                        <label for="sform" class="form-label float-end">جۆری دراو</label>
+                        <select name="currency_type" class="form-control" name="" id="sform">
+                          <option value="dinar">دینار</option>
+                          <option value="dollar">دۆلار</option>
+                          <option value="tman">تمەن</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
                       <textarea name="note" placeholder="تێبینی" id="" cols="20" rows="5" class="form-control col-md-10 mx-auto"></textarea>
                     </div>
 
@@ -294,9 +333,10 @@ if (post('add')) {
     $work_place = secure($_POST['work_place']);
     $phone = secure($_POST['phone']);
     $note = secure($_POST['note']);
+    $currency_type = secure($_POST['currency_type']);
   
-    execute("INSERT INTO customer (`name`,`phone`,`address`,`work_place`,`note`) 
-    VALUES('$name','$phone','$address','$work_place','$note') ");
+    execute("INSERT INTO customer (`name`,`phone`,`address`,`work_place`,`note`,`currency_type`) 
+    VALUES('$name','$phone','$address','$work_place','$note','$currency_type') ");
   
   $_SESSION["add_success"] = "";
     direct('customer.php');
@@ -312,9 +352,10 @@ if (post('edit')) {
     $work_place = secure($_POST['work_place']);
     $phone = secure($_POST['phone']);
     $note = secure($_POST['note']);
+    $currency_type = secure($_POST['currency_type']);
   
   
-    execute("UPDATE `customer` SET `name`='$name',`phone`='$phone',`address`='$address',`work_place`='$work_place',`note`='$note' WHERE `id`='$id' ");
+    execute("UPDATE `customer` SET `name`='$name',`phone`='$phone',`address`='$address',`work_place`='$work_place',`note`='$note' ,`currency_type`='$currency_type' WHERE `id`='$id' ");
   
     $_SESSION["edit_success"] = "";
     direct('customer.php');

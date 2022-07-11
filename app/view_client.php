@@ -13,10 +13,27 @@ if (empty($data)) {
 foreach ($data as $client) {
     $id = $client['id'];
     $name = $client['name'];
+    $image = $client['image'];
     $phone = $client['phone'];
     $date = $client['date_start'];
     $work_place = $client['work_place'];
     $status = $client['status'];
+    $bry_para=$client['bry_para'];
+    $currency_type=$client['currency_type'];
+    $budget_month=$client['budget_month'];
+
+    if ($currency_type=='dinar') {
+      $currency_type='دینار';
+    }
+  
+    if ($currency_type=='dollar') {
+      $currency_type='دۆلار';
+    }
+  
+    if ($currency_type=='tman') {
+      $currency_type='تمەن';
+    }
+
 
 $get_teams=getdata("SELECT * FROM teams WHERE id= '$work_place'");
 
@@ -77,6 +94,39 @@ if ($get_teams==null) {
 
 <?php 
 
+//  edit clients info
+if (post('edit_client')) {
+  $id = secure($_POST['id']);
+  $name = secure($_POST['name']);
+  $image =upload('image','../assets/img/client/');
+  $phone = secure($_POST['phone']);
+  $work_place = secure($_POST['work_place']);
+  $status = secure($_POST['status']);
+  $bry_para=secure($_POST['bry_para']);
+  $currency_type=secure($_POST['currency_type']);
+  if (empty($bry_para)) {
+    $bry_para="0";
+  }
+
+  if ($image!=null) {
+    $get = getdata(" SELECT * FROM client WHERE id='$id'");
+    $oldavatar = $get['image'];
+    unlink('../assets/img/client/'.$oldavatar);
+    execute(" UPDATE client SET `name`='$name',`image`='$image',`phone`='$phone',`work_place`='$work_place',`bry_para`='$bry_para',`status`='$status',`currency_type`='$currency_type' WHERE id='$id'");
+    $_SESSION["add_success"] = "";
+    direct("view_client.php?client_id=$id"); 
+  }else{
+    execute(" UPDATE client SET `name`='$name',`phone`='$phone',`work_place`='$work_place',`bry_para`='$bry_para',`status`='$status',`currency_type`='$currency_type' WHERE id='$id'");
+    $_SESSION["add_success"] = "";
+    direct("view_client.php?client_id=$id"); 
+  }
+
+
+}
+
+
+
+
 
 // edit
 
@@ -86,13 +136,22 @@ if (post('edit_budget_month')) {
     $id=secure($_POST['id']);
     $budget = secure($_POST['budget']);
     $debt = secure($_POST['debt']);
-    $date_budget = secure($_POST['date_budget']);
     $date_debt = secure($_POST['date_debt']);
     $punish = secure($_POST['punish']);
+    $reward = secure($_POST['reward']);
+    $work_for = secure($_POST['work_for']);
 
-    $date_end=date('Y-m-d', strtotime($date_debt. ' + 28 days'));
+    if (empty($reward)) {
+      $reward=0;
+    }
+    
+    if (empty($punish)) {
+      $punish=0;
+    }
+    
 
-    $sql=execute("UPDATE `budget` SET `budget_amount`='$budget',`punish`='$punish',`date`='$date_budget' WHERE id_budget = '$id'");
+
+    $sql=execute("UPDATE `budget` SET `budget_amount`='$budget',`punish`='$punish',`reward`='$reward',`work_for`='$work_for' WHERE id_budget = '$id'");
 
     $_SESSION["edit_success"] = "";
     $loc="view_client.php?client_id=".$client_id;
@@ -109,21 +168,37 @@ if (post('edit_budget_daily')) {
   $work_hour = secure($_POST['work_hour']);
   $work_hour_amount = secure($_POST['work_hour_amount']);
   $work_extra = secure($_POST['work_extra']);
-  $date = secure($_POST['date']);
   $punish = secure($_POST['punish']);
+  $work_for = secure($_POST['work_for']);
+  $reward = secure($_POST['reward']);
   
 
-
-  // calculate budget
-  $all_hour=$work_hour+$work_extra;
+  if (empty($reward)) {
+    $reward=0;
+  }
+  
+  if (empty($work_extra)) {
+    $work_extra=0;
+  }
+  
+  if (empty($punish)) {
+    $punish=0;
+  }
+  
+  // static  calculation  >>> the hour of working daily is 10 and static
+  $work_hour_amount=$bry_para/10; 
+  
+  $all_hour=$work_hour+$work_extra; 
   $budget=$work_hour_amount*$all_hour;
+  $budget=(int)$budget+$reward;
   $budget=$budget-$punish;
 
-  $sql=execute("UPDATE `work_daily` SET `work_hour`='$work_hour',`work_hour_amount`='$work_hour_amount',`work_extra`='$work_extra',`budget`='$budget',`punish`='$punish',`date`='$date' WHERE id_daily = '$id'");
+
+  $sql=execute("UPDATE `work_daily` SET `work_hour`='$work_hour',`work_hour_amount`='$work_hour_amount',`work_extra`='$work_extra',`budget`='$budget',`punish`='$punish',`reward`='$reward',`work_for`='$work_for' WHERE id_daily = '$id'");
 
   $_SESSION["edit_success"] = "";
   $loc="view_client.php?client_id=".$client_id;
- direct($loc); 
+  direct($loc); 
 
 }
 
@@ -181,7 +256,7 @@ if (post('del_budget_daily')) {
 // delete debt
 if (post('del_debt_month')) {
   $id = secure($_POST['id']);
-  $sql = execute(" DELETE  FROM debt WHERE id_debt = '$id'");
+  $sql = execute("DELETE FROM debt WHERE id_debt = '$id'");
   $_SESSION["delete"] = "";
   $loc="view_client.php?client_id=".$client_id;
   direct($loc); 
@@ -258,15 +333,21 @@ if (post('add_debt_month')) {
     $date_debt_end=date('Y-m-d', strtotime($date_debt_start. ' + '.$date_num.' days'));
    
 
-  $sql = execute("INSERT INTO `debt` (`debt_amount`,`date_start`,`date_end`,`gerawa`,`mawa`,`clientid`) VALUES('$debt_amount','$date_debt_start','$date_debt_end','0','$debt_amount','$client_id')");
+    $client=getdata(" SELECT * FROM client WHERE id=$client_id");
+
+      $name = $client['name'];
+      $phone = $client['phone'];
+
+
+  $sql = execute("INSERT INTO `debt` (`debt_amount`,`date_start`,`date_end`,`gerawa`,`mawa`,`clientid`,`name`,`phone`) VALUES('$debt_amount','$date_debt_start','$date_debt_end','0','$debt_amount','$client_id','$name','$phone')");
 
   $_SESSION["add_success"] = "";
     $loc="view_client.php?client_id=".$client_id;
    direct($loc);
 
+
+
 }
-
-
 
 
 ?>

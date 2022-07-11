@@ -20,6 +20,10 @@ if (isset($_SESSION['adm_id']) && isset($_SESSION['adm_token'])) {
   execute(" DELETE FROM user_tokens WHERE id='$user_id' ");
   }
   ?>
+ <script type="text/javascript">
+     window.print();
+ </script>
+
 <!DOCTYPE html>
 <html dir="rtl">
 
@@ -66,44 +70,28 @@ if (isset($_SESSION['adm_id']) && isset($_SESSION['adm_token'])) {
     /* background:red !important; */
     /* font-size:12px !important; */
 }
+@page {
+  size: A4 landscape;
+}
+
+/* Size in mm */    
+@page {
+  size: 100mm 200mm landscape;
+}
+
+/* Size in inches */    
+@page {
+  size: 4in 6in landscape;
+}
 </style>
 
 
-
-<div class="container-fluid  mt-3 d-flex justify-content-around">
-
-        <div class="btn  btn-dark " id="print"><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن</div>
-</div>
-
 <div class="container-fluid mt-2 d-flex flex-wrap" id="print_area">
-
-
-<div class="col-lg-12 col-12  p-4 d-flex justify-content-between bg-dark text-white" >
-
+<div class="col-lg-12 col-12" >
 <div>
-<p> سیستەمی کۆمپانیای هۆگر - ڕانیە</p>
-    <p>07501234567</p>
-
+<img src="../assets/img/img1.png" width="100%">
 </div>
-
-
-
-<div>
-    <p>بەروار و کات : <?PHP echo date("Y-m-d H:i:s");?></p>
-    <p>پسولەی کڕین</p>
-</div>
-
-
-</div>
-
-
-
-    <div class="row col-lg-12 col-12 m-auto p-4 table-responsive">
-
-      
-
-
-    <?php
+<?php
 
 if (isset($_POST['submit'])){
     $report_type=$_POST['report_type'];
@@ -113,8 +101,12 @@ if (isset($_POST['submit'])){
     if ($report_type=="buy") { ?>
 
 
+    <div class="row col-lg-12 col-12 m-auto p-4 table-responsive" style="zoom:60%">
+    
 
-<table class="table table-bordered text-center" style="zoom:70%">
+
+
+<table class="table table-bordered text-center" >
             <!-- <caption>List of users</caption> -->
             <thead>
                 <tr>
@@ -123,6 +115,7 @@ if (isset($_POST['submit'])){
                     <th scope="col">بڕ</th>
                     <th scope="col">جۆر</th>
                     <th scope="col">شوێن</th>
+                    <th>جۆری دراو</th>
                     <th scope="col">نرخی تاک</th>
                     <th scope="col">نرخی واسڵکراو</th>
                     <th scope="col">نرخی داشکاندن</th>
@@ -163,6 +156,19 @@ foreach ($buys as $buy) {
   $buy_type=$buy['buy_type'];
   $getdealer = getdata(" SELECT * FROM dealers WHERE id='$dealer_id' ");
   $dealer_name = $getdealer['name'];
+  
+  $currency_type=$getdealer['currency_type'];
+  if ($currency_type=='dinar') {
+    $currency_type='دینار';
+  }
+
+  if ($currency_type=='dollar') {
+    $currency_type='دۆلار';
+  }
+
+  if ($currency_type=='tman') {
+    $currency_type='تمەن';
+  }
 
 //   koy gshty
 $sum_wasl=$sum_wasl+$cost_wasl;
@@ -221,6 +227,7 @@ $sum_discount+=$discount;
                             }
                         ?>
                    </td>
+                   <td><?=$currency_type;?></td>
                     <td><?=$cost_t?></td>
                     <td><?=$cost_wasl?></td>
                     <td><?=$discount?></td>
@@ -237,10 +244,11 @@ $sum_discount+=$discount;
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td><?=$sum_wasl?> دینار</td>
-                    <td><?=$sum_discount?> دینار</td>
-                    <td><?=$sum_gshty?> دینار</td>
-                    <td><?=$sum_maway_peshw?> دینار</td>
+                    <td></td>
+                    <td><?=$sum_wasl?> </td>
+                    <td><?=$sum_discount?> </td>
+                    <td><?=$sum_gshty?> </td>
+                    <td><?=$sum_maway_peshw?></td>
                     <td></td>
 
                 </tr>
@@ -259,7 +267,7 @@ $sum_discount+=$discount;
     if ($report_type=="sale") { ?>
 
 
-<table class="table table-bordered text-center" style="zoom:90%">
+<table class="table table-bordered text-center" style="zoom:80%">
             <!-- <caption>List of users</caption> -->
             <thead>
                 <tr>
@@ -268,6 +276,7 @@ $sum_discount+=$discount;
                     <th scope="col">بڕ</th>
                     <th scope="col">جۆر</th>
                     <th scope="col">شوێن</th>
+                    <th>جۆری دراو</th>
                     <th scope="col">نرخی فرۆشتن</th>
                     <th scope="col">نرخی واسڵکراو</th>
                     <th scope="col">نرخی داشکاندن</th>
@@ -315,6 +324,19 @@ $sum_discount+=$discount;
 
   $getcustomer = getdata(" SELECT * FROM customer WHERE id='$customer_id' ");
   $customer_name = $getcustomer['name'];
+
+  $currency_type=$getcustomer['currency_type'];
+  if ($currency_type=='dinar') {
+    $currency_type='دینار';
+  }
+
+  if ($currency_type=='dollar') {
+    $currency_type='دۆلار';
+  }
+
+  if ($currency_type=='tman') {
+    $currency_type='تمەن';
+  }
 
 
 
@@ -369,6 +391,7 @@ $sum_discount+=$discount;
                             }
                         ?>
                    </td>
+                   <td><?=$currency_type;?></td>
                     <td><?=$cost_t?></td>
                     <td><?=$cost_wasl?></td>
                     <td><?=$discount?></td>
@@ -380,6 +403,7 @@ $sum_discount+=$discount;
                 <?php } ?>
                 <tr class="bg-dark text-white">
                     <td class="bg-dark text-white">کۆی گشتی</td>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -411,6 +435,7 @@ $sum_discount+=$discount;
                     <th scope="col">بڕ</th>
                     <th scope="col">جۆر</th>
                     <th scope="col">شوێن</th>
+                    <th>جۆری دراو</th>
                     <th scope="col">نرخی تاک</th>
                     <th scope="col">نرخی واسڵکراو</th>
                     <th scope="col">نرخی داشکاندن</th>
@@ -451,6 +476,19 @@ foreach ($buys as $buy) {
   $buy_type=$buy['buy_type'];
   $getdealer = getdata(" SELECT * FROM dealers WHERE id='$dealer_id' ");
   $dealer_name = $getdealer['name'];
+
+  $currency_type=$getdealer['currency_type'];
+  if ($currency_type=='dinar') {
+    $currency_type='دینار';
+  }
+
+  if ($currency_type=='dollar') {
+    $currency_type='دۆلار';
+  }
+
+  if ($currency_type=='tman') {
+    $currency_type='تمەن';
+  }
 
 //   koy gshty
 $sum_wasl=$sum_wasl+$cost_wasl;
@@ -509,6 +547,7 @@ $sum_discount+=$discount;
                             }
                         ?>
                    </td>
+                   <td><?=$currency_type;?></td>
                     <td><?=$cost_t?></td>
                     <td><?=$cost_wasl?></td>
                     <td><?=$discount?></td>
@@ -525,10 +564,11 @@ $sum_discount+=$discount;
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td><?=$sum_wasl?> دینار</td>
-                    <td><?=$sum_discount?> دینار</td>
-                    <td><?=$sum_gshty?> دینار</td>
-                    <td><?=$sum_maway_peshw?> دینار</td>
+                    <td></td>
+                    <td><?=$sum_wasl?></td>
+                    <td><?=$sum_discount?></td>
+                    <td><?=$sum_gshty?></td>
+                    <td><?=$sum_maway_peshw?></td>
                     <td></td>
 
                 </tr>
@@ -545,7 +585,7 @@ $sum_discount+=$discount;
 if ($report_type=="return_sale") { ?>
 
 
-<table class="table table-bordered text-center" style="zoom:90%">
+<table class="table table-bordered text-center" style="zoom:85%">
         <!-- <caption>List of users</caption> -->
         <thead>
             <tr>
@@ -554,6 +594,7 @@ if ($report_type=="return_sale") { ?>
                 <th scope="col">بڕ</th>
                 <th scope="col">جۆر</th>
                 <th scope="col">شوێن</th>
+                <th>جۆری دراو</th>
                 <th scope="col">نرخی فرۆشتن</th>
                 <th scope="col">نرخی واسڵکراو</th>
                 <th scope="col">نرخی داشکاندن</th>
@@ -601,6 +642,19 @@ $sum_discount+=$discount;
 
 $getcustomer = getdata(" SELECT * FROM customer WHERE id='$customer_id' ");
 $customer_name = $getcustomer['name'];
+
+$currency_type=$getcustomer['currency_type'];
+if ($currency_type=='dinar') {
+  $currency_type='دینار';
+}
+
+if ($currency_type=='dollar') {
+  $currency_type='دۆلار';
+}
+
+if ($currency_type=='tman') {
+  $currency_type='تمەن';
+}
 
 
 
@@ -655,6 +709,7 @@ $customer_name = $getcustomer['name'];
                         }
                     ?>
                </td>
+               <td><?=$currency_type;?></td>
                 <td><?=$cost_t?></td>
                 <td><?=$cost_wasl?></td>
                 <td><?=$discount?></td>
@@ -671,10 +726,11 @@ $customer_name = $getcustomer['name'];
                 <td></td>
                 <td></td>
                 <td></td>
-                <td><?=$sum_wasl?> دینار</td>
-                <td><?=$sum_discount?> دینار</td>
-                <td><?=$sum_gshty?> دینار</td>
-                <td><?=$sum_maway_peshw?> دینار</td>
+                <td></td>
+                <td><?=$sum_wasl?> </td>
+                <td><?=$sum_discount?> </td>
+                <td><?=$sum_gshty?> </td>
+                <td><?=$sum_maway_peshw?> </td>
                 <td></td>
 
             </tr>
@@ -747,10 +803,10 @@ $customer_name = $getcustomer['name'];
                 <tr class="bg-dark text-white">
                     <td class="bg-dark text-white">کۆی گشتی</td>
                     <td></td>
-                    <td><?=$sum_debt?> دینار</td>
+                    <td><?=$sum_debt?> </td>
                     <td></td>
                     <td></td>
-                    <td><?=$sum_mawa?> دینار</td>
+                    <td><?=$sum_mawa?> </td>
                     <td></td>
                 </tr>
 
@@ -763,7 +819,7 @@ $customer_name = $getcustomer['name'];
 
 <?php if ($report_type=="xarjy") { ?>
 
-    <table class="table table-bordered  text-center" dir="rtl" style="zoom:85%">
+    <table class="table table-bordered  text-center" dir="rtl" style="zoom:80%">
         <thead>
             <tr>
             <th>بەروار</th>
@@ -801,7 +857,7 @@ foreach ($items as $item) {
 ?>
        <tr>
        <td><?=$date;?></td>
-        <td><?=$name;?></td>
+        <td style="max-width:320px;width:320px;overflow:hidden;word-wrap: break-word;overflow-wrap: break-word;white-space: pre-wrap;"><?=$name;?></td>
         <?php
           $persons = show(" SELECT * FROM person WHERE  `id`=$xarj_by");
           foreach ($persons as $person) {
@@ -851,14 +907,788 @@ foreach ($items as $item) {
 <!-- end  if isset($_POST['submit']) -->
    <?php } ?>
 
+
+<!-- dealer single info -->
+
+<?php if (isset($_POST['dealer_info'])){  
+    $user_id= secure($_POST['user_id']);
+
+    if (isset($_POST['con_id'])) {
+        $post_id= secure($_POST['con_id']);
+        $buys = show("SELECT * FROM buy WHERE dealer_id=$user_id AND id=$post_id AND `status`=1");
+        $numRecord=countdata("SELECT * FROM buy WHERE dealer_id=$user_id AND id=$post_id AND `status`=1");
+    }else{
+        $buys = show(" SELECT * FROM buy WHERE dealer_id=$user_id AND `status`=1");
+        $numRecord=countdata(" SELECT * FROM buy WHERE dealer_id=$user_id AND `status`=1");
+    }
+   
+
+    $data = show(" SELECT * FROM dealers WHERE `id`=$user_id");  
+    foreach ($data as $user) {
+        $name = $user['name'];
+        $phone = $user['phone'];
+        $address = $user['address'];
+        $work_place = $user['work_place'];
+        $note = $user['note']; 
+        $currency_type = $user['currency_type']; 
+     
+        if ($currency_type=='dinar') {$currency_type='دینار';}
+        if ($currency_type=='dollar') {$currency_type='دۆلار';}
+        if ($currency_type=='tman') {$currency_type='تمەن';}
+
+        $refund_p=0;
+        $refund=getdata(" SELECT sum(price) as price from refund WHERE dealer_id=$user_id");
+       
+        if (!empty($refund)) {
+            $refund_p=$refund['price']; 
+        }
+
+
+        $dealers_buy=getdata(" SELECT sum(cost_co) as cost_total,sum(cost_wasl) as cost_wasl FROM buy WHERE dealer_id=$user_id AND `status`=1");
+        $cost_maway_peshw=$dealers_buy['cost_total']-$dealers_buy['cost_wasl'];
+        $cost_maway_peshw-=$refund_p;
+
+        if ($cost_maway_peshw<0) {$cost_maway_peshw=0;}
+
+       
+
+?>
+
+<hr>
+<div class="container mr-5 mb-3 mt-3">
+<h6 class="d-flex justify-content-between"> <span>ناوی فرۆشیار  :  <?=$name?></span>   <span>مۆبایل : <?=$phone?>  </span>  </h6>
+</div>
+<?php } ?>
+ 
+ <table class="table table-bordered text-center" style="zoom:90%">
+            <!-- <caption>List of users</caption> -->
+            <thead>
+                <tr>
+                    <th scope="col">ناوی شتوومەک</th>
+                    <th scope="col">بەروار</th>
+                    <th scope="col">بڕ</th>
+                    <th scope="col">جۆر</th>
+                    <th scope="col">شوێن</th>
+                    <th scope="col">جۆری دراو</th>
+                    <th scope="col">نرخی تاک</th>
+                    <th scope="col">نرخی واسڵکراو</th>
+                    <th scope="col">نرخی داشکاندن</th>
+                    <th scope="col">نرخی گشتی</th>
+                    <th scope="col">نرخی ماوە</th>                   
+                    <th scope="col">شۆفێر</th>
+
+                </tr>
+            </thead>
+            <tbody  id="show_data">
+<?php 
+$sum_wasl=0;
+$sum_discount=0;
+$sum_gshty=0;
+$sum_mawa=0;
+$sum_maway_peshw=0;
+
+
+
+foreach ($buys as $buy) {
+  $id = $buy['id'];
+  $dealer_id = $buy['dealer_id'];
+  $driver_id = $buy['driver_id'];
+  $num = $buy['num'];
+  $cost_t = $buy['cost_t'];
+  $cost_co = $buy['cost_co'];
+  $cost_wasl = $buy['cost_wasl'];
+  $type = $buy['type'];
+  $cost_mawa = $cost_co-$cost_wasl;
+  $place = $buy['place'];
+  $cost_froshtn = $buy['cost_fr'];
+  $discount = $buy['discount'];
+  $date = $buy['date'];
+  $unit = $buy['unit'];
+  $per=$buy['percentage'];
+  $product_name=$buy['name_product'];
+  $buy_type=$buy['buy_type'];
+
+//   koy gshty
+$sum_wasl=$sum_wasl+$cost_wasl;
+$sum_maway_peshw=$sum_maway_peshw+$cost_mawa;
+$sum_gshty=$sum_gshty+$cost_co;
+$sum_discount+=$discount;
+
+
+
+
+//   $getdealer = getdata(" SELECT * FROM dealers WHERE id='$dealer_id' ");
+//   $dealer_name = $getdealer['name'];
+
+
+
+?>
+                <tr>
+                    <td>
+                    <?php 
+                    $buy_type_name='';
+                    if ($buy_type=="qa3a") {
+                        $buy_type_name='ئەشیای ناو قاعە';
+                        echo $buy_type_name."<br>";
+                        echo $product_name;
+                    }
+
+                    if ($buy_type=="asn") {
+                        echo 'ئاسن';
+                    }
+
+                    if ($buy_type=="helka") {
+                        echo 'هێلکە';
+                    }
+
+                    if ($buy_type=="3alaf") {
+                        echo 'عەلەف';
+                    }
+
+                    
+                    
+                    ?> 
+
+                    
+
+
+                    </td>
+                    <td><?=$date?></td>
+                    <td>
+                        <?=$num?> <?=$unit?>
+                        <?php
+                        if ($buy_type=="3alaf") {
+                            echo "<br>".$per." کیلۆگرام";
+                        }
+                        ?>
+                    </td>
+                    <td><?=$type?></td>
+                    <td>
+                        <?php
+                            if (!empty($place)) {
+                                echo $place;
+                            }else{
+                                echo "-";
+                            }
+                        ?>
+                   </td>
+                    <td><?=$currency_type?></td>
+                    <td><?=$cost_t?></td>
+                    <td><?=$cost_wasl?></td>
+                    <td><?=$discount?></td>
+                    <td><?=$cost_co?></td>
+                    <td><?=$cost_mawa?></td>
+                    <td class="driver-info">
+                        <?php
+                        if ($driver_id!=0) {
+                            $getdriver = getdata(" SELECT * FROM drivers WHERE id='$driver_id' ");
+                            $driver_name = $getdriver['name'];
+                            $driver_phone = $getdriver['phone'];
+                            $driver_car_number = $getdriver['car_number'];
+                            echo "<span>$driver_name</span>"."<br>";
+                            echo $driver_car_number."<br>";
+                            echo $driver_phone."<br>";
+                        }else{
+                            echo "-";
+                        }
+                        
+                        ?>
+                    </td>
+     
+                </tr>
+                <?php } ?>
+
+            </tbody>
+        </table>
+
+<div class="row mt-5 d-flex justify-content-center">
+    <div class="col-lg-4 col-sm-5 ml-auto">
+        <table class="table table-clear text-center">
+            <tbody>
+                <tr>
+                    <td class="left">
+                    <strong>کۆی گشتی نرخی واسڵکراو</strong>
+                    </td>
+                    <td class="right"><?=$sum_wasl?></td>
+                </tr>
+
+                <tr>
+                    <td class="left">
+                    <strong>کۆی گشتی نرخی داشکاندن</strong>
+                    </td>
+                    <td class="right"><?=$sum_discount?></td>
+                </tr>
+
+                <tr>
+                    <td class="left">
+                    <strong>کۆی گشتی نرخی ماوە</strong>
+                    </td>
+                    <td class="right">
+                        <?php 
+                            if ($numRecord==2) {
+                                echo $cost_maway_peshw;
+                            }else{
+                                echo $cost_mawa;
+                            }
+                        ?>
+                    </td>
+                </tr>
+
+                <tr class="bg-dark text-light">
+                    <td class="left">
+                    <strong>کۆی گشتی نرخ</strong>
+                    </td>
+                    <td class="right">
+                    <strong><?=$sum_gshty?></strong>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+ <?php } ?>   
+
+<!-- end dealer single info -->
+
+
+
+
+<!-- customer  info -->
+
+<?php if (isset($_POST['customer_info'])){  
+    $user_id= secure($_POST['user_id']);
+
+    if (isset($_POST['con_id'])) {
+        $post_id= secure($_POST['con_id']);
+        $sales = show(" SELECT * FROM sale WHERE customer_id=$user_id AND `id`=$post_id AND `status`=1");
+        $numRecord=countdata("SELECT * FROM sale WHERE customer_id=$user_id AND `id`=$post_id AND `status`=1");
+    }else{
+        $sales = show(" SELECT * FROM sale WHERE customer_id=$user_id AND `status`=1");
+        $numRecord=countdata("SELECT * FROM sale WHERE customer_id=$user_id AND `status`=1");
+    }
+
+    $data = show(" SELECT * FROM customer WHERE `id`=$user_id");  
+    foreach ($data as $user) {
+        $name=$user['name'];
+        $phone=$user['phone'];
+        $currency_type=$user['currency_type'];
+        if ($currency_type=='dinar') {$currency_type='دینار';}
+        if ($currency_type=='dollar') {$currency_type='دۆلار';}
+        if ($currency_type=='tman') {$currency_type='تمەن';}
+
+        $refund_p=0;
+        $refund=getdata(" SELECT sum(price) as price from refund_customer WHERE customer_id=$user_id");
+       
+        if (!empty($refund)) {
+            $refund_p=$refund['price']; 
+        }
+
+        $customer=getdata(" SELECT sum(cost_co) as cost_total,sum(cost_wasl) as cost_wasl FROM sale WHERE customer_id=$user_id AND `status`=1");
+        $cost_maway_peshw=$customer['cost_total']-$customer['cost_wasl'];
+        $cost_maway_peshw-=$refund_p;
+
+        if ($cost_maway_peshw<0) {$cost_maway_peshw=0;}
+
+
+?>
+
+<hr>
+<div class="container mr-5 mb-3 mt-3">
+    <h6 class="d-flex justify-content-between"> <span>ناوی کڕیار  :  <?=$name?></span>   <span>مۆبایل : <?=$phone?>  </span>  </h6>
+</div>
+
+<table class="table table-bordered text-center" style="zoom:90%">
+            <!-- <caption>List of users</caption> -->
+            <thead>
+                <tr>
+                    <th scope="col">ناوی شتوومەک</th>
+                    <th scope="col">بەروار</th>
+                    <th scope="col">بڕ</th>
+                    <th scope="col">جۆر</th>
+                    <th scope="col">شوێن</th>
+                    <th scope="col">جۆری دراو</th>
+                    <th scope="col">نرخی فرۆشتن</th>
+                    <th scope="col">نرخی واسڵکراو</th>
+                    <th scope="col">نرخی داشکاندن</th>
+                    <th scope="col">نرخی گشتی</th>
+                    <th scope="col">نرخی ماوە</th>
+                   
+                    <th scope="col">شۆفێر</th>
+
+
+
+                </tr>
+            </thead>
+            <tbody id="show_data">
+<?php 
+$sum_wasl=0;
+$sum_discount=0;
+$sum_gshty=0;
+$sum_mawa=0;
+$sum_maway_peshw=0;
+
+foreach ($sales as $sale) {
+  $id = $sale['id'];
+  $customer_id = $sale['customer_id'];
+  $driver_id = $sale['driver_id'];
+  $num = $sale['num'];
+  $cost_t = $sale['cost_t'];
+  $cost_co = $sale['cost_co'];
+  $cost_wasl = $sale['cost_wasl'];
+  $type = $sale['type'];
+  $cost_mawa = $cost_co-$cost_wasl;
+  $place = $sale['place'];
+  $discount = $sale['discount'];
+  $date = $sale['date'];
+  $unit = $sale['unit'];
+  $per=$sale['percentage'];
+  $product_name=$sale['name_product'];
+  $sale_type=$sale['sale_type'];
+
+//   koy gshty
+$sum_wasl=$sum_wasl+$cost_wasl;
+$sum_maway_peshw=$sum_maway_peshw+$cost_mawa;
+$sum_gshty=$sum_gshty+$cost_co;
+$sum_discount+=$discount;
+
+
+?>
+                <tr>
+                    <td>
+                    <?php 
+                    $sale_type_name='';
+                    if ($sale_type=="qa3a") {
+                        $sale_type_name='ئەشیای ناو قاعە';
+                        echo $sale_type_name."<br>";
+                        echo $product_name;
+                    }
+
+                    if ($sale_type=="asn") {
+                        echo 'ئاسن';
+                    }
+
+                    if ($sale_type=="helka") {
+                        echo 'هێلکە';
+                    }
+
+                    if ($sale_type=="3alaf") {
+                        echo 'عەلەف';
+                    }
+
+                    
+                    
+                    ?> 
+
+                    
+
+
+                    </td>
+                    <td><?=$date?></td>
+                    <td>
+                        <?=$num?> <?=$unit?>
+                        <?php
+                        if ($sale_type=="3alaf") {
+                            echo "<br>".$per." کیلۆگرام";
+                        }
+                        ?>
+                    </td>
+                    <td><?=$type?></td>
+                    <td>
+                        <?php
+                            if (!empty($place)) {
+                                echo $place;
+                            }else{
+                                echo "-";
+                            }
+                        ?>
+                   </td>
+                   <td><?=$currency_type;?></td>
+                    <td><?=$cost_t?></td>
+                    <td><?=$cost_wasl?></td>
+                    <td><?=$discount?></td>
+                    <td><?=$cost_co?></td>
+                    <td><?=$cost_mawa?></td>
+                    <td class="driver-info">
+                        <?php
+                        if ($driver_id!=0) {
+                            $getdriver = getdata(" SELECT * FROM drivers WHERE id='$driver_id' ");
+                            $driver_name = $getdriver['name'];
+                            $driver_phone = $getdriver['phone'];
+                            $driver_car_number = $getdriver['car_number'];
+                            echo "<span>$driver_name</span>"."<br>";
+                            echo $driver_car_number."<br>";
+                            echo $driver_phone."<br>";
+                        }else{
+                            echo "-";
+                        }
+                        
+                        ?>
+                    </td>
+
+  
+                
+                </tr>
+                <?php } ?>
+                <!-- <tr class="bg-dark text-white">
+                    <td class="bg-dark text-white">کۆی گشتی</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><?=$sum_wasl?></td>
+                    <td><?=$sum_discount?></td>
+                    <td><?=$sum_gshty?></td>
+                    <td><?=$sum_maway_peshw?></td>
+                    <td></td>
+   
+
+                </tr> -->
+            </tbody>
+        </table>
+
+
+        
+<div class="row mt-5 d-flex justify-content-center">
+    <div class="col-lg-4 col-sm-5 ml-auto">
+        <table class="table table-clear text-center">
+            <tbody>
+                <tr>
+                    <td class="left">
+                    <strong>کۆی گشتی نرخی واسڵکراو</strong>
+                    </td>
+                    <td class="right"><?=$sum_wasl?></td>
+                </tr>
+
+                <tr>
+                    <td class="left">
+                    <strong>کۆی گشتی نرخی داشکاندن</strong>
+                    </td>
+                    <td class="right"><?=$sum_discount?></td>
+                </tr>
+
+                <tr>
+                    <td class="left">
+                    <strong>کۆی گشتی نرخی ماوە</strong>
+                    </td>
+                    <td class="right">
+                        <?php 
+                            if ($numRecord==2) {
+                                echo $cost_maway_peshw;
+                            }else{
+                                echo $cost_mawa;
+                            }
+                        ?>
+                    </td>
+                </tr>
+
+                <tr class="bg-dark text-light">
+                    <td class="left">
+                    <strong>کۆی گشتی نرخ</strong>
+                    </td>
+                    <td class="right">
+                    <strong><?=$sum_gshty?></strong>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+<?php } } ?> 
+<!-- end customer info -->
+
+
+
+
+<!-- spender  info -->
+
+<?php if (isset($_POST['spender_info'])){  
+    $user_id= secure($_POST['user_id']);
+
+    if (isset($_POST['con_id'])) {
+        $post_id= secure($_POST['con_id']);
+        $items = show(" SELECT * FROM xarjy WHERE `xarj_by`='$user_id' AND id=$post_id ");
+    }else{
+        $items = show(" SELECT * FROM xarjy WHERE `xarj_by`='$user_id'");
+    }
+
+?>
+
+<table  class="table  table-bordered  text-center" dir="rtl">
+        <thead>
+            <tr>
+                <th>بەروار</th>
+                <th>بۆچی خەرجکراوە</th>
+                <th>پارەی وەرگیراو</th>
+                <th>بڕی نرخی خەرجکراو</th>
+                <th>نرخی ماوە</th>
+                <th>شوێن</th>
+            </tr>
+        </thead>
+        <tbody id="show_data">
+
+<?php 
+$sumGetPrice=0;
+$sumPrice=0;
+$sumMawa=0;
+
+foreach ($items as $item) {
+  $id = $item['id'];
+  $name = $item['name_item'];
+  $price = $item['price'];
+  $place = $item['place'];
+  $get_price = $item['get_price'];
+  $xarj_by = $item['xarj_by'];
+  $date = $item['date'];
+  $price_mawa=$get_price - $price;
+
+  $sumGetPrice+=$get_price;
+  $sumPrice+=$price;
+  $sumMawa+=$price_mawa;
+
+?>
+       <tr>
+       <td><?=$date;?></td>
+        <td style="max-width:320px;width:320px;overflow:hidden;word-wrap: break-word;overflow-wrap: break-word;white-space: pre-wrap;"><?=$name;?></td>
+        <td><?=$get_price;?></td>
+        <td><?=$price;?></td>
+        <td><?=$price_mawa;?></td>
+        <td><?=$place;?></td>
+
+      </tr>
+<?php
+}
+?>
+
+<tr class="bg-dark text-white">
+                    <td class="bg-dark text-white">کۆی گشتی</td>
+                    <td></td>
+                    <td><?=$sumGetPrice?></td>
+                    <td><?=$sumPrice?></td>
+                    <td><?=$sumMawa?></td>
+                    <td></td>
+                </tr>
+
+        </tbody>
+    </table>
+
+<?php } ?> 
+<!-- end spedner info -->
+
+
+
+
+<!-- driver  info -->
+
+<?php if (isset($_POST['driver_info'])){  
+    $driver_id= secure($_POST['driver_id']);
+
+    if (isset($_POST['work_id'])) {
+        $work_id= secure($_POST['work_id']);
+        $works=show("SELECT * FROM driver_work WHERE driver_id=$driver_id AND id=$work_id");
+    }else{
+        $works=show("SELECT * FROM driver_work WHERE driver_id=$driver_id");
+    }
+    $data = show(" SELECT * FROM drivers WHERE `id`=$driver_id");
+    foreach ($data as $staff) {
+
+    $name = $staff['name'];
+    $phone = $staff['phone'];
+
+    $currency_type=$staff['currency_type'];
+    if ($currency_type=='dinar') {
+      $currency_type='دینار';
+    }
+  
+    if ($currency_type=='dollar') {
+      $currency_type='دۆلار';
+    }
+  
+    if ($currency_type=='tman') {
+      $currency_type='تمەن';
+    }
+
+
+?>
+<hr>
+<div class="container mr-5 mb-3 mt-3">
+    <h5> ناوی سایەق :  <?=$name?> ,   <span>ژمارەی مۆبایل  : <?=$phone?>  </span>  </h5>
+</div>
+<?php } ?>
+
+
+<table class="table table-bordered text-center">
+    <!-- <caption>List of users</caption> -->
+    <thead>
+        <tr>
+            <th scope="col">ناونیشانی هێنانی بار</th>
+            <th scope="col">ناونیشانی گەشتنی بار</th>
+            <th scope="col"> ماوەی گەشتن</th>
+            <th scope="col">نرخ</th>
+            <th scope="col">پارەدان</th>
+            <th>جۆری دراو</th>
+            <th scope="col">تێبینی</th>
+
+
+        </tr>
+    </thead>
+    <tbody id="show_data">
+ 
+    <?php
+
+foreach ($works as $work) {
+$work_id=$work['id'];
+    $from=$work['from'];
+    $to=$work['to'];
+    $time=$work['time'];
+    $price=$work['price'];
+    $money_owner=$work['money_owner'];
+    $note=$work['note'];
+    
+?>
+        <tr>
+            <td><?=$from?></td>
+            <td><?=$to?></td>
+            <td><?=$time?></td>
+            <td><?=$price?></td>
+            <td><?=$money_owner?></td>
+            <td><?=$currency_type;?></td>
+            <td style="max-width:320px;width:320px;overflow:hidden;word-wrap: break-word;overflow-wrap: break-word;white-space: pre-wrap;"><?=$note;?></td>
+          
+        </tr>
+
+        <?php } ?>
+
+ 
+    </tbody>
+</table>
+
+<?php } ?> 
+<!-- end driver info -->
+
+
+
+<!-- staff  info -->
+
+<?php if (isset($_POST['staff_info'])){  
+    $staff_id= secure($_POST['staff_id']);
+    if (isset($_POST['project_id'])) {
+        $project_id= secure($_POST['project_id']);
+        $projects=show("SELECT * FROM staff_work WHERE staff_id=$staff_id AND id=$project_id");
+    }else{
+        $projects=show("SELECT * FROM staff_work WHERE staff_id=$staff_id ");
+    }
+
+    $data = show(" SELECT * FROM staff WHERE `id`=$staff_id");
+    foreach ($data as $staff) {
+
+    $name = $staff['name'];
+    $manager = $staff['manager'];
+    $currency_type = $staff['currency_type'];
+
+    if ($currency_type=='dinar') {
+      $currency_type='دینار';
+    }
+  
+    if ($currency_type=='dollar') {
+      $currency_type='دۆلار';
+    }
+  
+    if ($currency_type=='tman') {
+      $currency_type='تمەن';
+    }
+
+
+?>
+<hr>
+<div class="container mr-5 mb-3 mt-3">
+    <h5> ناوی ستاف :  <?=$name?> ,   <span>بەڕێوەبەر : <?=$manager?>  </span>  </h5>
+</div>
+<?php } ?>
+
+<table class="table table-bordered text-center" style="zoom:80%">
+    <!-- <caption>List of users</caption> -->
+    <thead>
+        <tr>
+            <th scope="col">ناوی پڕۆژە</th>
+            <th scope="col">بڕی نرخی پڕۆژە</th>
+            <th scope="col">نرخی تاک</th>
+            <th scope="col">کۆی گشتی نرخ</th>
+            <th scope="col">پارەی وەرگیراو</th>
+            <th scope="col">پارەی خەرجکراو</th>
+            <th scope="col">پارەی ماوە</th>
+            <th scope="col">ناونیشان</th>
+            <th scope="col">خاوەن پڕۆژە</th>
+            <th>جۆری دراو</th>
+            <th scope="col">تێبینی</th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+
+foreach ($projects as $project) {
+$project_id=$project['id'];
+    $project_name=$project['name'];
+
+    $cost_project=$project['cost_project'];
+    $cost_fixed=$project['cost_fixed'];
+    $cost_total=$project['cost_total'];
+
+    $get_price=$project['get_price'];
+    $xarjy=$project['xarjy'];
+    $date=$project['date'];
+    $address=$project['address'];
+    $owner=$project['owner'];
+    $note=$project['note'];
+    $cost_mawa=$cost_total-$get_price;
+?>
+        <tr>
+            <td><?=$project_name?></td>
+            <td><?=$cost_project?></td>
+            <td><?=$cost_fixed?></td>
+            <td><?=$cost_total?></td>
+            <td><?=$get_price?></td>
+            <td><?=$xarjy?></td>
+            <td><?=$cost_mawa?></td>
+            <td><?=$address?></td>
+            <td><?=$owner?></td>
+            <td><?=$currency_type;?></td>
+            <td style="max-width:320px;width:320px;overflow:hidden;word-wrap: break-word;overflow-wrap: break-word;white-space: pre-wrap;"><?=$note;?></td>
+
+        </tr>
+
+<?php } ?>
+
+</tbody>
+</table>
+
+<?php } ?> 
+
+<!-- end staff id -->
+
    </div>
 
 
 
    <!-- client monthlty and daily -->
 
-    <?php if (isset($_GET['client_month'])){  
-        $client_id=$_GET['client_month'];  
+    <?php if (isset($_POST['client_month'])){  
+        $client_id=$_POST['client_id'];  
+
+        if (isset($_POST['con_id'])) {
+            $budget_id=$_POST['con_id'];
+            $joins=show("SELECT * FROM budget WHERE clientid= $client_id AND id_budget=$budget_id");
+        }else{
+            $joins=show("SELECT * FROM budget WHERE clientid= $client_id");
+        }
+
         $data = show(" SELECT * FROM client WHERE `id`=$client_id");
         
         if (empty($data)) {
@@ -871,6 +1701,21 @@ foreach ($items as $item) {
                 $date = $client['date_start'];
                 $work_place = $client['work_place'];
                 $status = $client['status'];
+                $currency_type=$client['currency_type'];
+
+                if ($currency_type=='dinar') {
+                  $currency_type='دینار';
+                }
+              
+                if ($currency_type=='dollar') {
+                  $currency_type='دۆلار';
+                }
+              
+                if ($currency_type=='tman') {
+                  $currency_type='تمەن';
+                }
+
+                
                 $get_teams=getdata("SELECT * FROM teams WHERE id= '$work_place'");
 
                 $team_name='';
@@ -882,8 +1727,8 @@ foreach ($items as $item) {
         ?>
 
 
-<div class="row col-lg-4 col-12 m-auto">
-        <div class="card border shadow-none m-auto " style="width: 25rem;border-radius:8px">
+<div class="row col-lg-10 col-12 m-auto">
+        <div class="card border shadow-none m-auto " style="width: 60rem;border-radius:8px">
             <ul class="list-group list-group-flush text-center">
                 <li class="list-group-item"><strong>ناو : </strong> <?=$name?></li>
                 <li class="list-group-item"><strong>ژمارە مۆبایل : </strong> <?=$phone?></li>
@@ -895,36 +1740,42 @@ foreach ($items as $item) {
         </div>
     </div>
 
-<div class="row col-lg-8 col-12 m-auto p-4 table-responsive">
+<div class="row col-lg-8 col-12 m-auto p-4 table-responsive" style="zoom:90%">
 
 <table class="table table-bordered text-center">
     <!-- <caption>List of users</caption> -->
     <thead>
         <tr>
             <th scope="col">بەروار</th>
+            <th>جۆری دراو</th>
             <th scope="col">بڕی موچە</th>
+            <th scope="col">بڕی پاداشت</th>
             <th scope="col">غەرامە</th>
             <th scope="col">کۆی گشتی مووچە</th>
         </tr>
     </thead>
     <tbody>
         <?php
-$joins=show("SELECT * FROM budget WHERE clientid= $client_id");
+
 
 foreach ($joins as $join) {
 $budget_id=$join['id_budget'];
     $date_bud=$join['date'];
     $budget_amount=$join['budget_amount'];
     $punish=$join['punish'];
+    $reward=$join['reward'];
 ?>
         <tr>
             <td><?=$date_bud?></td>
+            <td><?=$currency_type?></td>
             <td><?=$budget_amount?></td>
+            <td><?=$reward?></td>
             <td><?=$punish?></td>
             <td>
                 <?php
-  $result=$budget_amount-$punish;
-  echo $result."  هەزار";
+ $budget=(int)$budget_amount+$reward;
+ $budget=$budget-$punish;
+ echo $budget;
   ?>
             </td>
         </tr>
@@ -946,8 +1797,16 @@ $budget_id=$join['id_budget'];
 
     <!-- client daily -->
 
-    <?php if (isset($_GET['client_daily'])){  
-        $client_id=$_GET['client_daily'];  
+    <?php if (isset($_POST['client_daily'])){  
+        $client_id=$_POST['client_id'];  
+
+        if (isset($_POST['con_id'])) {
+            $budget_id=$_POST['con_id'];
+            $joins=show("SELECT * FROM work_daily WHERE clientid= $client_id AND id_daily=$budget_id");
+        }else{
+            $joins=show("SELECT * FROM work_daily WHERE clientid= $client_id");
+        }
+
         $data = show(" SELECT * FROM client WHERE `id`=$client_id");
         
         if (empty($data)) {
@@ -960,6 +1819,21 @@ $budget_id=$join['id_budget'];
                 $date = $client['date_start'];
                 $work_place = $client['work_place'];
                 $status = $client['status'];
+                $bry_para = $client['bry_para'];
+                $currency_type=$client['currency_type'];
+
+                if ($currency_type=='dinar') {
+                  $currency_type='دینار';
+                }
+              
+                if ($currency_type=='dollar') {
+                  $currency_type='دۆلار';
+                }
+              
+                if ($currency_type=='tman') {
+                  $currency_type='تمەن';
+                }
+            
                 $get_teams=getdata("SELECT * FROM teams WHERE id= '$work_place'");
 
                 $team_name='';
@@ -971,56 +1845,68 @@ $budget_id=$join['id_budget'];
         ?>
 
 
-<div class="row col-lg-4 col-12 m-auto">
-        <div class="card border shadow-none m-auto " style="width: 25rem;border-radius:8px">
+<div class="row col-lg-10 col-12 m-auto">
+        <div class="card border shadow-none m-auto " style="width: 60rem;border-radius:8px">
             <ul class="list-group list-group-flush text-center">
                 <li class="list-group-item"><strong>ناو : </strong> <?=$name?></li>
                 <li class="list-group-item"><strong>ژمارە مۆبایل : </strong> <?=$phone?></li>
                 <li class="list-group-item"><strong>بەرواری دەستپێکردن : </strong><?=$date?></li>
                 <li class="list-group-item"><strong>شوێنی کار : </strong><?=$team_name?></li>
                 <li class="list-group-item"><strong>جۆری کارکردن : </strong>ڕۆژانە</li>
+                <li class="list-group-item"><strong>بڕی پارەی کارکردنی ڕۆژانە : </strong><?=$bry_para?></li>
 
             </ul>
         </div>
     </div>
 
 
-    <div class="row col-lg-9 col-12 m-auto p-4 table-responsive" style="zoom:90%"> 
+    <div class="row col-lg-9 col-12 m-auto p-4 table-responsive" style="zoom:75%"> 
 
 <table class="table table-bordered text-center">
     <!-- <caption>List of users</caption> -->
     <thead>
         <tr>
-            <th scope="col">بەروار</th>
-            <th scope="col">سەعاتی کارکردن</th>
-            <th scope="col">نرخی سەعاتی کارکردن</th>
-            <th scope="col">سەعاتی ئیزافە</th>
-            <th scope="col">غەرامە</th>
-            <th scope="col">کۆی گشتی مووچە</th>
+                    <th scope="col">بەروار</th>
+                    <th scope="col">سەعاتی کارکردن</th>
+                    <th scope="col">نرخی سەعاتی کارکردن</th>
+                    <th scope="col">سەعاتی زیادە</th>
+                    <th scope="col">بڕی پاداشت</th>
+                    <th scope="col">غەرامە</th>
+                    <th scope="col">کۆی گشتی مووچە</th>
+                    <th>جۆری دراو</th>
+                    <th scope="col">ئیشی کردووە بۆ</th>
+      
         </tr>
     </thead>
     <tbody>
-        <?php
-$joins=show("SELECT * FROM work_daily WHERE clientid= $client_id");
-
-foreach ($joins as $join) {
-    $daily_id=$join['id_daily'];
-    $work_hour=$join['work_hour'];
-    $work_hour_amount=$join['work_hour_amount'];
-    $work_extra=$join['work_extra'];
-    $budget=$join['budget'];
-    $punish=$join['punish'];
-    $date=$join['date'];
-    $clientid=$join['clientid'];
-?>
-        <tr>
-            <td><?=$date?></td>
-            <td><?=$work_hour?></td>
-            <td><?=$work_hour_amount?></td>
-            <td><?=$work_extra?></td>
-            <td><?=$punish?></td>
-            <td><?=$budget?></td>
-        </tr>
+    <?php
+       
+    
+    foreach ($joins as $join) {
+            $daily_id=$join['id_daily'];
+            $work_hour=$join['work_hour'];
+            $work_hour_amount=$join['work_hour_amount'];
+            $work_extra=$join['work_extra'];
+            $budget=$join['budget'];
+            $punish=$join['punish'];
+            $reward=$join['reward'];
+            $date=$join['date'];
+            $clientid=$join['clientid'];
+            $work_for=$join['work_for'];
+     ?>
+                <tr>
+                    <td><?=$date?></td>
+                    <td><?=$work_hour?></td>
+                    <td><?=$work_hour_amount?></td>
+                    <td><?=$work_extra?></td>
+                    <td><?=$reward?></td>
+                    <td><?=$punish?></td>
+                    <td><?=$budget?></td>
+                    <td><?=$currency_type?></td>
+                    <td><?=$work_for?></td>
+                    
+                 
+                </tr>
 
 
         
@@ -1035,10 +1921,151 @@ foreach ($joins as $join) {
     
     
     
-   
+
+       <!-- refund -->
+
+   <?php  
+    if (isset($_POST['refund_info'])) {
+        $user_id= secure($_POST['user_id']);
+
+        if (isset($_POST['refund_id'])) {
+            $refund_id= secure($_POST['refund_id']);
+            $refunds=show("SELECT * FROM refund WHERE id=$refund_id AND dealer_id=$user_id");
+        }else{
+            $refunds=show("SELECT * FROM refund WHERE dealer_id=$user_id");        
+        } 
+        $dealer=getdata("SELECT * FROM dealers WHERE id=$user_id");
+        $dealer_name=$dealer['name'];
+        ?>
+
+<div class="container-fluid mt-4 mb-3">
+    <h6 class="text-secondary">ناوی فرۆشیار : <?=$dealer_name?></h6>
+</div>
+
+<div class="row col-lg-12 col-12 m-auto p-4 table-responsive">
+
+<table class="table table-bordered text-center">
+<thead>
+    <tr>
+      <th scope="col">بڕی پارەی واسڵکراو</th>
+      <th scope="col">جۆری دراو</th>
+      <th scope="col">جۆری واسڵکردن</th>
+      <th scope="col">بەروار</th>
+    </tr>
+</thead>    
+
+<tbody>
+<?php
+        foreach ($refunds as $refund) {
+            $refund_id=$refund['id'];
+            $dealer_id=$refund['dealer_id'];
+            $price=$refund['price'];
+            $date=$refund['date'];
+            $refund_type=$refund['refund_type'];
+
+            if ($refund_type=='cash') {$refund_type="کاش";}
+            if ($refund_type=='7awala') {$refund_type="حەواڵە";}
+
+            $dealer=getdata("SELECT * FROM dealers WHERE id=$dealer_id");
+            $dealer_name=$dealer['name'];
+            $currency_type = $dealer['currency_type']; 
+     
+            if ($currency_type=='dinar') {$currency_type='دینار';}
+            if ($currency_type=='dollar') {$currency_type='دۆلار';}
+            if ($currency_type=='tman') {$currency_type='تمەن';}
+            
+
+            ?>
+  <tr>
+        <td><?=$price;?></td>
+        <td><?=$currency_type;?></td>
+        <td><?=$refund_type;?></td>
+        <td><?=$date;?></td>
+  </tr>
+
+  <?php }  ?>
+
+</tbody>
+
+</table>
+</div>  
+        
+   <?php } ?>
 
 
 
+
+   <!-- refund customer  -->
+
+   <!-- refund -->
+
+   <?php  
+    if (isset($_POST['refund_customer_info'])) {
+        $user_id= secure($_POST['user_id']);
+
+        if (isset($_POST['refund_id'])) {
+            $refund_id= secure($_POST['refund_id']);
+            $refunds=show("SELECT * FROM refund_customer WHERE id=$refund_id AND customer_id=$user_id");
+        }else{
+            $refunds=show("SELECT * FROM refund_customer WHERE customer_id=$user_id");        
+        } 
+        $customer=getdata("SELECT * FROM customer WHERE id=$user_id");
+        $customer_name=$customer['name'];
+        ?>
+
+<div class="container-fluid mt-4 mb-3">
+    <h6 class="text-secondary">ناوی کڕیار : <?=$customer_name?></h6>
+</div>
+
+<div class="row col-lg-12 col-12 m-auto p-4 table-responsive">
+
+<table class="table table-bordered text-center">
+<thead>
+    <tr>
+      <th scope="col">بڕی پارەی واسڵکراو</th>
+      <th scope="col">جۆری دراو</th>
+      <th scope="col">جۆری واسڵکردن</th>
+      <th scope="col">بەروار</th>
+    </tr>
+</thead>    
+
+<tbody>
+<?php
+        foreach ($refunds as $refund) {
+            $refund_id=$refund['id'];
+            $customer_id=$refund['customer_id'];
+            $price=$refund['price'];
+            $date=$refund['date'];
+            $refund_type=$refund['refund_type'];
+
+            if ($refund_type=='cash') {$refund_type="کاش";}
+            if ($refund_type=='7awala') {$refund_type="حەواڵە";}
+
+            $customer=getdata("SELECT * FROM customer WHERE id=$customer_id");
+            $customer_name=$customer['name'];
+            $currency_type = $customer['currency_type']; 
+     
+            if ($currency_type=='dinar') {$currency_type='دینار';}
+            if ($currency_type=='dollar') {$currency_type='دۆلار';}
+            if ($currency_type=='tman') {$currency_type='تمەن';}
+            
+
+            ?>
+  <tr>
+        <td><?=$price;?></td>
+        <td><?=$currency_type;?></td>
+        <td><?=$refund_type;?></td>
+        <td><?=$date;?></td>
+  </tr>
+
+  <?php }  ?>
+
+</tbody>
+
+</table>
+</div>  
+        
+   <?php } ?>
 
 
        

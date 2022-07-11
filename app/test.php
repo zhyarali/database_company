@@ -1,221 +1,312 @@
-<?php
-ob_start();
-session_start();
-require_once('../server/helper.php') ;
-if (isset($_SESSION['adm_id']) && isset($_SESSION['adm_token'])) {
-  $token =$_SESSION['adm_token'];
-  $user_id = $_SESSION['adm_id'];
-  }
-  else {
-  $token ='';
-  $user_id = '';
-  }
-  $check = countdata(" SELECT * FROM user_tokens WHERE user_id='$user_id' AND token='$token'  ");
-  if($check > 0 ) {
-  $getuser = getdata(" SELECT * FROM admin WHERE id='$user_id'  ");
-  $uname = $getuser['uname'];
-  $username = $getuser['name'];
-  }
-  else {
-  execute(" DELETE FROM user_tokens WHERE id='$user_id' ");
-  }
-  ?>
-<!DOCTYPE html>
-<html dir="rtl">
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <!-- <link rel="icon" type="image/png" href="../assets/img/favicon.png"> -->
-  <title>
-        Management system 
-  </title>
-  <!--     Fonts and icons     -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-  <!-- Nucleo Icons -->
-  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
-  <!-- <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script> -->
-  <link href="../assets/font-awesome/all.css" rel="stylesheet" />
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <!-- CSS Files -->
-  <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.0.3"  rel="stylesheet" />
-  <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.0.3" media="print" rel="stylesheet" />
+<?php require_once('header.php'); ?>
 
-  <!-- custom css Files -->
-  <link id="pagestyle" href="../assets/css/style.css" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/datatables.css">
-  <link rel="stylesheet" href="../assets/css/datatables.min.css">
-  <script src="../assets/js/core/alert.js"></script>
- 
-  
-</head>
-
-<body>
-
-
-<style>
-    .table tbody tr:last-child td {
-  border-width: 1px !important;
-}
-.table{
-    border-radius:10px !important;
-}
-.table th{
-    /* background:red !important; */
-    /* font-size:12px !important; */
-}
-</style>
-
-
-
-<div class="container-fluid  mt-3 d-flex justify-content-around">
-
-        <div class="btn  btn-dark " id="print"><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن</div>
-</div>
-
-<div class="container-fluid mt-2 d-flex flex-wrap" id="print_area">
-
-
-<div class="col-lg-12 col-12  p-4 d-flex justify-content-between" style="border:1px solid black">
-
-<div>
-<p>سیستەمی کۆمپانیای هۆگر</p>
-    <p>07501234567</p>
-    <p>ڕانیە</p>
+<div class="container d-flex justify-content-around mt-5 flex-wrap">
+<a data-toggle="modal" data-target="#add" style="font-size:16px"  class="btn btn-success " ><i class="fas fa-user-plus "></i>  زیادکردنی شۆفێر</a>
+<div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن</div>
 </div>
 
 
 
-<div>
-    <p>بەروار و کات : <?PHP echo date("Y-m-d H:i:s");?></p>
-    <p>پسولەی کڕین</p>
+<div class="container-fluid mt-2">
+<div class="row d-flex justify-content-center" id="result">
+
+<?php 
+$drivers = show(" SELECT * FROM drivers ");
+foreach ($drivers as $driver) {
+  $id = $driver['id'];
+  $name = $driver['name'];
+  $car_type = $driver['car_type'];
+  $car_model = $driver['car_model'];
+  $car_number = $driver['car_number'];
+  $phone = $driver['phone'];
+  $work_type = $driver['work_type'];
+  $money_owner = $driver['money_owner'];
+?>
+     
+
+<div class=" col-6 col-sm-6 col-md-4 col-lg-3  col-xl-3  text-center mt-5 mt-lg-0 p-2">
+ <a href="view_client.php?client_id=<?=$id?>">
+<div class="card " style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2) !important;">
+<div class="card-body pb-2">
+<h6 class="card-title"><?=$name?></h6>
+<p class="card-text"><?=$phone;?></p>
+<p class="card-text"> <strong>جۆری سەیارە :</strong> <?=$car_type;?></p>
+<p class="card-text"> <strong>جۆری کار :</strong> <?=$work_type?></p>
+<!-- <p class="btn btn-outline-dark btn-sm"><?=$date;?></p> -->
+<div class="d-flex justify-content-around mt-3">
+<a   class="dropdown-item mx-2  btn btn-primary" style="background-color:#7868E6 !important;" href="#">پێدانی مووچە</a>
+<a data-toggle="modal" data-target="#delete<?=$id?>" class="dropdown-item btn  btn-danger" style="background-color:#A6A9B6 !important;">سڕینەوە</a>
 </div>
 
-
 </div>
+</div>
+</a> 
 
-
-
-    <div class="row col-lg-12 col-12 m-auto p-4 table-responsive">
-
+</div> 
       
+<!-- delete modal -->
+  <div class="modal fade" id="delete<?php echo $driver['id'] ?>" tabindex="-1"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal" role="document">
+      <div class="modal-content" style="background-color: white;border-radius: 15px;">
+        <div class="modal-body text-center">
+         <div class="container-fluid">
+  <div class="row row-cols-1 row-cols-md-3">
+    <div class="col-md-12 mb-3 mx-auto">
+      <div class="h-100">
+        <i class="fa fa-times-circle" style="float:left;color: black"  data-dismiss="modal"></i>
+        <div class="card-body">
+          <h5 class="container col-md-10 mt-3  text-center">
+        دڵنیای لە سڕینەوەی ئەم کڕینە لەناو سیستەمەکەت ؟
+        </h5>
+        <br>
+         <form dir="rtl" method="POST">
+         <div class="form-group">
+              <input type="hidden" placeholder="  ناو  " name="id" value="<?=$id;?> " class="form-control col-md-10 mx-auto">
+            </div> 
+            <!-- <div class="form-group">
+              <input type="text" placeholder="  ناو  " name="name" value="<?=$name;?> " class="form-control col-md-10 mx-auto">
+            </div>   -->
+    <button type="submit" name="del" class="btn btn-danger btn-block">  سڕینەوە  </button>
+  </form>
+      </div>
+      </div>
+       </div>
+  </div>
+  </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
+<!-- edit modal -->
+<div class="modal fade" id="edit<?php echo $driver['id'] ?>" tabindex="-1"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content" style="background-color: white;border-radius: 15px;">
+        <div class="modal-body text-right">
+         <div class="container-fluid">
+  <div class="row row-cols-1 row-cols-md-3">
+    <div class="col-md-12 mb-3 mx-auto">
+      <div class="h-100">
+        <i class="fa fa-times-circle" style="float:left;color: black"  data-dismiss="modal"></i>
+        <div class="card-body">
+          <h5 class="container col-md-6 mt-3  text-center">
+      گۆڕانکاری بکە لە زانیارییەکانی کڕین 
+        </h5>
+        <br>
+        <form method="POST">
+        <div class="form-group">
+              <input type="hidden" placeholder="ID " name="id" value="<?=$id;?> " class="form-control col-md-10 mx-auto">
+            </div> 
+                <label>ناوی شۆفێر</label>
+                <div class="form-group">
+                <input type="text" placeholder="  ناوی شۆفێر  " name="name" value="<?=$name;?> " class="form-control col-md-10 mx-auto">
+                </div> 
+                <label>جۆری سەیارە</label>
+                <div class="form-group">
+                    <select name="car_type" value="<?=$car_type;?>" class="form-control col-md-10 mx-auto">
+                        <option <?php if($car_type=="بچووک") echo 'selected="selected"'; ?> value="بچووک">بچووک</option>
+                        <option <?php if($car_type=="گەورە") echo 'selected="selected"'; ?> value="گەورە">گەورە</option>
+                    </select>
+                </div> 
+                <label>مۆدێلی سەیارە</label>
+                <div class="form-group">
+                <input type="text" placeholder="مۆدێلی سەیارە " name="car_model" value="<?=$car_model;?>"  class="form-control col-md-10 mx-auto">
+                </div> 
 
-    <?php
+                <label>ژمارەی سەیارە</label>
+                <div class="form-group">
+                <input type="text"  name="car_number" value="<?=$car_number;?>"  class="form-control col-md-10 mx-auto">
+                </div> 
 
-if (isset($_POST['submit'])){
-    $report_type=$_POST['report_type'];
+                <label>ژمارە مۆبایل</label>
+                <div class="form-group">
+                <input type="text" placeholder=" ژمارە مۆبایل" name="phone" value="<?=$phone;?>" class="form-control col-md-10 mx-auto">
+                </div> 
+                <label>جۆری کار</label>
+                <div class="form-group">
+                    <select name="work_type" value="<?=$work_type;?>" class="form-control col-md-10 mx-auto">
+                        <option <?php if($work_type=="بار") echo 'selected="selected"'; ?> value="بار">بار</option>
+                        <option <?php if($work_type=="سەعات") echo 'selected="selected"'; ?> value="سەعات">سەعات</option>
+                        <option <?php if($work_type=="ڕۆژانە") echo 'selected="selected"'; ?> value="ڕۆژانە">ڕۆژانە</option>
+                    </select>
+                </div> 
+                <label>پارەدان</label>
+                <div class="form-group">
+                    <select name="money_owner" value="<?=$money_owner;?>" class="form-control col-md-10 mx-auto">
+                        <option <?php if($money_owner=="ستاف") echo 'selected="selected"'; ?> value="ستاف">ستاف</option>
+                        <option <?php if($money_owner=="کۆمپانیا") echo 'selected="selected"'; ?> value="کۆمپانیا">کۆمپانیا</option>
+                        <option <?php if($money_owner=="کڕیار") echo 'selected="selected"'; ?> value="کڕیار">کڕیار</option>
+                    </select>
+                </div> 
+            
+    <button type="submit" name="edit" class="btn btn-info btn-block">  نوێکردنەوەی زانیارییەکانی شۆفێر  </button>
+  </form>
+      </div>
+      </div>
+       </div>
+  </div>
+  </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    if ($report_type=="buy") {
-        echo "hasjha";
-    }
-
-
-    if ($report_type=="sale") {
-        
-    }
-
-
-    if ($report_type=="return_buy") {
-        
-    }
-
-
-    if ($report_type=="return_sale") {
-        
-    }
-
-
-    if ($report_type=="debt") {
-        
-    }
-
-    if ($report_type=="xarjy") {
-        
-    }
-
-
-
-
-
- 
-
+  
+<?php
 }
 ?>
-
-
-
-
-
-
-    </div>
+     
 </div>
 
 
-<br><br>
+
+
+ <?php
+ if (isset($_SESSION["edit_success"])) {
+    msg('سەرکەتووبوو','سەرکەوتووانە  گۆڕانکاری لەزانیارییەکان کرا ','success');
+     unset($_SESSION["edit_success"]);
+ }
+
+ if (isset($_SESSION["add_success"])) {
+    msg('سەرکەتووبوو','سەرکەوتووانە زانیارییەکان تۆمارکرا ','success');
+     unset($_SESSION["add_success"]);
+ }
+
+ if (isset($_SESSION["delete"])) {
+    msg('ئاگاداری','سەرکەوتووانە سڕایەوە ','warning');
+    unset($_SESSION["delete"]);
+ }
+
+ 
+ ?>
+ 
 
 
 
 
+<?php 
 
+if (post('edit')) {
+    $id = secure($_POST['id']);
+  $name = secure($_POST['name']);
+  $car_type = secure($_POST['car_type']);
+  $car_model = secure($_POST['car_model']);
+  $car_number = secure($_POST['car_number']);
+  $phone = secure($_POST['phone']);
+  $work_type = secure($_POST['work_type']);
+  $money_owner = secure($_POST['money_owner']);
+
+  $sql = execute("UPDATE `drivers` SET `name`='$name',`car_type`='$car_type',`car_model`='$car_model',`car_number`='$car_number',`phone`='$phone',`work_type`='$work_type',`money_owner`='$money_owner' WHERE id = '$id'");
+    $_SESSION["edit_success"] = "";
+    header("Location: drivers.php");
+
+}
+
+if (post('del')) {
+    $id = secure($_POST['id']);
+    $sql = execute(" DELETE  FROM drivers WHERE id = '$id'");
+    $_SESSION["delete"] = "";
+    direct('drivers.php');
     
+}
+
+if (post('add')) {
+  $name = secure($_POST['name']);
+  $car_type = secure($_POST['car_type']);
+  $car_model = secure($_POST['car_model']);
+  $car_number = secure($_POST['car_number']);
+  $phone = secure($_POST['phone']);
+  $work_type = secure($_POST['work_type']);
+  $money_owner = secure($_POST['money_owner']);
+
+  $sql = execute("INSERT INTO `drivers` (`name`,`car_type`,`car_model`,`car_number`,`phone`,`work_type`,`money_owner`) VALUES('$name','$car_type','$car_model','$car_number','$phone','$work_type','$money_owner')");
+    $_SESSION["add_success"] = "";
+   direct('drivers.php');
+
+}
+
+?>
+<?php require_once('footer.php'); ?>
 
 
 
-<!--   Core JS Files   -->
 
-<script src="../assets/js/core/jquery.min.js"></script>
-  <script src="../assets/js/core/bootstrap.bundle.min.js"></script>
-<script src="../assets/js/core/popper.min.js"></script>
-  <script src="../assets/js/core/bootstrap.min.js"></script>
-  
-  <script src="../assets/js/core/jquery.dataTables.js"></script>
-  <script src="../assets/js/core/jquery.dataTables.min.js"></script>
-  
-  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/chartjs.min.js"></script>
+<!-- add driver modal -->
+<div class="modal fade" id="add" tabindex="-1"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content" style="background-color: white;border-radius: 15px;">
+        <div class="modal-body text-right">
+         <div class="container-fluid">
+  <div class="row row-cols-1 row-cols-md-3">
+    <div class="col-md-12 mb-3 mx-auto">
+      <div class="h-100">
+        <i class="fa fa-times-circle" style="float:left;color: black"  data-dismiss="modal"></i>
+        <div class="card-body">
+          <h5 class="container col-md-6 mt-3  text-center">
+              شۆفێر زیادبکە
+        </h5>
+        <br>
+        <form method="POST">
+         
+                <label>ناوی شۆفێر</label>
+                <div class="form-group">
+                <input type="text" placeholder="  ناوی شۆفێر  " name="name"  class="form-control col-md-10 mx-auto">
+                </div> 
+                <label>جۆری سەیارە</label>
+                <div class="form-group">
+                    <select name="car_type"  class="form-control col-md-10 mx-auto">
+                        <option value="بچووک">بچووک</option>
+                        <option  value="گەورە">گەورە</option>
+                    </select>
+                </div> 
+                <label>مۆدێلی سەیارە</label>
+                <div class="form-group">
+                <input type="text" placeholder="مۆدێلی سەیارە " name="car_model"  class="form-control col-md-10 mx-auto">
+                </div> 
+
+                <label>ژمارەی سەیارە</label>
+                <div class="form-group">
+                <input type="text" placeholder="ژمارەی سەیارە" name="car_number"  class="form-control col-md-10 mx-auto">
+                </div> 
+
+                <label>ژمارە مۆبایل</label>
+                <div class="form-group">
+                <input type="text" placeholder=" ژمارە مۆبایل" name="phone"  class="form-control col-md-10 mx-auto">
+                </div> 
+                <label>جۆری کار</label>
+                <div class="form-group">
+                    <select name="work_type"  class="form-control col-md-10 mx-auto">
+                        <option value="بار">بار</option>
+                        <option value="سەعات">سەعات</option>
+                        <option value="ڕۆژانە">ڕۆژانە</option>
+                    </select>
+                </div> 
+                <label>پارەدان</label>
+                <div class="form-group">
+                    <select name="money_owner" class="form-control col-md-10 mx-auto">
+                        <option  value="ستاف">ستاف</option>
+                        <option  value="کۆمپانیا">کۆمپانیا</option>
+                        <option  value="کڕیار">کڕیار</option>
+                    </select>
+                </div> 
+            
+    <button type="submit" name="add" class="btn btn-info btn-block">زیادکردنی شۆفێر</button>
+  </form>
+      </div>
+      </div>
+       </div>
+  </div>
+  </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
-  <script src="../assets/js/core/alert.js"></script>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.3"></script>
-  <script src="../assets/js/printthis.js"></script>
-
-   
+  <script type="text/javascript">
+function printpage()
+  {
+  window.print()
+  }
 </script>
-        <script>
-      $(document).ready(function() {
-          var table = $('#example').DataTable( {
-          } );
-       
-          $('input[type="search"]').addClass("search-input");
-
-      } );
-
-      $('#client').click(function() {
-        $('.client_name').removeClass("d-none");
-        $('.another').addClass("d-none");
-     });
-
-     $('#another').click(function() {
-        $('.another').removeClass("d-none");
-        $('.client_name').addClass("d-none");
-     });
-
-
-
- $('#print').click(function() {
-    window.print();
-});
-
-     </script>
-</body>
-</html>
-
-
-

@@ -1,19 +1,21 @@
 <?php require_once('header.php'); ?>
 
 <div class="container-fluid mt-4">
-<button onclick="window.history.back()" class="btn btn-sm btn-info shadow" >
+<a href="sale.php" class="btn btn-sm btn-info shadow" >
  <span class="fa fa-arrow-right"></span>
  گەڕانەوە
-  </button>
+  </a>
 </div>
 
+
+<?php if ($is_admin==1) {?>
 <div class="container d-flex justify-content-around mt-2 flex-wrap">
     <a data-toggle="modal" data-target="#add" style="font-size:16px" class="btn btn-success "><i
             class="fas fa-dollar-sign "></i> فرۆشتنی  عەلەف </a>
-    <div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن
-    </div>
+    <!-- <div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن
+    </div> -->
 </div>
-
+<?php } ?>
 
 
 
@@ -29,6 +31,7 @@
                             <th> جۆری عەلەف</th>
                             <th>ڕێژە (KG)</th>
                             <th>بڕ</th>
+                            <th>جۆری دراو</th>
                             <th> نرخی فرۆشتن </th>
                             <th> نرخی داشکاندن </th>
                             <th> نرخی واسڵکراو </th>
@@ -36,7 +39,8 @@
                             <th> نرخی ماوە </th>
                             <th>شۆفێر</th>
                             <th> بەروار </th>
-                            <th> Action </th>
+                            <th>تێبینی</th>
+                            <?php if ($is_admin==1) {?><th> Action </th><?php } ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,11 +60,27 @@ foreach ($sale_3alaf as $halaf) {
   $place = $halaf['place'];
   $discount = $halaf['discount'];
   $date = $halaf['date'];
+  $note = $halaf['note'];
   $unit = $halaf['unit'];
   $per=$halaf['percentage'];
 
   $getCustomer = getdata(" SELECT * FROM customer WHERE id='$customer_id' ");
   $customer_name = $getCustomer['name'];
+
+
+  $currency_type=$getCustomer['currency_type'];
+  if ($currency_type=='dinar') {
+    $currency_type='دینار';
+  }
+
+  if ($currency_type=='dollar') {
+    $currency_type='دۆلار';
+  }
+
+  if ($currency_type=='tman') {
+    $currency_type='تمەن';
+  }
+
 
   $getdriver = getdata(" SELECT * FROM drivers WHERE id='$driver_id' ");
   $driver_name = $getdriver['name'];
@@ -74,20 +94,29 @@ foreach ($sale_3alaf as $halaf) {
                             <td><?=$type;?></td>
                             <td><?=$per;?></td>
                             <td><?=$num;?>  <?=$unit;?></td>
+                            <td><?=$currency_type;?></td>
                             <td><?=$cost_t;?></td>
                             <td><?=$discount;?></td>
                             <td><?=$cost_wasl;?></td>
                             <td><?=$cost_co;?></td>
                             <td><?=$cost_mawa;?></td>
-                            <td class="driver-info"> <span><?=$driver_name?></span> <br> <?=$driver_car_number?> <br> <?=$driver_phone?></td>
+                            <td class="driver-info">
+                            <a data-toggle="modal" data-target="#driver<?=$driver_id?>" style="font-size:13px" class="btn btn-secondary "><i
+                           class="fas fa-car-side "></i> زیادکردنی کار</a>  <br>
+                                 <span><?=$driver_name?></span> <br> <?=$driver_car_number?> <br> <?=$driver_phone?>
+                                </td>
                             <td><?=$date;?></td>
+                            <td style="max-width:220px;width:220px;overflow:hidden;word-wrap: break-word;overflow-wrap: break-word;white-space: pre-wrap;"><?=$note;?></td>
+                            <?php if ($is_admin==1) {?>
                             <td>
+                                
                                 <i class="fa fa-trash s-20 cursor" data-toggle="modal"
                                     data-target="#delete<?php echo $halaf['id'] ?>"></i>
                                 <i class="fa fa-edit s-20 cursor" data-toggle="modal"
                                     data-target="#edit<?php echo $halaf['id'] ?>"></i>
                                 <!-- <i class="fa fa-print cursor s-20" data-toggle="modal" data-target="#print" ></i>            -->
                             </td>
+                            <?php } ?>
                         </tr>
 
                         <!-- delete modal -->
@@ -235,11 +264,10 @@ foreach ($sale_3alaf as $halaf) {
                                                     class="form-control col-md-10 mx-auto" name="discount" required="">
                                             </div>
 
-                                            <label> بەروار</label>
-                                            <div class="form-group">
-                                                <input type="date" value="<?=$date?>"
-                                                    class="form-control col-md-10 mx-auto" name="date" required="">
-                                            </div>
+                                        <label>تێبینی</label>
+                                        <div class="form-group">
+                                            <textarea id="my-textarea" class="form-control" name="note" rows="4"><?=$note?></textarea>
+                                        </div>
 
                                                             
 
@@ -258,7 +286,86 @@ foreach ($sale_3alaf as $halaf) {
                         </div>
 
 
-                        <?php
+
+                    
+                
+<!--  add work to driver -->
+
+<div class="modal fade" id="driver<?=$driver_id?>"> tabindex="-1"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+      <div class="modal-content" style="background-color: white;border-radius: 15px;">
+        <div class="modal-body text-right">
+         <div class="container-fluid">
+  <div class="row row-cols-1 row-cols-md-3">
+    <div class="col-md-12 mb-3 mx-auto">
+      <div class="h-100">
+        <i class="fa fa-times-circle" style="float:left;color: black"  data-dismiss="modal"></i>
+        <div class="card-body">
+          <h5 class="mt-3  text-center">
+          زیادکردنی کار بۆ شۆفێر
+        </h5>
+        <br>
+        <form method="POST">
+
+        <div class="form-group">
+              <input type="hidden" placeholder="ID " name="id" value="<?=$driver_id;?> " class="form-control col-md-10 mx-auto">
+            </div> 
+
+                <label>ناونیشانی هێنانی بار</label>
+                <div class="form-group">
+                <input type="text" placeholder="" name="from"  class="form-control col-md-10 mx-auto">
+                </div> 
+
+                <label>ناونیشانی گەشتنی بار</label>
+                <div class="form-group">
+                <input type="text" placeholder="" name="to"  class="form-control col-md-10 mx-auto">
+                </div> 
+
+                <label>ماوەی گەشتن بە کات</label>
+                <div class="form-group">
+                <input type="number"  name="time"  class="form-control col-md-10 mx-auto">
+                </div>
+                
+                <label>نرخی بار</label>
+                <div class="form-group">
+                <input type="number" placeholder="" name="price"  class="form-control col-md-10 mx-auto">
+                </div> 
+
+                <label>پارەدانەکە لەسەر کێبووە</label>
+                <div class="form-group">
+                    <select name="money_owner"  class="form-control col-md-10 mx-auto">
+                        <option value="کۆمپانیا">کۆمپانیا</option>
+                        <option value="ستاف">ستاف</option>ستاف
+                        <option value="شۆفێر">شۆفێر</option>
+                        <option value="داواکار">داواکار</option>
+                    </select>
+                </div> 
+
+                <label>تێبینی</label>
+                <div class="form-group">
+                <textarea id="my-textarea" class="form-control" name="note" rows="4"></textarea>
+                </div> 
+
+
+    <center>
+      <button type="submit" name="work" class="btn btn-info btn-block" style="background-color:#7868E6 !important;">زیادکردنی کار بۆ شۆفێر</button>
+    </center>
+
+    </form>
+      </div>
+      </div>
+       </div>
+  </div>
+  </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+<?php
 }
 ?>
                     </tbody>
@@ -376,9 +483,8 @@ foreach ($sale_3alaf as $halaf) {
 
 
                                             <div class="form-group">
-                                                <input type="date" placeholder="  بەروار  "
-                                                    class="form-control col-md-10 mx-auto" name="date" required="">
-                                            </div>
+                                          <textarea id="my-textarea" placeholder="تێبینی بنووسە" class="form-control" name="note" rows="4"></textarea>
+                                          </div>
 
                                             <br>
                                             <button type="submit" name="add"
@@ -434,7 +540,7 @@ if (post('edit')) {
     $type = secure($_POST['type']);
     $place = secure($_POST['place']);
     $cost_wasl = secure($_POST['cost_wasl']);
-    $date = secure($_POST['date']);
+    $note = secure($_POST['note']);
     $discount = secure($_POST['discount']);
     $unit = secure($_POST['unit']);
     $percentage = secure($_POST['percentage']);
@@ -456,7 +562,7 @@ if($num > ($remainqty+$oldnum)) {
     msg('ئاگاداربە !','ئەوەندە بڕ لەم کاڵەیە بەردەست نیە ','warning');
 }
 else {
-$sql=execute("UPDATE  `sale` SET `customer_id`='$customer_id',`num`='$num',`cost_t`='$cost_t',`cost_co`='$cost_co',`type`='$type',`place`='$place',`cost_wasl`='$cost_wasl',`date`='$date',`discount`='$discount',`unit`='$unit',`percentage`='$percentage',`driver_id`='$driver_id'  WHERE id='$id' ");
+$sql=execute("UPDATE  `sale` SET `customer_id`='$customer_id',`num`='$num',`cost_t`='$cost_t',`cost_co`='$cost_co',`type`='$type',`place`='$place',`cost_wasl`='$cost_wasl',`note`='$note',`discount`='$discount',`unit`='$unit',`percentage`='$percentage',`driver_id`='$driver_id'  WHERE id='$id' ");
 $_SESSION["edit_success"] = "";
 direct('sale_3alaf.php');
 }
@@ -469,6 +575,25 @@ if (post('del')) {
     direct('sale_3alaf.php');
 }
 
+
+
+//   add work to driver
+if (post('work')) {
+    $id = secure($_POST['id']);
+    $from = secure($_POST['from']);
+    $to = secure($_POST['to']);
+    $time = secure($_POST['time']);
+    $price = secure($_POST['price']);
+    $money_owner = secure($_POST['money_owner']);
+    $note = secure($_POST['note']);
+  
+  
+    $sql = execute("INSERT INTO `driver_work` (`from`,`to`,`time`,`price`,`money_owner`,`note`,`driver_id`) VALUES('$from','$to','$time','$price','$money_owner','$note','$id')");
+    $_SESSION["add_success"] = "";
+    $loc="view_driver.php?driver_id=".$driver_id;
+    direct($loc);
+  
+  }
 
 
 // add
@@ -485,7 +610,8 @@ if (post('add')) {
     $unit = secure($_POST['unit']);
     $place = secure($_POST['place']);
     $cost_wasl = secure($_POST['cost_wasl']);
-    $date = secure($_POST['date']);
+    $note = secure($_POST['note']);
+    $date=date("Y-m-d");
     $discount = secure($_POST['discount']);
     $percentage = secure($_POST['percentage']);
 
@@ -506,7 +632,7 @@ if($num > $remainqty) {
     msg('ئاگاداربە !','ئەوەندە بڕ لەم کاڵەیە بەردەست نیە ','warning');
 }
 else {
-$sql=execute("INSERT INTO `sale` (`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`place`,`percentage`,`driver_id`,`sale_type`,`status`) VALUES('$customer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','عەلەف','$place','$percentage','$driver_id','3alaf','1') ");
+$sql=execute("INSERT INTO `sale` (`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`place`,`percentage`,`driver_id`,`sale_type`,`status`,`note`) VALUES('$customer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','عەلەف','$place','$percentage','$driver_id','3alaf','1','$note') ");
 $_SESSION["add_success"] = "";
 direct('sale_3alaf.php');
 }

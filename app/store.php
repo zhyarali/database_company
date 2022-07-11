@@ -10,8 +10,8 @@
 </div>
 
 <div class="container d-flex justify-content-around mt-2 flex-wrap">
-  <div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن
-  </div>
+  <!-- <div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن
+  </div> -->
 </div>
 
 

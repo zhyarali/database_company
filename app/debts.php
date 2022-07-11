@@ -1,8 +1,12 @@
 <?php require_once('header.php'); ?>
 
 <div class="container d-flex justify-content-around mt-5 flex-wrap">
+<a href="expire_debt.php" style="font-size:16px"  class="btn btn-dark " > قەرزە بەسەرچووەکان</a>
+<?php if ($is_admin==1) {?>
 <a data-toggle="modal" data-target="#add_debt" style="font-size:16px"  class="btn btn-success " ><i class="fas fa-dollar-sign "></i>  زیادکردنی قەرز</a>
-<div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن</div>
+<?php } ?>
+<a href="debt_company.php" style="font-size:16px"  class="btn btn-secondary " >قەرزی کۆمپانیا</a>
+
 </div>
 
 
@@ -37,7 +41,7 @@
                     <th scope="col">بڕی گێڕاوە</th>
                     <th scope="col">بڕی ماوە</th>
                     <th scope="col"> بەروار تەواوبوون</th>
-                    <th scope="col">Action</th>
+                    <?php if ($is_admin==1) {?> <th scope="col">Action</th><?php } ?>
                 </tr>
             </thead>
             <tbody>
@@ -71,13 +75,14 @@
                     <td><?=$gerawa?></td>
                     <td><?=$mawa?></td>
                     <td><?=$date_debt_end?></td>
+                    <?php if ($is_admin==1) {?>
                     <td>
                         <i class="fa fa-edit  s-20 cursor" style="color:#14cd7c" data-toggle="modal"
                             data-target="#edit<?php echo $debt['id_debt'] ?>"></i>
                         <i class="fa fa-trash text-dark s-20 cursor" data-toggle="modal"
                             data-target="#del<?php echo $debt['id_debt'] ?>"></i>
                     </td>
-
+                    <?php } ?>
                 </tr>
 
                 <!-- edit modal -->

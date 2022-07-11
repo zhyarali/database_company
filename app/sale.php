@@ -64,7 +64,7 @@
       </div>
 </a>
     </div>
-
+<!-- 
     <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">
     <a href="sale_panal.php"> 
       <div class="bg-cards border-radius-lg h-100">
@@ -73,15 +73,16 @@
         </div>
       </div>
 </a>
-    </div>
+    </div> -->
 
   </div>
 </div>
 
+<?php if ($is_admin==1) {?>
 <div class="container-fluid d-flex justify-content-around mt-5 flex-wrap">
 <a href="customer.php"  style="font-size:16px" class="btn btn-success "><i
             class="fas fa-user-plus "></i> زیادکردنی  کڕیار</a>
 </div>
-
+<?php } ?>
 
 <?php require_once('footer.php'); ?>

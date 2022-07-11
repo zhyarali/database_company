@@ -2,20 +2,20 @@
 
 
 <div class="container-fluid mt-4">
-<button onclick="window.history.back()" class="btn btn-sm btn-info shadow" >
- <span class="fa fa-arrow-right"></span>
+<a href="buy.php" class="btn btn-sm btn-info shadow" >
+ <span class="fa fa-arsrow-right"></span>
  گەڕانەوە
-  </button>
+  </a>
 </div>
 
-
+<?php if ($is_admin==1) {?>
 <div class="container d-flex justify-content-around mt-2 flex-wrap">
     <a data-toggle="modal" data-target="#add" style="font-size:16px" class="btn btn-success "><i
             class="fas fa-dollar-sign "></i> زیادکردنی ئەشیای قاعە</a>
-    <div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن
-    </div>
+    <!-- <div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن
+    </div> -->
 </div>
-
+<?php } ?>
 
 
 
@@ -23,7 +23,7 @@
     <div class="row m-auto">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table id="example" class="table  table-striped table-bordered  text-center" dir="rtl" style="zoom:85%">
+                <table id="example" class="table  table-striped table-bordered  text-center" dir="rtl" style="zoom:80%">
                     <thead style="background-color: #0a0327;color: white">
                         <tr>
                             <th> ناوی فرۆشیار</th>
@@ -37,8 +37,10 @@
                             <th> نرخی گشتی </th>
                             <th> نرخی ماوە </th>
                             <th> نرخی فرۆشتن </th>
+                            <th>جۆری دراو</th>
                             <th> بەروار </th>
-                            <th> Action </th>
+                            <th>تێبینی</th>
+                            <?php if ($is_admin==1) {?><th> Action </th><?php } ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,9 +61,23 @@ foreach ($buy_qa3a as $qa3a) {
   $discount = $qa3a['discount'];
   $date = $qa3a['date'];
   $unit = $qa3a['unit'];
+  $note = $qa3a['note'];
+
 
   $getdealer = getdata(" SELECT * FROM dealers WHERE id='$dealer_id' ");
   $dealer_name = $getdealer['name'];
+  $currency_type = $getdealer['currency_type'];
+  if ($currency_type=='dinar') {
+    $currency_type='دینار';
+  }
+
+  if ($currency_type=='dollar') {
+    $currency_type='دۆلار';
+  }
+
+  if ($currency_type=='tman') {
+    $currency_type='تمەن';
+  }
 
 ?>
                         <tr>
@@ -76,7 +92,10 @@ foreach ($buy_qa3a as $qa3a) {
                             <td><?=$cost_co;?></td>
                             <td><?=$cost_mawa;?></td>
                             <td><?=$cost_froshtn;?></td>
+                            <td><?=$currency_type;?></td>
                             <td><?=$date;?></td>
+                            <td style="max-width:240px;width:240px;overflow:hidden;word-wrap: break-word;overflow-wrap: break-word;white-space: pre-wrap;"><?=$note;?></td>
+                            <?php if ($is_admin==1) {?>
                             <td>
                                 <i class="fa fa-trash s-20 cursor" data-toggle="modal"
                                     data-target="#delete<?php echo $qa3a['id'] ?>"></i>
@@ -84,6 +103,7 @@ foreach ($buy_qa3a as $qa3a) {
                                     data-target="#edit<?php echo $qa3a['id'] ?>"></i>
                                 <!-- <i class="fa fa-print cursor s-20" data-toggle="modal" data-target="#print" ></i>            -->
                             </td>
+                            <?php } ?>
                         </tr>
 
                         <!-- delete modal -->
@@ -225,11 +245,11 @@ foreach ($buy_qa3a as $qa3a) {
                                                     class="form-control col-md-10 mx-auto" name="discount" required="">
                                             </div>
 
-                                            <label> بەروار</label>
-                                            <div class="form-group">
-                                                <input type="date" value="<?=$date?>"
-                                                    class="form-control col-md-10 mx-auto" name="date" required="">
-                                            </div>
+                                              
+                    <label>تێبینی</label>
+                  <div class="form-group">
+                    <textarea id="my-textarea" class="form-control" name="note" rows="4"><?=$note?></textarea>
+                  </div>  
 
                                                             
 
@@ -356,9 +376,8 @@ foreach ($buy_qa3a as $qa3a) {
 
 
                                             <div class="form-group">
-                                                <input type="date" placeholder="  بەروار  "
-                                                    class="form-control col-md-10 mx-auto" name="date" required="">
-                                            </div>
+                                                <textarea id="my-textarea" placeholder="تێبینی بنووسە" class="form-control" name="note" rows="4"></textarea>
+                                             </div>
 
                                             <br>
                                             <button type="submit" name="add"
@@ -414,7 +433,7 @@ if (post('edit')) {
   $place = secure($_POST['place']);
   $cost_wasl = secure($_POST['cost_wasl']);
   $cost_fr = secure($_POST['cost_fr']);
-  $date = secure($_POST['date']);
+  $note = secure($_POST['note']);
   $discount = secure($_POST['discount']);
   $unit = secure($_POST['unit']);
 
@@ -423,7 +442,7 @@ if (post('edit')) {
 
    $cost_mawa =$cost_co-$cost_wasl;
 
-  $sql=execute("UPDATE  `buy` SET `dealer_id`='$dealer_id',`name_product`='$name_product',`num`='$num',`cost_t`='$cost_t',`cost_co`='$cost_co',`type`='$type',`place`='$place',`cost_wasl`='$cost_wasl',`cost_fr`='$cost_fr',`date`='$date',`discount`='$discount',`unit`='$unit'  WHERE id='$id' ");
+  $sql=execute("UPDATE  `buy` SET `dealer_id`='$dealer_id',`name_product`='$name_product',`num`='$num',`cost_t`='$cost_t',`cost_co`='$cost_co',`type`='$type',`place`='$place',`cost_wasl`='$cost_wasl',`cost_fr`='$cost_fr',`note`='$note',`discount`='$discount',`unit`='$unit'  WHERE id='$id' ");
   $_SESSION["edit_success"] = "";
   direct('buy_qa3a.php');
 
@@ -450,15 +469,16 @@ if (post('add')) {
     $place = secure($_POST['place']);
     $cost_wasl = secure($_POST['cost_wasl']);
     $cost_fr = secure($_POST['cost_fr']);
-    $date = secure($_POST['date']);
+    $note = secure($_POST['note']);
     $discount = secure($_POST['discount']);
+    $date=date('Y-m-d');
 
      $cost_co = $cost_t*$num;
      $cost_co=$cost_co - $discount;
 
  
 
-    $sql=execute("INSERT INTO `buy` (`dealer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`cost_fr`,`discount`,`unit`,`name_product`,`place`,`buy_type`,`status`) VALUES('$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$cost_fr','$discount','$unit','$name_product','$place','qa3a','1') ");
+    $sql=execute("INSERT INTO `buy` (`dealer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`cost_fr`,`discount`,`unit`,`name_product`,`place`,`buy_type`,`status`,`note`) VALUES('$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$cost_fr','$discount','$unit','$name_product','$place','qa3a','1','$note') ");
     $_SESSION["add_success"] = "";
     direct('buy_qa3a.php');
 }

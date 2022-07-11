@@ -2,17 +2,18 @@
 
 
 <div class="container-fluid mt-4">
-<button onclick="window.history.back()" class="btn btn-sm btn-info shadow" >
+<a href="return_sale.php" class="btn btn-sm btn-info shadow" >
  <span class="fa fa-arrow-right"></span>
  گەڕانەوە
-  </button>
+  </a>
 </div>
 
+<?php if ($is_admin==1) {?>
 <div class="container d-flex justify-content-around mt-2 flex-wrap">
-<a data-toggle="modal" data-target="#add" style="font-size:16px"  class="btn btn-success " ><i class="fas fa-dollar-sign "></i> گەڕاندنەوەی فرۆشتنی هێلکە </a>
-<div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن</div>
+<a data-toggle="modal" data-target="#add" style="font-size:16px"  class="btn btn-success " ><i class="fas fa-dollar-sign "></i> گەڕانەوەی فرۆشتنی هێلکە</a>
+<!-- <div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن</div> -->
 </div>
-
+<?php } ?>
 
 
 
@@ -32,8 +33,10 @@
                 <th> نرخی واسڵکراو    </th>
                 <th> نرخی ماوە    </th>
                 <th> نرخی گشتی      </th>
+                <th>جۆری دراو</th>
                 <th> بەروار    </th>
-                <th> Action      </th>
+                <th>تێبینی</th>
+                <?php if ($is_admin==1) {?><th> Action</th><?php } ?>
             </tr>
         </thead>
         <tbody>
@@ -42,6 +45,7 @@ $buy_helka = show(" SELECT * FROM sale WHERE sale_type='helka' AND `status`='-1'
 foreach ($buy_helka as $helka) {
   $id = $helka['id'];
   $customer_id = $helka['customer_id'];
+  $name_product = $helka['name_product'];
   $num = $helka['num'];
   $cost_t = $helka['cost_t'];
   $cost_co = $helka['cost_co'];
@@ -51,8 +55,22 @@ foreach ($buy_helka as $helka) {
   $cost_mawa = $cost_co-$cost_wasl;
   $discount = $helka['discount'];
   $date = $helka['date'];
+  $note = $helka['note'];
   $getcustomer = getdata(" SELECT * FROM customer WHERE id='$customer_id' ");
   $customer_name = $getcustomer['name'];
+
+  $currency_type=$getcustomer['currency_type'];
+  if ($currency_type=='dinar') {
+    $currency_type='دینار';
+  }
+
+  if ($currency_type=='dollar') {
+    $currency_type='دۆلار';
+  }
+
+  if ($currency_type=='tman') {
+    $currency_type='تمەن';
+  }
   
 ?>
 
@@ -65,12 +83,16 @@ foreach ($buy_helka as $helka) {
         <td><?=$cost_wasl;?></td>
         <td><?=$cost_mawa;?></td>
         <td><?=$cost_co;?></td>
+        <td><?=$currency_type;?></td>
         <td><?=$date;?></td>
+        <td style="max-width:220px;width:220px;overflow:hidden;word-wrap: break-word;overflow-wrap: break-word;white-space: pre-wrap;"><?=$note;?></td>
+        <?php if ($is_admin==1) {?>
         <td>
         <i class="fa fa-trash s-20 cursor" data-toggle="modal" data-target="#delete<?php echo $helka['id'] ?>"></i>        
         <i class="fa fa-edit s-20 cursor" data-toggle="modal" data-target="#edit<?php echo $helka['id'] ?>" ></i>        
         <!-- <i class="fa fa-print s-20 cursor" data-toggle="modal" data-target="#print" ></i>            -->
         </td>
+        <?php } ?>
       </tr>
       
 <!-- delete modal -->
@@ -145,6 +167,10 @@ foreach ($buy_helka as $helka) {
                         name="type" required="">
                     </div>
 
+
+                    <input name="name_product" type="hidden" value="<?=$name_product;?>" required>
+
+
                     <div class="form-group">
                       <select name="unit"  class="form-control col-md-10 mx-auto">
                           <option value="دانە">دانە</option>
@@ -177,13 +203,12 @@ foreach ($buy_helka as $helka) {
                     </div>
 
                    
-                    <label>بەروار</label>
-                    <div class="form-group">
-                      <input type="date" value="<?=$date?>" class="form-control col-md-10 mx-auto" name="date"
-                        required="">
-                    </div>
+                    <label>تێبینی</label>
+                  <div class="form-group">
+                    <textarea id="my-textarea" class="form-control" name="note" rows="4"><?=$note?></textarea>
+                  </div>
               
-    <button type="submit" name="edit" class="btn btn-dark btn-block">  نوێکردنەوەی گەڕاندنەوەی فرۆشتن  </button>
+    <button type="submit" name="edit" class="btn btn-dark btn-block">  نوێکردنەوەی فرۆشتن  </button>
   </form>
       </div>
       </div>
@@ -226,7 +251,7 @@ foreach ($buy_helka as $helka) {
                 <i class="fa fa-times-circle" style="float:left;color: black" data-dismiss="modal"></i>
                 <div class="card-body">
                   <h5 class="container col-md-6 mt-3  text-center">
-                    زیادکردنی گەڕاوەی فرۆشتنی هێلکە
+                    زیادکردنی گەڕانەوەی فرۆشتنی هێلکە
                   </h5>
                   <br>
                   <form class="mt-5" dir="rtl" method="POST" enctype="multipart/form-data">
@@ -247,6 +272,9 @@ foreach ($buy_helka as $helka) {
                       <input type="text" placeholder="   جۆری هێلکە  " class="form-control col-md-10 mx-auto"
                         name="type" required="">
                     </div>
+
+                    <input name="name_product" type="hidden" value="هێلکە" required>
+
 
                     <div class="form-group">
                       <select name="unit"  class="form-control col-md-10 mx-auto">
@@ -278,14 +306,14 @@ foreach ($buy_helka as $helka) {
                     </div>
 
                     <div class="form-group">
-                      <input type="date" placeholder="  بەروار  " class="form-control col-md-10 mx-auto" name="date"
-                        required="">
-                    </div>
+                        <textarea id="my-textarea" placeholder="تێبینی بنووسە" class="form-control" name="note" rows="4"></textarea>
+                      </div>
+                  
 
                     <br>
                     <button type="submit" name="add" class="btn btn-success btn-block btn-sm s-20">
                       <i class="fal fa-plus s-20"></i>
-                     گەڕاندنەوەی فرۆشتن </button>
+                     گەڕانەوەی فرۆشتن </button>
                   </form>
                 </div>
               </div>
@@ -328,22 +356,38 @@ foreach ($buy_helka as $helka) {
 if (post('edit')) {
   $id = secure($_POST['id']);
   $customer_id = secure($_POST['customer_id']);
+  $name_product = secure($_POST['name_product']);
   $type = secure($_POST['type']);
   $num = secure($_POST['num']);
   $cost_t = secure($_POST['cost_t']);
-  $date = secure($_POST['date']);
+  $note = secure($_POST['note']);
   $cost_wasl = secure($_POST['cost_wasl']);
-  $cost_fr = secure($_POST['cost_fr']);
   $discount = secure($_POST['discount']);
   $unit = secure($_POST['unit']); 
 
    $cost_co = $cost_t*$num;
    $cost_co=$cost_co-$discount;
 
-  $sql=execute("UPDATE `sale` SET `customer_id`='$customer_id',`cost_t`='$cost_t',`cost_co`='$cost_co',`num`='$num',`type`='$type',`cost_wasl`='$cost_wasl',`date`='$date',`discount`='$discount' ,`unit`='$unit' WHERE `id`='$id' ");
+   $getoldqty = getdata(" SELECT * FROM  sale WHERE id='$id' ");
+   $oldnum = $getoldqty['num'];
+   
+        $gettotalbuy = show("  SELECT sum(num) as 'totalbuy' FROM  buy WHERE name_product='$name_product' AND type='$type' AND  `status`='1' ");
+        $totalbuy = $gettotalbuy[0]['totalbuy']; 
+      
+        $gettotalsale = show("  SELECT sum(num) as 'totalsale' FROM  sale WHERE name_product='$name_product' AND type='$type' AND `status`='1' ");
+        $totalsale = $gettotalsale[0]['totalsale']; 
+        $remainqty = $totalbuy-$totalsale;
+   // zhika lussssssssssssssss
+   if($num > ($remainqty+$oldnum)) {
+   msg('ئاگاداربە !','ئەوەندە بڕ لەم کاڵەیە بەردەست نیە ','warning');
+   }
+   else {
+
+  $sql=execute("UPDATE `sale` SET `customer_id`='$customer_id',`cost_t`='$cost_t',`cost_co`='$cost_co',`num`='$num',`type`='$type',`cost_wasl`='$cost_wasl',`note`='$note',`discount`='$discount' ,`unit`='$unit' WHERE `id`='$id' ");
     $_SESSION["edit_success"] = "";
     direct('return_sale_helka.php');
 
+}
 }
 
 if (post('del')) {
@@ -359,22 +403,35 @@ if (post('del')) {
 
 if (post('add')) {
     $customer_id = secure($_POST['customer_id']);
+    $name_product = secure($_POST['name_product']);
     $type = secure($_POST['type']);
     $num = secure($_POST['num']);
     $cost_t = secure($_POST['cost_t']);
-    $date = secure($_POST['date']);
+    $note = secure($_POST['note']);
+    $date=date("Y-m-d");
     $cost_wasl = secure($_POST['cost_wasl']);
-    $cost_fr = secure($_POST['cost_fr']);
     $discount = secure($_POST['discount']);
     $unit = secure($_POST['unit']); 
 
      $cost_co = $cost_t*$num;
      $cost_co=$cost_co-$discount;
 
+     $gettotalbuy = show("  SELECT sum(num) as 'totalbuy' FROM  buy WHERE name_product='$name_product' AND type='$type' AND  `status`='1' ");
+     $totalbuy = $gettotalbuy[0]['totalbuy']; 
+   
+     $gettotalsale = show("  SELECT sum(num) as 'totalsale' FROM  sale WHERE name_product='$name_product' AND type='$type' AND `status`='1' ");
+     $totalsale = $gettotalsale[0]['totalsale']; 
+     $remainqty = $totalbuy-$totalsale;
+// zhika lus
+if($num > $remainqty) {
+  msg('ئاگاداربە !','ئەوەندە بڕ لەم کاڵەیە بەردەست نیە ','warning');
+}
+else {
 
-    $sql=execute("INSERT INTO `sale` (`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`sale_type`,`status`) VALUES('$customer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','helka','-1') ");
+    $sql=execute("INSERT INTO `sale` (`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`sale_type`,`status`,`note`) VALUES('$customer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','هێلکە','helka','-1','$note') ");
     $_SESSION["add_success"] = "";
     direct('return_sale_helka.php');
+}
 }
 
 ?>

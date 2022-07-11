@@ -40,33 +40,50 @@ $xarjytotal = 0;
 }
 
 
-$income=$buytotal-$saletotal;
-$income=$income-$xarjytotal;
-$income=$income-$debttotal;
+// budget
 
-if ($income<0) {
-    $income=0;
+$budget_month=show("SELECT sum(budget_amount) as 'total' FROM budget 
+WHERE Date(date)=CURDATE() ");
+$monthlytotal = $sale[0]['total'];
+if ($monthlytotal==null) {
+$monthlytotal = 0;
 }
 
 
 // mwchay karmand
 
 $daily=show("SELECT sum(budget) as 'total' FROM work_daily 
-WHERE Date(date)>='$date1' AND Date(date)<='$date2' ");
+WHERE Date(date)>='$date1' AND Date(date)<='$date2' AND `work_for`='کۆمپانیا' ");
 $dailytotal = $daily[0]['total'];
 if ($dailytotal==null) {
 $dailytotal = 0;
 }
 
 $monthly=show("SELECT sum(budget_amount) as 'total' FROM budget 
-WHERE Date(date)>='$date1' AND Date(date)<='$date2' ");
+WHERE Date(date)>='$date1' AND Date(date)<='$date2' AND `work_for`='کۆمپانیا' ");
 $monthlytotal = $monthly[0]['total'];
 if ($monthlytotal==null) {
 $monthlytotal = 0;
 }
 
 
+
+
+
 $budget_all=$dailytotal+$monthlytotal;
+
+$income=$buytotal-$saletotal;
+$income=$income-$xarjytotal;
+$income=$income-$debttotal;
+$income=$income-$dailytotal;
+$income=$income-$monthlytotal; 
+
+if ($income<0) {
+    $income=0;
+}
+
+
+
 
 
 

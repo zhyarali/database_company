@@ -40,9 +40,29 @@ $xarjytotal = 0;
 }
 
 
+// budget
+
+$budget_month=show("SELECT sum(budget_amount) as 'total' FROM budget 
+WHERE Date(date)=CURDATE() ");
+$monthlytotal = $budget_month[0]['total'];
+if ($monthlytotal==null) {
+$monthlytotal = 0;
+}
+
+$budget_daily=show("SELECT sum(budget) as 'total' FROM work_daily 
+WHERE Date(date)=CURDATE() ");
+$dailytotal = $budget_daily[0]['total'];
+if ($dailytotal==null) {
+$dailytotal = 0;
+}
+
+
 $income=$buytotal-$saletotal;
 $income=$income-$xarjytotal;
 $income=$income-$debttotal;
+$income=$income-$dailytotal;
+$income=$income-$monthlytotal;
+
 
 if ($income<0) {
     $income=0;
@@ -58,6 +78,8 @@ if ($income<0) {
 
 
 <div class="container-fluid">
+
+
 
 <div class="row d-flex justify-content-center">
         <div class="col-xl-2 col-sm-6 mb-xl-0 mb-4">

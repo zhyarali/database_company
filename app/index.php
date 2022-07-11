@@ -233,6 +233,19 @@ if ($income<0) {
                   </div>
                   </a>
                 </div>
+
+                               
+                <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">
+                  <a href="staff.php">
+                  <div class="bg-cards border-radius-lg h-100">
+                    <i class="fal fa-users s-70 p-3"></i>
+                    <div class="position-relative  align-items-center justify-content-center h-80 mt-3">
+                       <h3 class="text-light btn btn-dark container s-14 col col-xl-8 col-8 col-md-8 p-1">ستاف</h3>
+                    </div>
+                  </div>
+                  </a>
+                </div>
+
                 <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">
                   <a href="report.php">
                   <div class="bg-cards border-radius-lg h-100">
@@ -253,6 +266,7 @@ if ($income<0) {
                   </div>
                   </a>
                 </div>
+                <?php if ($is_admin==1) {?>
                 <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">
                   <a href="backup.php">
                   <div class="bg-cards border-radius-lg h-100">
@@ -263,6 +277,9 @@ if ($income<0) {
                   </div>
                   </a>
                 </div>
+                <?php } ?>
+
+                <?php if ($is_admin==1) {?>
                 <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">
                   <a href="admin.php">
                   <div class="bg-cards border-radius-lg h-100">
@@ -273,6 +290,8 @@ if ($income<0) {
                   </div>
                   </a>
                 </div>
+                <?php } ?>
+
                 <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">
                   <a href="conv.php">
                   <div class="bg-cards border-radius-lg h-100">
@@ -283,6 +302,8 @@ if ($income<0) {
                   </div>
                   </a>
                 </div>
+
+                <?php if ($is_admin==1) {?>
                 <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">
                   <a href="settings.php">
                   <div class="bg-cards border-radius-lg h-100">
@@ -293,6 +314,8 @@ if ($income<0) {
                   </div>
                   </a>
                 </div>
+                <?php } ?>
+
                 <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">
                   <a href="comments.php">
                   <div class="bg-cards border-radius-lg h-100">
@@ -313,7 +336,7 @@ if ($income<0) {
                   </div>
                   </a>
                 </div>
-               
+
 
 
                 

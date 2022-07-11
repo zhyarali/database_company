@@ -18,6 +18,7 @@
             <tr>
                 <th>ناوی سیانی</th>
                 <th>   ژمارە مۆبایل  </th>
+                <th>تێبینی</th>
                 <th> Action </th>
             </tr>
         </thead>
@@ -28,17 +29,18 @@ foreach ($persons as $person) {
   $id = $person['id'];
   $name = $person['name'];
   $phone = $person['phone'];
+  $note = $person['note'];
 
 
 
 ?>
        <tr>
-        <td><?=$name;?></td>
+        <td><a href="spender.php?id=<?=$id?>"><?=$name;?></a></td>
         <td><?=$phone;?></td>
+        <td><?=$note;?></td>
         <td>
         <i class="fa fa-trash s-20 cursor" data-toggle="modal" data-target="#delete<?php echo $person['id'] ?>"></i>        
         <i class="fa fa-edit s-20 cursor" data-toggle="modal" data-target="#edit<?php echo $person['id'] ?>" ></i>        
-        <i class="fa fa-print s-20 cursor" onclick="window.print()" ></i>           
         </td>
       </tr>
       
@@ -105,7 +107,12 @@ foreach ($persons as $person) {
                 <div class="form-group">
                 <input type="text"  name="phone" value="<?=$phone;?>"  class="form-control col-md-10 mx-auto">
                 </div> 
-                 
+
+              <label>تێبینی</label>
+              <div class="form-group">
+                <textarea id="my-textarea" class="form-control" name="note" rows="4"><?=$note?></textarea>
+              </div>
+                  
             
     <button type="submit" name="edit" class="btn btn-info btn-block">  نوێکردنەوەی زانیارییەکان  </button>
   </form>
@@ -158,6 +165,12 @@ foreach ($persons as $person) {
                 <div class="form-group">
                 <input type="text"  name="phone"   class="form-control col-md-10 mx-auto">
                 </div> 
+
+
+                <label>تێبینی</label>
+              <div class="form-group">
+                <textarea id="my-textarea" class="form-control" name="note" rows="4"></textarea>
+              </div>
                  
             
                 
@@ -205,8 +218,9 @@ if (post('edit')) {
     $id = secure($_POST['id']);
     $name = secure($_POST['name']);
     $phone = secure($_POST['phone']);
+    $note = secure($_POST['note']);
 
-  $sql = execute("UPDATE `person` SET `name`='$name',`phone`='$phone' WHERE id = '$id'");
+  $sql = execute("UPDATE `person` SET `name`='$name',`phone`='$phone',`note`='$note' WHERE id = '$id'");
     $_SESSION["edit_success"] = "";
     header("Location: person.php");
 
@@ -223,9 +237,11 @@ if (post('del')) {
 if (post('add')) {
   $name = secure($_POST['name']);
   $phone = secure($_POST['phone']);
+  $note = secure($_POST['note']);
+
  
 
-  $sql = execute("INSERT INTO `person` (`name`,`phone`) VALUES('$name','$phone')");
+  $sql = execute("INSERT INTO `person` (`name`,`phone`,`note`) VALUES('$name','$phone','$note')");
     $_SESSION["add_success"] = "";
    direct('person.php');
 

@@ -35,7 +35,11 @@
        
           $('input[type="search"]').addClass("search-input");
 
+
       } );
+
+
+
 
       $('#client').click(function() {
         $('.client_name').removeClass("d-none");
@@ -47,8 +51,19 @@
         $('.client_name').addClass("d-none");
      });
 
-
      
+  $("#client_status").change(function() {
+        if ($("#client_monthly").is(":selected")) {
+         $("#daily_amount").addClass("d-none");
+         $("#budget_amount").removeClass("d-none");
+        }
+        else if ($("#client_daily").is(":selected")) {
+         $("#daily_amount").removeClass("d-none");
+         $("#budget_amount").addClass("d-none");
+        }
+  })
+
+
 
      </script>
 </body>

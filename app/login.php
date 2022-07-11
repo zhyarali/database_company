@@ -1,4 +1,7 @@
-<?php require_once('../server/helper.php'); ?>
+<?php require_once('../server/helper.php');
+session_start();
+ob_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,7 +26,7 @@
         
 </head> 
 <body class="bg-dark" >
-<div class="container card col-lg-3 col-10 col-xl-3 col-md-4" style="border-radius: 25px;margin-top: 7%">
+<div class="container card col-lg-3 col-10 col-xl-3 col-md-4" style="border-radius: 25px;margin-top:2%">
 <?php $select = show(" SELECT * FROM system ");
       foreach($select as $row) {
           $id = $row['id'];
@@ -65,7 +68,6 @@ $sql = " SELECT * FROM admin WHERE uname='$uname' AND pass='$password' ";
 $check = countdata($sql);
 if ($check > 0 ) {
 $get = getdata($sql);
-session_start();
 $id = $get['id'];
 $token = md5($password).uniqid().password_hash($password,PASSWORD_DEFAULT);
 $username = $get['username'];

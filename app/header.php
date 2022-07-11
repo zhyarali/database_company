@@ -9,12 +9,14 @@ if (isset($_SESSION['adm_id']) && isset($_SESSION['adm_token'])) {
   else {
   $token ='';
   $user_id = '';
-  }
+  header('location:login.php');
+}
   $check = countdata(" SELECT * FROM user_tokens WHERE user_id='$user_id' AND token='$token'  ");
   if($check > 0 ) {
   $getuser = getdata(" SELECT * FROM admin WHERE id='$user_id'  ");
   $uname = $getuser['uname'];
   $username = $getuser['name'];
+  $is_admin = $getuser['type'];
   }
   else {
   execute(" DELETE FROM user_tokens WHERE id='$user_id' ");

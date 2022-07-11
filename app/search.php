@@ -10,6 +10,10 @@ if (isset($_POST["query"])) {
 $search=secure($_POST['query']);
 
 $store = show(" SELECT name_product,buy_type,cost_t,cost_fr,type,date FROM buy WHERE  `status`='1' AND type LIKE '%".$search."%' OR name_product LIKE '%".$search."%' GROUP BY type,name_product; ");
+if ($store==null) {
+    echo "هیچ زانیارییەک نەدۆزرایەوە ..!";
+}
+
 foreach ($store as $all) {
   $cost_t = $all['cost_t'];
   $cost_froshtn = $all['cost_fr'];
@@ -116,6 +120,8 @@ else
 echo $output;
 }
 ?>    
+
+
 
 
 

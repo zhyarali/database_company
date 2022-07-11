@@ -2,18 +2,22 @@
 
 
 <div class="container-fluid mt-4">
-<button onclick="window.history.back()" class="btn btn-sm btn-info shadow" >
+<a href="sale.php" class="btn btn-sm btn-info shadow" >
  <span class="fa fa-arrow-right"></span>
  گەڕانەوە
-  </button>
+  </a>
 </div>
 
 
 <div class="container d-flex justify-content-around mt-2 flex-wrap">
+<?php if ($is_admin==1) {?>
     <a data-toggle="modal" data-target="#add" style="font-size:16px" class="btn btn-success "><i
             class="fas fa-dollar-sign "></i> فرۆشتنی ئەشیای قاعە</a>
-    <div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن
-    </div>
+<?php } ?>
+            <a href="sale_meter.php" style="font-size:16px;background:#7868E6 !important;" class="btn btn-danger"> فرۆشتن  بەمەتر</a>
+
+    <!-- <div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن
+    </div> -->
 </div>
 
 
@@ -36,8 +40,10 @@
                             <th> نرخی واسڵکراو </th>
                             <th> نرخی گشتی </th>
                             <th> نرخی ماوە </th>
+                            <th>جۆری دراو</th>
                             <th> بەروار </th>
-                            <th> Action </th>
+                            <th>تێبینی</th>
+                            <?php if ($is_admin==1) {?>  <th> Action </th><?php } ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,9 +63,23 @@ foreach ($sale_qa3a as $qa3a) {
   $discount = $qa3a['discount'];
   $date = $qa3a['date'];
   $unit = $qa3a['unit'];
+  $note = $qa3a['note'];
 
   $getCustomer = getdata(" SELECT * FROM customer WHERE id='$customer_id' ");
   $customer_name = $getCustomer['name'];
+
+  $currency_type=$getCustomer['currency_type'];
+  if ($currency_type=='dinar') {
+    $currency_type='دینار';
+  }
+
+  if ($currency_type=='dollar') {
+    $currency_type='دۆلار';
+  }
+
+  if ($currency_type=='tman') {
+    $currency_type='تمەن';
+  }
 
 ?>
                         <tr>
@@ -73,7 +93,10 @@ foreach ($sale_qa3a as $qa3a) {
                             <td><?=$cost_wasl;?></td>
                             <td><?=$cost_co;?></td>
                             <td><?=$cost_mawa;?></td>
+                            <td><?=$currency_type;?></td>
                             <td><?=$date;?></td>
+                            <td style="max-width:220px;width:220px;overflow:hidden;word-wrap: break-word;overflow-wrap: break-word;white-space: pre-wrap;"><?=$note;?></td>
+                            <?php if ($is_admin==1) {?>
                             <td>
                                 <i class="fa fa-trash s-20 cursor" data-toggle="modal"
                                     data-target="#delete<?php echo $qa3a['id'] ?>"></i>
@@ -81,6 +104,7 @@ foreach ($sale_qa3a as $qa3a) {
                                     data-target="#edit<?php echo $qa3a['id'] ?>"></i>
                                 <!-- <i class="fa fa-print cursor s-20" data-toggle="modal" data-target="#print" ></i>            -->
                             </td>
+                            <?php } ?>
                         </tr>
 
                         <!-- delete modal -->
@@ -218,10 +242,9 @@ foreach ($sale_qa3a as $qa3a) {
                                                     class="form-control col-md-10 mx-auto" name="discount" required="">
                                             </div>
 
-                                            <label> بەروار</label>
+                                            <label>تێبینی</label>
                                             <div class="form-group">
-                                                <input type="date" value="<?=$date?>"
-                                                    class="form-control col-md-10 mx-auto" name="date" required="">
+                                                <textarea id="my-textarea" class="form-control" name="note" rows="4"><?=$note?></textarea>
                                             </div>
 
                                                             
@@ -344,8 +367,7 @@ foreach ($sale_qa3a as $qa3a) {
 
 
                                             <div class="form-group">
-                                                <input type="date" placeholder="  بەروار  "
-                                                    class="form-control col-md-10 mx-auto" name="date" required="">
+                                           <textarea id="my-textarea" placeholder="تێبینی بنووسە" class="form-control" name="note" rows="4"></textarea>
                                             </div>
 
                                             <br>
@@ -400,7 +422,7 @@ if (post('edit')) {
   $type = secure($_POST['type']);
   $place = secure($_POST['place']);
   $cost_wasl = secure($_POST['cost_wasl']);
-  $date = secure($_POST['date']);
+  $note = secure($_POST['note']);
   $discount = secure($_POST['discount']);
   $unit = secure($_POST['unit']);
   $cost_co = $cost_t*$num;
@@ -420,7 +442,7 @@ if($num > ($remainqty+$oldnum)) {
 }
 else {
 
-  $sql=execute("UPDATE  `sale` SET `customer_id`='$customer_id',`name_product`='$name_product',`num`='$num',`cost_t`='$cost_t',`cost_co`='$cost_co',`type`='$type',`place`='$place',`cost_wasl`='$cost_wasl',`date`='$date',`discount`='$discount',`unit`='$unit'  WHERE id='$id' ");
+  $sql=execute("UPDATE  `sale` SET `customer_id`='$customer_id',`name_product`='$name_product',`num`='$num',`cost_t`='$cost_t',`cost_co`='$cost_co',`type`='$type',`place`='$place',`cost_wasl`='$cost_wasl',`note`='$note',`discount`='$discount',`unit`='$unit'  WHERE id='$id' ");
   $_SESSION["edit_success"] = "";
   direct('sale_qa3a.php');
 
@@ -445,7 +467,8 @@ if (post('add')) {
     $unit = secure($_POST['unit']);
     $place = secure($_POST['place']);
     $cost_wasl = secure($_POST['cost_wasl']);
-    $date = secure($_POST['date']);
+    $note = secure($_POST['note']);
+    $date=date("Y-m-d");
     $discount = secure($_POST['discount']);
 
      $cost_co = $cost_t*$num;
@@ -464,7 +487,7 @@ if($num > $remainqty) {
     msg('ئاگاداربە !','ئەوەندە بڕ لەم کاڵەیە بەردەست نیە ','warning');
 }
 else {
-$sql=execute("INSERT INTO `sale` (`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`place`,`sale_type`,`status`) VALUES('$customer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','$name_product','$place','qa3a','1') ");
+$sql=execute("INSERT INTO `sale` (`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`place`,`sale_type`,`status`,`note`) VALUES('$customer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','$name_product','$place','qa3a','1','$note') ");
 $_SESSION["add_success"] = "";
 direct('sale_qa3a.php');
 }

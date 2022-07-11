@@ -27,7 +27,7 @@
     <a data-toggle="modal" data-target="#add" class="btn  btn-success s-16"><i class="fa fa-dollar-sign"></i> 
         زیادکردنی فرۆشیارەکان</a>
 
-        <div onclick="window.print()" class="btn s-16  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن</div>
+        <!-- <div onclick="window.print()" class="btn s-16  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن</div> -->
 </div>
 
 
@@ -43,6 +43,7 @@
       <th scope="col">ناونیشان</th>
       <th scope="col">شوێنی کارکردن</th>
       <th scope="col">ژمارە مۆبایل</th>
+      <th scope="col">جۆری دراو</th>
       <th scope="col">تێبینی</th>
       <th scope="col">Action</th>
     </tr>
@@ -58,12 +59,28 @@
             $address=$dealer['address'];
             $phone=$dealer['phone'];
             $work_place=$dealer['work_place'];
-            $note=$dealer['note'];?>
+            $currency_type=$dealer['currency_type'];
+            $note=$dealer['note'];
+            
+            if ($currency_type=='dinar') {
+              $currency_type='دینار';
+            }
 
-            <td><?=$name;?></td>
+            if ($currency_type=='dollar') {
+              $currency_type='دۆلار';
+            }
+
+            if ($currency_type=='tman') {
+              $currency_type='تمەن';
+            }
+
+            ?>
+
+            <td><a href="dealer_detail.php?id=<?=$id;?>"><?=$name;?></a></td>
             <td><?=$address;?></td>
             <td><?=$work_place;?></td>
             <td><?=$phone;?></td>
+            <td><?=$currency_type;?></td>
             <td><?=$note;?></td>
 
       <td>
@@ -117,6 +134,13 @@
                     <div class="form-group">
                       <input type="text" placeholder="ژمارە مۆبایل" class="form-control col-md-10 mx-auto"
                         name="phone" required="" value="<?=$phone;?>">
+                    </div>
+                    <div class="form-group">
+                    <select name="currency_type"  class="form-control col-md-10 mx-auto"> 
+                        <option value="dinar"  <?php echo $currency_type=='دینار' ? 'selected' : '' ?> >دینار</option>
+                        <option value="dollar" <?php echo $currency_type=='دۆلار' ? 'selected' : '' ?>>دۆلار</option>
+                        <option value="tman"   <?php echo $currency_type=='تمەن' ? 'selected' : '' ?>>تمەن</option>
+                    </select>
                     </div>
 
                     <div class="form-group">
@@ -239,6 +263,16 @@
                         name="phone" required="">
                     </div>
 
+                    
+                    <div class="form-group">
+                    <label for="" class="float-end">جۆری دراو</label>
+                    <select name="currency_type"  class="form-control col-md-10 mx-auto"> 
+                        <option value="dinar">دینار</option>
+                        <option value="dollar">دۆلار</option>
+                        <option value="tman">تمەن</option>
+                    </select>
+                    </div>
+
                     <div class="form-group">
                       <textarea name="note" placeholder="تێبینی" id="" cols="20" rows="5" class="form-control col-md-10 mx-auto"></textarea>
                     </div>
@@ -294,9 +328,10 @@ if (post('add')) {
     $work_place = secure($_POST['work_place']);
     $phone = secure($_POST['phone']);
     $note = secure($_POST['note']);
+    $currency_type = secure($_POST['currency_type']);
   
-    execute("INSERT INTO dealers (`name`,`phone`,`address`,`work_place`,`note`) 
-    VALUES('$name','$phone','$address','$work_place','$note') ");
+    execute("INSERT INTO dealers (`name`,`phone`,`address`,`work_place`,`note`,`currency_type`) 
+    VALUES('$name','$phone','$address','$work_place','$note','$currency_type') ");
   
   $_SESSION["add_success"] = "";
     direct('dealers.php');
@@ -312,9 +347,10 @@ if (post('edit')) {
     $work_place = secure($_POST['work_place']);
     $phone = secure($_POST['phone']);
     $note = secure($_POST['note']);
+    $currency_type = secure($_POST['currency_type']);
   
   
-    execute("UPDATE `dealers` SET `name`='$name',`phone`='$phone',`address`='$address',`work_place`='$work_place',`note`='$note' WHERE `id`='$id' ");
+    execute("UPDATE `dealers` SET `name`='$name',`phone`='$phone',`address`='$address',`work_place`='$work_place',`note`='$note', `currency_type`='$currency_type' WHERE `id`='$id' ");
   
     $_SESSION["edit_success"] = "";
     direct('dealers.php');

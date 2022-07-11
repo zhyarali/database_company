@@ -65,7 +65,7 @@
 </a>
     </div>
 
-    <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">
+    <!-- <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">
     <a href="buy_panal.php"> 
       <div class="bg-cards border-radius-lg h-100">
         <div class="position-relative  align-items-center justify-content-center h-80 mt-3">
@@ -73,16 +73,17 @@
         </div>
       </div>
 </a>
-    </div>
+    </div> -->
 
   </div>
 </div>
 
+<?php if ($is_admin==1) {?>
 <div class="container-fluid d-flex justify-content-around mt-5 flex-wrap">
 <a href="dealers.php"  style="font-size:16px" class="btn btn-success "><i
             class="fas fa-user-plus "></i> زیادکردنی  فرۆشیار</a>
 </div>
-
+<?php } ?>
 
 
 <?php require_once('footer.php'); ?>

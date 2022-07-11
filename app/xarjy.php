@@ -1,30 +1,32 @@
 <?php require_once('header.php'); ?>
 
+<?php if ($is_admin==1) {?>
 <div class="container d-flex justify-content-around mt-5 flex-wrap">
 <a  data-toggle="modal" data-target="#add" class="btn btn-success" style="font-size:16px"> زیادکردنی خەرجی   <i class="fas fa-dollar-sign"></i></a>
 
 <a href="person.php"  class="btn btn-dark" style="font-size:16px"> زیادکردنی ئەو کەسانەی خەرجی دەکەن   <i class="fas fa-user-plus "></i></a>
 
 </div>
+<?php } ?>
 
 
-
-<div class="container-fluid mt-2">
+<div class="container-fluid mt-5">
 <div class="row m-auto" >
 <div class="col-md-12">  
 <div class="table-responsive">
 <table id="example" class="table  table-striped table-bordered  text-center" dir="rtl">
         <thead  style="background-color: #0a0327;color: white">
             <tr>
-                <th>بۆچی خەرجکراوە</th>
                 <th>خەرجکراوە لەلایەن</th>
+                <th>بۆچی خەرجکراوە</th>
                 <th>پارەی وەرگیراو</th>
                 <th>بڕی نرخی خەرجکراو</th>
                 <th>نرخی ماوە</th>
+                <th>جۆری دراو</th>
                 <th>شوێن</th>
                 <th>   ژمارە مۆبایل  </th>
                 <th>بەروار</th>
-                <th> Action      </th>
+                <?php if ($is_admin==1) {?> <th> Action </th><?php } ?>
             </tr>
         </thead>
         <tbody>
@@ -38,22 +40,38 @@ foreach ($items as $item) {
   $get_price = $item['get_price'];
   $xarj_by = $item['xarj_by'];
   $date = $item['date'];
+
+  $currency_type=$item['currency_type'];
+  if ($currency_type=='dinar') {
+    $currency_type='دینار';
+  }
+
+  if ($currency_type=='dollar') {
+    $currency_type='دۆلار';
+  }
+
+  if ($currency_type=='tman') {
+    $currency_type='تمەن';
+  }
+
   $price_mawa=$get_price - $price;
 
 
 ?>
        <tr>
-        <td><?=$name;?></td>
-        <?php
+       <?php
           $persons = show(" SELECT * FROM person WHERE  `id`=$xarj_by");
           foreach ($persons as $person) {
             $name_person = $person['name'];
+            $name_person = $person['name'];
         ?>
-        <td><?=$name_person;?></td>
+        <td><a href="spender.php?id=<?=$xarj_by;?>"><?=$name_person;?></a></td>
         <?php } ?>
+        <td style="max-width:320px;width:320px;overflow:hidden;word-wrap: break-word;overflow-wrap: break-word;white-space: pre-wrap;"><?=$name;?></td>
         <td><?=$get_price;?></td>
         <td><?=$price;?></td>
         <td><?=$price_mawa;?></td>
+        <td><?=$currency_type;?></td>
         <td><?=$place;?></td>
         <?php
           $persons = show(" SELECT * FROM person WHERE  `id`=$xarj_by");
@@ -63,11 +81,12 @@ foreach ($items as $item) {
         <td><?=$phone_person;?></td>
         <td><?=$date;?></td>
         <?php } ?>
+        <?php if ($is_admin==1) {?>
         <td>
         <i class="fa fa-trash s-20 cursor" data-toggle="modal" data-target="#delete<?php echo $item['id'] ?>"></i>        
         <i class="fa fa-edit s-20 cursor" data-toggle="modal" data-target="#edit<?php echo $item['id'] ?>" ></i>        
-        <i class="fa fa-print s-20 cursor" onclick="window.print()" ></i>           
         </td>
+        <?php } ?>
       </tr>
       
 <!-- delete modal -->
@@ -152,15 +171,19 @@ foreach ($items as $item) {
                 <input type="text"  name="price" value="<?=$price;?>"  class="form-control col-md-10 mx-auto">
                 </div> 
 
+                <div class="form-group">
+                    <select name="currency_type"  class="form-control col-md-10 mx-auto"> 
+                        <option value="dinar"  <?php echo $currency_type=='دینار' ? 'selected' : '' ?> >دینار</option>
+                        <option value="dollar" <?php echo $currency_type=='دۆلار' ? 'selected' : '' ?>>دۆلار</option>
+                        <option value="tman"   <?php echo $currency_type=='تمەن' ? 'selected' : '' ?>>تمەن</option>
+                    </select>
+                    </div>
+
                 <label>شوێن</label>
                 <div class="form-group">
                 <input type="text"  name="place" value="<?=$place;?>"  class="form-control col-md-10 mx-auto">
                 </div> 
                
-                <label>بەروار</label>
-                <div class="form-group">
-                <input type="date" placeholder="بەروار" value="<?=$date;?>" name="date"  class="form-control col-md-10 mx-auto">
-                </div>
                 <label>ژمارە مۆبایل</label>
                 <?php
           $persons = show(" SELECT * FROM person WHERE  `id`=$xarj_by");
@@ -201,7 +224,7 @@ foreach ($items as $item) {
 
 
 
-<!-- add driver modal -->
+<!-- add xarjy modal -->
 <div class="modal fade" id="add" tabindex="-1"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content" style="background-color: white;border-radius: 15px;">
@@ -248,16 +271,20 @@ foreach ($items as $item) {
                 <input type="text" placeholder="نرخ" name="price"  class="form-control col-md-10 mx-auto">
                 </div> 
 
+                <div class="form-group">
+                  <label for="" class="float-end">جۆری دراو</label>
+                 <select name="currency_type"  class="form-control col-md-10 mx-auto"> 
+                  <option value="dinar">دینار</option>
+                  <option value="dollar">دۆلار</option>
+                  <option value="tman">تمەن</option>
+              </select>
+               </div>
+
                 <label>شوێن</label>
                 <div class="form-group">
                 <input type="text"  name="place"  class="form-control col-md-10 mx-auto">
                 </div> 
-                
-                <label>بەروار</label>
-                <div class="form-group">
-                <input type="date" placeholder="بەروار" name="date"  class="form-control col-md-10 mx-auto">
-                </div>
-            
+
                 
             
     <button type="submit" name="add" class="btn btn-info btn-block">زیادکردنی خەرجی</button>
@@ -307,11 +334,11 @@ if (post('edit')) {
     $name = secure($_POST['name']);
     $price = secure($_POST['price']);
     $xarj_by = secure($_POST['xarj_by']);
-    $date = secure($_POST['date']);
     $place = secure($_POST['place']);
     $get_price = secure($_POST['get_price']);
+    $currency_type = secure($_POST['currency_type']);
 
-  $sql = execute("UPDATE `xarjy` SET `name_item`='$name',`price`='$price',`place`='$place',`get_price`='$get_price',`xarj_by`='$xarj_by',`date`='$date' WHERE id = '$id'");
+  $sql = execute("UPDATE `xarjy` SET `name_item`='$name',`price`='$price',`place`='$place',`get_price`='$get_price',`xarj_by`='$xarj_by',`currency_type`='$currency_type' WHERE id = '$id'");
     $_SESSION["edit_success"] = "";
     header("Location: xarjy.php");
 
@@ -329,11 +356,12 @@ if (post('add')) {
   $name = secure($_POST['name']);
   $price = secure($_POST['price']);
   $xarj_by = secure($_POST['xarj_by']);
-  $date = secure($_POST['date']);
+  $date =date("Y-m-d");
   $place = secure($_POST['place']);
   $get_price = secure($_POST['get_price']);
+  $currency_type = secure($_POST['currency_type']);
 
-  $sql = execute("INSERT INTO `xarjy` (`name_item`,`price`,`place`,`get_price`,`xarj_by`,`date`) VALUES('$name','$price','$place','$get_price','$xarj_by','$date')");
+  $sql = execute("INSERT INTO `xarjy` (`name_item`,`price`,`place`,`get_price`,`xarj_by`,`date`,`currency_type`) VALUES('$name','$price','$place','$get_price','$xarj_by','$date','$currency_type')");
     $_SESSION["add_success"] = "";
    direct('xarjy.php');
 

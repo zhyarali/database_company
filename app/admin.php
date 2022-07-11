@@ -43,7 +43,7 @@ if($type == "1") {
 <?php 
 if($type == "0") {
 ?>
-     مۆدیرەیت
+    بەکارهێنەری ئاسایی
       <?php
 }
      ?>
@@ -117,7 +117,7 @@ if($type == "0") {
      ناوی بەکارهێنەر
       <input type="text" placeholder="uname " class="form-control col-md-10 mx-auto" name="uname" value="<?=$name;?> " readonly  required="">
     </div>
-    <button type="submit" name="edituser"  class="btn btn-warning btn-block"> گۆڕین بۆ مۆدیرەیت   </button>
+    <button type="submit" name="edituser"  class="btn btn-warning btn-block"> گۆڕین بۆ بەکارهێنەری ئاسایی   </button>
     <button type="submit" name="edituserr"  class="btn btn-success btn-block"> گۆڕین بۆ بەڕێوبەری گشتی   </button>
   </form>
       </div>
