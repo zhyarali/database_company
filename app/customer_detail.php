@@ -5,6 +5,8 @@ $user_id=$_GET['id'];
 $users = countdata(" SELECT * FROM customer WHERE `id`=$user_id");
 $data = show(" SELECT * FROM customer WHERE `id`=$user_id");
 
+$num_of_return_buy= countdata("SELECT * FROM sale WHERE customer_id=$user_id AND `status`=-1");
+
 if (empty($data)) {
   direct('index.php');
 }else{   
@@ -207,7 +209,17 @@ if (empty($data)) {
           </div>
           <p class="btn btn-dark shadow" id="btn_search">زانیاری بەپێی ڕۆژ بهێنەوە</p>
 
-       </div>    
+       </div>  
+       
+       
+       <button style="background-color:#7868E6 !important;outline:none;shadow:none" data-bs-toggle="modal" href="#exampleModalToggle" role="button" type="button" class="btn btn-primary mx-3 border-0  position-relative">
+           گەڕاوەی کڕین
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <?php echo $num_of_return_buy;?>
+            </span>
+            </button>
+        </div>    
+
     
    </div>
 
@@ -433,6 +445,26 @@ $sum_discount+=$discount;
 
 
 
+<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+      <h4 class="modal-title" id="exampleModalLabel">لیستی گەڕاندنەوەکانی فرۆشتن</h4>
+        <button type="button" class="btn btn-secondary " data-bs-dismiss="modal" aria-label="Close">داخستن</button>
+        
+      </div>
+      <div class="modal-body">
+                        
+            <?php include('return_sale_modal.php'); ?>       
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
 
 
     
@@ -448,6 +480,22 @@ if (isset($_SESSION["add_success"])) {
     msg('سەرکەتووبوو','سەرکەوتووانە  بڕی پارەی دیاریکراو گەڕێنرایەوە ','success');
      unset($_SESSION["add_success"]);
  }
+
+
+ if (isset($_SESSION["delete_return"])) {
+  msg('سەرکەتووبوو','بە سەرکەوتوویی ئەم فرۆشتنە سڕایەوە','success');
+   unset($_SESSION["delete_return"]);
+}
+
+
+if (post('delete_return_sale')) {
+  $id = secure($_POST['id']);
+  $userId = secure($_POST['userId']);
+  execute("DELETE FROM sale WHERE id='$id' ");
+  $_SESSION["delete_return"] = "";
+  $loc="customer_detail.php?id=".$userId;
+  direct($loc);
+}
 
 
  if (post('add_refund')) {

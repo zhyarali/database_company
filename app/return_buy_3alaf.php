@@ -9,8 +9,7 @@
 
 
 <div class="container d-flex justify-content-around mt-2 flex-wrap">
-    <button style="font-size:16px" class="btn text-light btn-secondary disabled">گەڕانەوەی کڕینی  عەلەف</button>
-   
+    <button style="font-size:16px" class="btn text-light btn-secondary ">گەڕانەوەی کڕینی  عەلەف</button>
 </div>
 
 

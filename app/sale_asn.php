@@ -40,6 +40,9 @@
                             <th> بەروار </th>
                             <th>تێبینی</th>
                             <?php if ($is_admin==1) {?>    <th> Action </th><?php } ?>
+                            <?php if ($is_admin==1) {?>
+                      <th>گەڕاندنەوە</th>
+                <?php } ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,6 +102,15 @@ foreach ($sale_asn as $asn) {
                                 <!-- <i class="fa fa-print cursor s-20" data-toggle="modal" data-target="#print" ></i>            -->
                             </td>
                             <?php } ?>
+
+                            <?php if ($is_admin==1) {?>
+                            <td>
+                                    <form method="post" action="sale_asn.php">
+                                        <input type="hidden" name="id" value="<?=$id?>">
+                                        <button type="submit" name="return_sale" style="border:none;background:none" > <i class="fas fa-sync"></i> </button>
+                                    </form> 
+                            </td>
+        <?php } ?>
                         </tr>
 
                         <!-- delete modal -->
@@ -391,13 +403,23 @@ foreach ($sale_asn as $asn) {
     unset($_SESSION["delete"]);
  }
 
+ if (isset($_SESSION["update_return"])) {
+    msg('سەرکەتووبوو','بە سەرکەوتوویی ئەم فرۆشتنە گەڕێندرایەوە','success');
+     unset($_SESSION["update_return"]);
+  }
  
  ?>
 
 
 
+<?php 
 
-    <?php 
+if (post('return_sale')) {
+    $id = secure($_POST['id']);
+    execute("UPDATE sale SET `status`='-1' WHERE id='$id' ");
+    $_SESSION["update_return"] = "";
+    direct('sale_asn.php');
+  }
 
 if (post('edit')) {
     $id = secure($_POST['id']);

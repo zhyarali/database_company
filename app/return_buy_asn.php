@@ -8,14 +8,9 @@
   </a>
 </div>
 
-<?php if ($is_admin==1) {?>
 <div class="container d-flex justify-content-around mt-2 flex-wrap">
-    <a data-toggle="modal" data-target="#add" style="font-size:16px" class="btn btn-success "><i
-            class="fas fa-dollar-sign "></i>گەڕانەوەی کڕینی ئاسن</a>
-    <!-- <div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن
-    </div> -->
+    <button style="font-size:16px" class="btn text-light btn-secondary ">گەڕانەوەی کڕینی  ئاسن</button>
 </div>
-<?php } ?>
 
 
 
