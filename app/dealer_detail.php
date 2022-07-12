@@ -355,8 +355,9 @@ $sum_discount+=$discount;
                 </form>    
                </td>
                 <td> 
-                <form method="post" action="dealer_detail.php">
+                <form method="post" action="dealer_detail.php?id=<?=$user_id?>">
                     <input type="hidden" name="id" value="<?=$id?>">
+                    <input type="hidden" name="userId" value="<?=$user_id?>">
                     <button type="submit" name="return_buy" style="border:none;background:none" > <i class="fas fa-sync"></i> </button>
                 </form>    
                </td>
@@ -417,12 +418,14 @@ $sum_discount+=$discount;
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content">
       <div class="modal-header">
-      <h4 class="modal-title" id="exampleModalLabel">گەڕانەوەی کڕین</h4>
+      <h4 class="modal-title" id="exampleModalLabel">لیستی گەڕاندنەوەکانی کڕین</h4>
         <button type="button" class="btn btn-secondary " data-bs-dismiss="modal" aria-label="Close">داخستن</button>
         
       </div>
       <div class="modal-body">
-        Show a second modal and hide this one with the button below.
+                        
+            <?php include('return_buy_modal.php'); ?>       
+
       </div>
 
     </div>
@@ -447,6 +450,24 @@ if (isset($_SESSION["add_success"])) {
     msg('سەرکەتووبوو','سەرکەوتووانە  بڕی پارەی دیاریکراو گەڕێنرایەوە ','success');
      unset($_SESSION["add_success"]);
  }
+if (isset($_SESSION["update_return"])) {
+    msg('سەرکەتووبوو','بە سەرکەوتوویی ئەم کڕینە گەڕێندرایەوە','success');
+     unset($_SESSION["update_return"]);
+ }
+if (isset($_SESSION["delete_return"])) {
+    msg('سەرکەتووبوو','بە سەرکەوتوویی ئەم کڕینە سڕایەوە','success');
+     unset($_SESSION["delete_return"]);
+ }
+
+
+ if (post('delete_return_buy')) {
+    $id = secure($_POST['id']);
+    $userId = secure($_POST['userId']);
+    execute("DELETE FROM buy WHERE id='$id' ");
+    $_SESSION["delete_return"] = "";
+    $loc="dealer_detail.php?id=".$userId;
+    direct($loc);
+ }
 
 
  if (post('add_refund')) {
@@ -463,6 +484,17 @@ if (isset($_SESSION["add_success"])) {
   }
 
 
+  if (post('return_buy')) {
+    $id = secure($_POST['id']);
+    $userId = secure($_POST['userId']);
+  
+    execute("UPDATE buy SET `status`='-1' WHERE id='$id' ");
+    $_SESSION["update_return"] = "";
+    $loc="dealer_detail.php?id=".$userId;
+    direct($loc);
+  }
+
+
 ?>
 
 
@@ -474,7 +506,7 @@ if (isset($_SESSION["add_success"])) {
     // });
  
     $('#btn_search').click(function () {
-      var date = $('#get_by_date').val();
+      var date = $('#get_by_date').val(); 
       var user_id = $('#user_id').val();
       if (date != '') {
         $.ajax({
