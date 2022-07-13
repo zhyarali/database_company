@@ -1,8 +1,8 @@
-<div class="bg-dark container mb-1 rounded overflow-hidden mt-5 py-2 px-3" dir="rtl">
+<!-- <div class="bg-dark container d-flex justify-content-center mb-1 rounded overflow-hidden mt-5 py-2 px-3" dir="rtl">
 	<span class="s-12 m-0 text-light " style="float:right;">گەشەی پێئەدرێت لەلایەن 
     <i class="fas fa-heart" style="color:#ff5454;"></i><a href="https://www.facebook.com/zarda.dev.5/" class="text-warning">
      شاناز عبدالواحید </a>  - <a href="https://tiyapro.com/app/" class="text-light"> تییا پڕۆ </a> </span>
-</div>
+</div> -->
 
 <!--   Core JS Files   -->
 
@@ -41,6 +41,7 @@
 
 
 
+
       $('#client').click(function() {
         $('.client_name').removeClass("d-none");
         $('.another').addClass("d-none");
@@ -62,6 +63,9 @@
          $("#budget_amount").addClass("d-none");
         }
   })
+
+
+
 
 
 

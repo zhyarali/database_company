@@ -365,9 +365,9 @@ foreach ($buy_helka as $helka) {
  }
 
  if (isset($_SESSION["update_return"])) {
-  msg('سەرکەتووبوو','بە سەرکەوتوویی ئەم کڕینە گەڕێندرایەوە','success');
-   unset($_SESSION["update_return"]);
-}
+    msg('سەرکەتووبوو','بە سەرکەوتوویی ئەم کڕینە گەڕێندرایەوە','success');
+     unset($_SESSION["update_return"]);
+ }
 
  
  ?>
