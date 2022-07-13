@@ -188,7 +188,7 @@ if ($income<0) {
                   <div class="bg-cards border-radius-lg h-100">
                     <i class="fal fa-store s-70 p-3"></i>
                     <div class="position-relative  align-items-center justify-content-center h-80 mt-3">
-                       <h3 class="text-light btn btn-dark container s-14 col col-xl-8 col-8 col-md-8 p-1"> گەڕاوەی فرۆش   </h3>
+                       <h3 class="text-light btn btn-dark container s-14 col col-xl-8 col-8 col-md-8 p-1"> گەڕاوەی فرۆشتن   </h3>
                     </div>
                   </div>
                   </a>
@@ -220,6 +220,17 @@ if ($income<0) {
                       <i class="fal fa-user-friends s-70 p-3"></i>
                     <div class="position-relative  align-items-center justify-content-center h-80 mt-3">
                        <h3 class="text-light btn btn-dark container s-14 col col-xl-8 col-8 col-md-8 p-1">  فرۆشیارەکان    </h3>
+                    </div>
+                  </div>
+                  </a>
+                </div>
+
+                <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">
+                  <a href="customer.php">
+                  <div class="bg-cards border-radius-lg h-100">
+                      <i class="fal fa-people-carry s-70 p-3"></i>
+                    <div class="position-relative  align-items-center justify-content-center h-80 mt-3">
+                       <h3 class="text-light btn btn-dark container s-14 col col-xl-8 col-8 col-md-8 p-1">  کڕیارەکان    </h3>
                     </div>
                   </div>
                   </a>
@@ -327,19 +338,6 @@ if ($income<0) {
                   </a>
                 </div>
                 <?php } ?>
-
-
-                <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">
-                  <a href="contact.php">
-                  <div class="bg-cards border-radius-lg h-100">
-                    <i class="fal fa-address-book s-70 p-3"></i>
-                    <div class="position-relative  align-items-center justify-content-center h-80 mt-3">
-                       <h3 class="text-light btn btn-dark container s-14 col col-xl-8 col-8 col-md-8 p-1">  پەیوەندی   </h3>
-                    </div>
-                  </div>
-                  </a>
-                </div>
-
 
 
                 

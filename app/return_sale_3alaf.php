@@ -7,15 +7,9 @@
   </a>
 </div>
 
-<?php if ($is_admin==1) {?>
 <div class="container d-flex justify-content-around mt-2 flex-wrap">
-    <a data-toggle="modal" data-target="#add" style="font-size:16px" class="btn btn-success "><i
-            class="fas fa-dollar-sign "></i> گەڕانەوەی فرۆشتنی  عەلەف </a>
-    <!-- <div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن -->
-    </div>
+    <a class="btn btn-primary text-light" style="background-color:#7868E6 !important;font-size:16px">گەڕانەوەی فرۆشتنی  عەلەف</a>
 </div>
-<?php } ?>
-
 
 
 <div class="container-fluid mt-2">

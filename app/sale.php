@@ -21,7 +21,7 @@
 
 
 
-<div class="container-fluid col-md-10  card">
+<div class="container-fluid col-md-12">
   <div class="row m-5">
 
     <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">

@@ -16,12 +16,12 @@
 
 
 <div class="container-fluid d-flex justify-content-around mt-5 flex-wrap">
-<h5  style="font-size:16px" class="btn btn-dark "> گەڕاوەی فرۆش</h5>
+<h5  style="font-size:16px" class="btn btn-dark "> گەڕاوەی فرۆشتن</h5>
 </div>
 
 
 
-<div class="container-fluid col-md-10  card">
+<div class="container-fluid col-md-12  ">
   <div class="row m-5">
 
     <div class="col-lg-2 col-6 col-xl-2 col-md-12 ms-auto text-center mt-5 mt-lg-0 p-2">
