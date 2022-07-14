@@ -1,18 +1,27 @@
 <?php require_once('header.php'); ?>
 
 
-<?php 
 
-if (isset($_GET['req']))
-    
-?>
 
-<div class="container d-flex justify-content-around mt-2 flex-wrap">
-<a  id="add_more" style="font-size:16px"  class="btn btn-success " ><i class="fas fa-dollar-sign "></i>Add More</a>
+<form method="post" action="testapp.php">
+
+<div class="d-flex justify-content-around mt-3 flex-wrap">
+    <a  id="add_more"  class="btn btn-success pb-1 pt-1" >
+
+        <p style="transform:translate(0px,10px)">
+        <i class="fas fa-plus-circle "></i>  <span style="font-weight:bold">زیادکردن </span>
+        </p>
+
+    </a>
+    <button  type="submit" name="submit-invoice" class="btn btn-dark pb-1 pt-1" >
+
+        <p style="transform:translate(0px,10px)">
+        <i class="fas fa-save "></i>  <span style="font-weight:bold">سەیڤکردن</span>
+        </p>
+
+    </button>
 </div>
-<div class="container d-flex justify-content-around mt-2 flex-wrap">
-<a href="testapp.php?req" style="font-size:16px"  class="btn btn-success " ><i class="fas fa-dollar-sign "></i>create</a>
-</div>
+
 
 <div class="container-fluid mt-2">
 <div class="row m-auto" >
@@ -20,7 +29,7 @@ if (isset($_GET['req']))
 <div class="col-md-12">
   <div class="table-responsive">
 <table  class="table  table-striped table-bordered  text-center" id="tab_logic" dir="rtl" style="zoom:85%">
-        <thead  style="background-color: #0a0327;color: white">
+        <thead class="bg-dark text-light">
             <tr>
                 <th>لابردن</th>
                 <th> ناوی فرۆشیار</th>
@@ -119,9 +128,9 @@ if (isset($_GET['req']))
 
 
     <div class="row  d-flex justify-content-center">
-    <div class="col-lg-4 col-sm-5 ml-auto">
-        <table class="table table-clear text-center">
-            <tbody>
+    <div class="col-lg-4 col-sm-5 ml-auto ">
+        <table class="table table-clear text-center " >
+            <tbody >
                 <tr>
                     <td class="left">
                     <strong>کۆی گشتی نرخی واسڵکراو</strong>
@@ -143,7 +152,7 @@ if (isset($_GET['req']))
                     <td class="right" id="total_mawa">0</td>
                 </tr>
 
-                <tr class="bg-dark text-light">
+                <tr class="bg-dark text-light" >
                     <td class="left">
                     <strong>کۆی گشتی نرخ</strong>
                     </td>
@@ -160,6 +169,8 @@ if (isset($_GET['req']))
  </div>
 
 </div>
+
+</form>
 
 
 
