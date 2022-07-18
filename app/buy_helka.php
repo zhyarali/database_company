@@ -8,234 +8,108 @@
   </a>
 </div>
 
-<?php if ($is_admin==1) {?>
-<div class="container d-flex justify-content-around mt-2 flex-wrap">
-<a data-toggle="modal" data-target="#add" style="font-size:16px"  class="btn btn-success " ><i class="fas fa-dollar-sign "></i>  کڕینی هێلکە</a>
-<!-- <div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن</div>  --> 
+
+<div class="d-flex justify-content-around mt-3 flex-wrap">
+    <a  href="buy_helka_add.php"  class="btn btn-success pb-1 pt-1" >
+
+        <p style="transform:translate(0px,10px)">
+        <i class="fas fa-plus-circle "></i>  <span style="font-weight:bold">زیادکردن</span>
+        </p>
+
+    </a>
 </div>
-<?php } ?>
+
 
 <div class="container-fluid mt-2">
 <div class="row m-auto" >
 
 <div class="col-md-12">
   <div class="table-responsive">
-<table id="example" class="table  table-striped table-bordered  text-center" dir="rtl" style="zoom:85%">
-        <thead  style="background-color: #0a0327;color: white">
+<table id="example" class="table table-hover   table-striped table-bordered  text-center" dir="rtl" style="zoom:85%">
+        <thead  class="bg-dark text-light">
             <tr>
-                <th> ناوی فرۆشیار</th>
-                <th> ژمارە    </th>
-                <th> نرخی تاک    </th>
-                <th> نرخی داشکاندن    </th>
-                <th> جۆر    </th>
-                <th> نرخی ماوە    </th>
-                <th> نرخی واسڵکراو    </th>
-                <th> نرخی گشتی      </th>
-                <th> نرخی فرۆشتن    </th>
-                <th>جۆری دراو</th>
-                <th> بەروار    </th>
-                <th> تێبینی    </th>
-                <?php if ($is_admin==1) {?>
-                <th> Action</th>
-                <?php } ?>
-                <?php if ($is_admin==1) {?>
-                <th>گەڕاندنەوە</th>
-                <?php } ?>
+                <th>ژمارەی وەسڵ</th>
+                <th>ناوی فرۆشیار</th>
+                <th>کۆی گشتی نرخ</th>
+                <th>بەروار</th>
+                <th>پرنتکردن</th>
+                <th>گۆڕانکاری</th>
+                <th>سڕینەوە</th>
             </tr>
         </thead>
         <tbody>
 <?php 
-$buy_helka = show(" SELECT * FROM buy WHERE buy_type='helka' AND `status`='1' ");
-foreach ($buy_helka as $helka) {
-  $id = $helka['id'];
-  $dealer_id = $helka['dealer_id'];
-  $num = $helka['num'];
-  $cost_t = $helka['cost_t'];
-  $cost_co = $helka['cost_co'];
-  $type = $helka['type'];
-  $cost_wasl = $helka['cost_wasl'];
-  $cost_froshtn = $helka['cost_fr'];
-  
-  $cost_mawa = $cost_co-$cost_wasl;
+                 $invoiceList =show("SELECT * from invoice WHERE type='buy_helka' ORDER BY date DESC");
 
-  $discount = $helka['discount'];
-  $date = $helka['date'];
-  $note=$helka['note'];
-  $getdealer = getdata(" SELECT * FROM dealers WHERE id='$dealer_id' ");
-  $dealer_name = $getdealer['name'];
-  $currency_type = $getdealer['currency_type'];
-  if ($currency_type=='dinar') {
-    $currency_type='دینار';
-  }
+                 foreach($invoiceList as $invoiceDetails){
+                 $invoiceDate = date("d/M/Y, H:i:s", strtotime($invoiceDetails["date"]));
 
-  if ($currency_type=='dollar') {
-    $currency_type='دۆلار';
-  }
-
-  if ($currency_type=='tman') {
-    $currency_type='تمەن';
-  }
-
-  
-  
 ?>
 
        <tr>
-        <td><a href="dealer_detail.php?id=<?=$dealer_id;?>"><?=$dealer_name;?></a></td>
-        <td><?=$num;?></td>
-        <td><?=$cost_t;?></td>
-        <td><?=$discount;?></td>
-        <td><?=$type;?></td>
-        <td><?=$cost_mawa;?></td>
-        <td><?=$cost_wasl;?></td>
-        <td><?=$cost_co;?></td>
-        <td><?=$cost_froshtn;?></td>
-        <td><?=$currency_type;?></td>
-        <td><?=$date;?></td>
-        <td style="max-width:220px;width:220px;overflow:hidden;word-wrap: break-word;overflow-wrap: break-word;white-space: pre-wrap;"><?=$note;?></td>
-        <?php if ($is_admin==1) {?>
-        <td>
-        <i class="fa fa-trash s-20 cursor" data-toggle="modal" data-target="#delete<?php echo $helka['id'] ?>"></i>        
-        <i class="fa fa-edit s-20 cursor" data-toggle="modal" data-target="#edit<?php echo $helka['id'] ?>" ></i>        
+          <td><?=$invoiceDetails['id']?></td>
+          <td>
+              
           
-      </td>
-        <?php } ?>
-        <?php if ($is_admin==1) {?>
-        <td>
-                <form method="post" action="buy_helka.php">
-                    <input type="hidden" name="id" value="<?=$id?>">
-                    <button type="submit" name="return_buy" style="border:none;background:none" > <i class="fas fa-sync"></i> </button>
-                </form> 
+            <?php  
+              $dealer_id=$invoiceDetails['dealer_id'];         
+              $getdealer = getdata(" SELECT * FROM dealers WHERE id='$dealer_id' "); ?>
+             <a href="dealer_detail.php?id=<?=$getdealer['id']?>">
+                <?=$getdealer['name']?>
+             </a>
+            <?php  ?>
+          
+            
         </td>
-        <?php } ?>
+          <td><?=$invoiceDetails['price']?></td>
+          <td><?=$invoiceDetails['date']?></td>
+          <td><a href="print_invoice.php?print_type=buy_helka&&invoice_id=<?=$invoiceDetails['id']?>"><i class="fa fa-print"></i></a></td>
+          <td><a href="buy_helka_invoice.php?invoice_id=<?=$invoiceDetails['id']?>"><i class="fa fa-edit"></i></a></td>
+          <td><a href="#" data-toggle="modal" data-target="#delete<?php echo $invoiceDetails['id'] ?>"><i class="fa fa-trash-alt"></i></a></td>
         
       </tr>
+
+
+
+
+          <!-- delete modal -->
+          <div class="modal fade" id="delete<?php echo $invoiceDetails['id'] ?>" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content" style="background-color: white;border-radius: 15px;">
+                                    <div class="modal-body text-center">
+                                        <div class="container-fluid">
+                                            <div class="row row-cols-1 row-cols-md-3">
+                                                <div class="col-md-12 mb-3 mx-auto">
+                                                    <div class="h-100">
+                                                        <i class="fa fa-times-circle" style="float:left;color: black"
+                                                            data-dismiss="modal"></i>
+                                                        <div class="card-body">
+                                                            <h5 class="container col-md-6 mt-3  text-center">
+                                                                دڵنیای لە سڕینەوەی ئەم وەسڵە لەناو سیستەمەکەت ؟
+                                                            </h5>
+                                                            <br>
+                                                            <form dir="rtl" method="POST">
+                                                                <div class="form-group">
+                                                                    <input type="hidden" placeholder="  ناو  " name="id"
+                                                                        value="<?=$invoiceDetails['id'];?> "
+                                                                        class="form-control col-md-10 mx-auto">
+                                                                </div>
+ 
+                                                                <button type="submit" name="del"
+                                                                    class="btn btn-danger btn-block"> سڕینەوە </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
       
-<!-- delete modal -->
-  <div class="modal fade" id="delete<?php echo $helka['id'] ?>" tabindex="-1"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content" style="background-color: white;border-radius: 15px;">
-        <div class="modal-body text-center">
-         <div class="container-fluid">
-  <div class="row row-cols-1 row-cols-md-3">
-    <div class="col-md-12 mb-3 mx-auto">
-      <div class="h-100">
-        <i class="fa fa-times-circle" style="float:left;color: black"  data-dismiss="modal"></i>
-        <div class="card-body">
-          <h5 class="container col-md-6 mt-3  text-center">
-        دڵنیای لە سڕینەوەی ئەم کڕینە لەناو سیستەمەکەت ؟
-        </h5>
-        <br>
-         <form dir="rtl" method="POST">
-         <div class="form-group">
-              <input type="hidden" placeholder="  ناو  " name="id" value="<?=$id;?> " class="form-control col-md-10 mx-auto">
-            </div> 
-            <!-- <div class="form-group">
-              <input type="text" placeholder="  ناو  " name="name" value="<?=$name;?> " class="form-control col-md-10 mx-auto">
-            </div>   -->
-    <button type="submit" name="del" class="btn btn-danger btn-block">  سڕینەوە  </button>
-  </form>
-      </div>
-      </div>
-       </div>
-  </div>
-  </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-<!-- edit modal -->
-<div class="modal fade" id="edit<?php echo $helka['id'] ?>" tabindex="-1"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content" style="background-color: white;border-radius: 15px;">
-        <div class="modal-body ">
-         <div class="container-fluid">
-  <div class="row row-cols-1 row-cols-md-3">
-    <div class="col-md-12 mb-3 mx-auto">
-      <div class="h-100">
-        <i class="fa fa-times-circle" style="float:left;color: black"  data-dismiss="modal"></i>
-        <div class="card-body">
-          <h5 class="container col-md-6 mt-3  text-center">
-      گۆڕانکاری بکە لە زانیارییەکانی کڕین 
-        </h5>
-        <br>
-    <form method="POST">
-        <div class="form-group">
-              <input type="hidden" placeholder="ID " name="id" value="<?=$id;?> " class="form-control col-md-10 mx-auto">
-            </div> 
-
-                                    <label>ناوی فرۆشیار</label>
-                                      <div class="form-group ">
-                                            <select name="dealer_id"  class="form-control col-md-10 mx-auto">
-                                                <?php
-                                                  $getdealer = show(" SELECT * FROM dealers");
-                                                  foreach ($getdealer as $dealer) { ?>
-                                                
-                                                <option <?php if($dealer_id==$dealer['id']) echo 'selected="selected"'; ?>  value="<?=$dealer['id']?>"> <?=$dealer['name']?> </option>
-                                               <?php   } ?>
-                                            </select>
-                                        </div> 
-
-                    <label>جۆری هێلکە</label>
-                    <div class="form-group">
-                      <input type="text" value="<?=$type?>"  class="form-control col-md-10 mx-auto"
-                        name="type" required="">
-                    </div>
-
-                    <div class="form-group">
-                      <select name="unit"  class="form-control col-md-10 mx-auto">
-                          <option value="دانە">دانە</option>
-                      </select>
-                    </div>
-
-                    <label>بڕ  </label>
-                    <div class="form-group">
-                      <input type="text" value="<?=$num?>" class="form-control col-md-10 mx-auto" name="num"
-                        required="">
-                    </div>
-
-                    <label>نرخی تاک</label>
-                    <div class="form-group">
-                      <input type="text" value="<?=$cost_t?>" class="form-control col-md-10 mx-auto"
-                        name="cost_t" required="">
-                    </div>
-
-                    <label>بڕی واسڵ</label>
-                    <div class="form-group">
-                      <input type="text" value="<?=$cost_wasl?>" class="form-control col-md-10 mx-auto"
-                        name="cost_wasl" required="">
-                    </div>
-
-                    <label>نرخی فرشتن بە دانە</label>
-                    <div class="form-group">
-                      <input type="text" value="<?=$cost_froshtn?>" class="form-control col-md-10 mx-auto"
-                        name="cost_fr" required="">
-                    </div>
-
-                    <label>نرخی داشکاندن</label>
-                    <div class="form-group">
-                      <input type="text" value="<?=$discount?>" class="form-control col-md-10 mx-auto"
-                        name="discount" required="">
-                    </div>
-
-                   
-                    <label>تێبینی</label>
-                  <div class="form-group">
-                    <textarea id="my-textarea" class="form-control" name="note" rows="4"><?=$note?></textarea>
-                  </div>
-              
-    <button type="submit" name="edit" class="btn btn-dark btn-block">  نوێکردنەوەی کڕین  </button>
-  </form>
-      </div>
-      </div>
-       </div>
-  </div>
-  </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   
 <?php
@@ -256,93 +130,7 @@ foreach ($buy_helka as $helka) {
 
 
 
-<!-- Add helka modal -->
-<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content" style="background-color: white;border-radius: 15px;">
-      <div class="modal-body text-right">
-        <div class="container-fluid">
-          <div class="row row-cols-1 row-cols-md-3">
-            <div class="col-md-12 mb-3 mx-auto">
-              <div class="h-100">
-                <i class="fa fa-times-circle" style="float:left;color: black" data-dismiss="modal"></i>
-                <div class="card-body">
-                  <h5 class="container col-md-6 mt-3  text-center">
-                    زیادکردنی کڕینی هێلکە
-                  </h5>
-                  <br>
-                  <form class="mt-5" dir="rtl" method="POST" enctype="multipart/form-data">
 
-                                       <label>ناوی فرۆشیار</label>
-                                      <div class="form-group ">
-                                            <select name="dealer_id"  class="form-control col-md-10 mx-auto">
-                                                <?php
-                                                  $getdealer = show(" SELECT * FROM dealers");
-                                                  foreach ($getdealer as $dealer) { ?>
-                                                
-                                                <option  value="<?=$dealer['id']?>"> <?=$dealer['name']?> </option>
-                                               <?php   } ?>
-                                            </select>
-                                        </div> 
-
-                    <div class="form-group">
-                      <input type="text" placeholder="   جۆری هێلکە  " class="form-control col-md-10 mx-auto"
-                        name="type" required="">
-                    </div>
-
-                    <div class="form-group">
-                      <select name="unit"  class="form-control col-md-10 mx-auto">
-                          <option value="دانە">دانە</option>
-                      </select>
-                    </div>
-
-                    <div class="form-group">
-                      <input type="text" placeholder=" بڕ " class="form-control col-md-10 mx-auto" name="num"
-                        required="">
-                    </div>
-
-                    <div class="form-group">
-                      <input type="text" placeholder="  نرخی تاک   " class="form-control col-md-10 mx-auto"
-                        name="cost_t" required="">
-                    </div>
-
-                  
-                    <div class="form-group">
-                      <input type="text" placeholder=" بڕی واسڵ " class="form-control col-md-10 mx-auto"
-                        name="cost_wasl" required="">
-                    </div>
-
-
-                    <div class="form-group">
-                      <input type="text" placeholder="  نرخی فرۆشتن بە دانە " class="form-control col-md-10 mx-auto"
-                        name="cost_fr" required="">
-                    </div>
-
-                    <div class="form-group">
-                      <input type="text" placeholder="  نرخی داشکاندن " class="form-control col-md-10 mx-auto"
-                        name="discount" required="">
-                    </div>
-
-                    
-                      <div class="form-group">
-                        <textarea id="my-textarea" placeholder="تێبینی بنووسە" class="form-control" name="note" rows="4"></textarea>
-                      </div>
-                  
-
-                    <br>
-                    <button type="submit" name="add" class="btn btn-success btn-block btn-sm s-20">
-                      <i class="fal fa-plus s-20"></i>
-                      زیادکردن </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 
@@ -409,7 +197,7 @@ if (post('edit')) {
 
 if (post('del')) {
     $id = secure($_POST['id']);
-    $sql = execute(" DELETE  FROM `buy` WHERE id = '$id'");
+    $sql = execute(" DELETE  FROM `invoice` WHERE id = '$id'");
     $_SESSION["delete"] = "";
     direct('buy_helka.php');
 }
@@ -441,4 +229,3 @@ if (post('add')) {
 
 ?>
 <?php require_once('footer.php'); ?>
-

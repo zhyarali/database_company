@@ -31,6 +31,7 @@
         <script>
       $(document).ready(function() {
           var table = $('#example').DataTable( {
+            
           } );
        
           $('input[type="search"]').addClass("search-input");

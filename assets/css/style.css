@@ -11,6 +11,10 @@ body{
     font-family: 'Speda-Regular';
 }
 
+table tr th{
+    text-align-last: center !important;
+}
+
 
 .bg-first{
     background: #141E30;  /* fallback for old browsers */
@@ -103,3 +107,7 @@ table tr .driver-info{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif !important;
 }
 
+
+table tr td input{
+    text-align-last: center !important;
+}

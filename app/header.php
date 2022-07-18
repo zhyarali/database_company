@@ -54,6 +54,11 @@ if (isset($_SESSION['adm_id']) && isset($_SESSION['adm_token'])) {
 
 <body class="g-sidenav-show">
 
+<?php 
+if (!isset($_GET['print_type'])) {
+  
+?>
+
   <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow bg-first border-radius-xl" id="navbarBlur" navbar-scroll="true">
@@ -95,4 +100,5 @@ if (isset($_SESSION['adm_id']) && isset($_SESSION['adm_token'])) {
        
       </div>
     </nav>
+    <?php } ?>
     <!-- End Navbar -->
