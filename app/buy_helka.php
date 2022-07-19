@@ -137,25 +137,13 @@
  
  
 <?php
- if (isset($_SESSION["edit_success"])) {
-    msg('سەرکەتووبوو','سەرکەوتووانە  گۆڕانکاری لەزانیارییەکان کرا ','success');
-     unset($_SESSION["edit_success"]);
- }
-
- if (isset($_SESSION["add_success"])) {
-    msg('سەرکەتووبوو','سەرکەوتووانە زانیارییەکان تۆمارکرا ','success');
-     unset($_SESSION["add_success"]);
- }
 
  if (isset($_SESSION["delete"])) {
     msg('ئاگاداری','سەرکەوتووانە سڕایەوە ','warning');
     unset($_SESSION["delete"]);
  }
 
- if (isset($_SESSION["update_return"])) {
-    msg('سەرکەتووبوو','بە سەرکەوتوویی ئەم کڕینە گەڕێندرایەوە','success');
-     unset($_SESSION["update_return"]);
- }
+
 
  
  ?>
@@ -166,34 +154,6 @@
 <?php 
 
 
-if (post('return_buy')) {
-  $id = secure($_POST['id']);
-
-  execute("UPDATE buy SET `status`='-1' WHERE id='$id' ");
-  $_SESSION["update_return"] = "";
-  direct('buy_helka.php');
-}
-
-if (post('edit')) {
-  $id = secure($_POST['id']);
-  $dealer_id = secure($_POST['dealer_id']);
-  $type = secure($_POST['type']);
-  $num = secure($_POST['num']);
-  $cost_t = secure($_POST['cost_t']);
-  $note = secure($_POST['note']);
-  $cost_wasl = secure($_POST['cost_wasl']);
-  $cost_fr = secure($_POST['cost_fr']);
-  $discount = secure($_POST['discount']);
-  $unit = secure($_POST['unit']); 
-
-   $cost_co = $cost_t*$num;
-   $cost_co=$cost_co-$discount;
-
-  $sql=execute("UPDATE `buy` SET `dealer_id`='$dealer_id',`cost_t`='$cost_t',`cost_co`='$cost_co',`num`='$num',`type`='$type',`cost_wasl`='$cost_wasl',`note`='$note',`cost_fr`='$cost_fr',`discount`='$discount' ,`unit`='$unit' WHERE `id`='$id' ");
-    $_SESSION["edit_success"] = "";
-    direct('buy_helka.php');
-
-}
 
 if (post('del')) {
     $id = secure($_POST['id']);
@@ -202,30 +162,6 @@ if (post('del')) {
     direct('buy_helka.php');
 }
 
-
-
-// add
-
-if (post('add')) {
-    $dealer_id = secure($_POST['dealer_id']);
-    $type = secure($_POST['type']);
-    $num = secure($_POST['num']);
-    $cost_t = secure($_POST['cost_t']);
-    $note = secure($_POST['note']);
-    $date=date("Y-m-d");
-    $cost_wasl = secure($_POST['cost_wasl']);
-    $cost_fr = secure($_POST['cost_fr']);
-    $discount = secure($_POST['discount']);
-    $unit = secure($_POST['unit']); 
-
-     $cost_co = $cost_t*$num;
-     $cost_co=$cost_co-$discount;
-     
-
-    $sql=execute("INSERT INTO `buy` (`dealer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`cost_fr`,`discount`,`unit`,`name_product`,`buy_type`,`status`,`note`) VALUES('$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$cost_fr','$discount','$unit','هێلکە','helka','1','$note') ");
-    $_SESSION["add_success"] = "";
-    direct('buy_helka.php');
-}
 
 ?>
 <?php require_once('footer.php'); ?>

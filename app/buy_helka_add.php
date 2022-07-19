@@ -2,6 +2,12 @@
 
 require_once('header.php'); 
 
+if (isset($_SESSION["add_success"])) {
+    msg('سەرکەوتوبوو','سەرکەوتووانە وەسڵەکە زیادکرا','success');
+     unset($_SESSION["add_success"]);
+ }
+
+
 if (post("add_invoice")){
     
 $total=$_POST['price'];
@@ -32,6 +38,9 @@ $cost_co=$cost_co-$discount;
 execute("INSERT INTO `buy` (`invoice_id`,`dealer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`cost_fr`,`discount`,`unit`,`name_product`,`buy_type`,`status`,`note`) VALUES('$lastInsertId','$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$cost_fr','$discount','$unit','هێلکە','helka','1','$note') ");
 
 }
+
+ $_SESSION["add_success"] = "";
+direct("buy_helka_add.php");
 
 }
 
@@ -71,6 +80,7 @@ execute("INSERT INTO `buy` (`invoice_id`,`dealer_id`,`cost_t`,`cost_co`,`num`,`t
 <div class="form-group ">
     <label>ناوی فرۆشیار</label>
             <select name="dealer_id"   class="form-control col-md-10 mx-auto">
+                <option disabled selected>شۆفێر هەڵبژێرە</option>
                 <?php
                     $getdealer = show(" SELECT * FROM dealers");
                     foreach ($getdealer as $dealer) { ?>

@@ -1,38 +1,35 @@
-<?php require_once('header.php'); ?>
-
-
 <?php 
 
-if (isset($_SESSION["edit_success"])) {
-    msg('سەرکەوتوبوو','سەرکەوتووانە  گۆڕانکاری کرا','success');
-     unset($_SESSION["edit_success"]);
+require_once('header.php'); 
+
+if (isset($_SESSION["add_success"])) {
+    msg('سەرکەوتوبوو','سەرکەوتووانە وەسڵەکە زیادکرا','success');
+     unset($_SESSION["add_success"]);
  }
 
-$invoice_id=$_GET['invoice_id'];
 
-$getInvoice = getdata(" SELECT * FROM invoice WHERE id='$invoice_id' ");
-$dealer_id=$getInvoice['dealer_id'];
-
-
-if (post("update_invoice")) {
-    $total=$_POST['price'];
-    $type_invoice="buy_helka";
-    $unit ="دانە";
-    $date=date("Y-m-d");
-    $note =$_POST['note'];
-
+if (post("add_invoice")){
+    
+$total=$_POST['price'];
+$type_invoice="buy_qa3a";
+$date=date("Y-m-d");
+$note =$_POST['note'];
+$place =$_POST['place'];
 $dealer_id = $_POST['dealer_id'];
 
- execute("UPDATE invoice SET `price`='$total',`type`='$type_invoice',`note`='$note',`dealer_id`='$dealer_id' WHERE id='$invoice_id'");
-
+$sqlInsert = "INSERT INTO invoice (`price`,`type`,`note`,`dealer_id`) VALUES ('$total','$type_invoice','$note','$dealer_id')";
+mysqli_query($conn, $sqlInsert);
+$lastInsertId = mysqli_insert_id($conn);
 
 for ($i = 0; $i < count($_POST['num']); $i++) {
 
 
-$id =$_POST['id'][$i];
+$name_product =$_POST['name_product'][$i];
 $type =$_POST['type'][$i];
 $num =$_POST['num'][$i];
 $cost_t =$_POST['cost_t'][$i];
+$unit =$_POST['unit'][$i];
+
 $cost_wasl =$_POST['cost_wasl'][$i];
 $cost_fr =$_POST['cost_fr'][$i];
 $discount =$_POST['discount'][$i];
@@ -40,62 +37,75 @@ $discount =$_POST['discount'][$i];
 $cost_co = $cost_t*$num;
 $cost_co=$cost_co-$discount;
 
-execute("UPDATE `buy` SET `invoice_id`='$invoice_id' , `dealer_id`='$dealer_id',`cost_t`='$cost_t',`cost_co`='$cost_co',`num`='$num',`type`='$type',`cost_wasl`='$cost_wasl',`note`='$note',`cost_fr`='$cost_fr',`discount`='$discount' ,`unit`='$unit' WHERE `id`='$id' ");
+execute("INSERT INTO `buy` (`invoice_id`,`dealer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`cost_fr`,`discount`,`unit`,`name_product`,`place`,`buy_type`,`status`,`note`) VALUES('$lastInsertId','$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$cost_fr','$discount','$unit','$name_product','$place','qa3a','1','$note') ");
+}
+
+ $_SESSION["add_success"] = "";
+direct("buy_qa3a_add.php");
 
 }
 
-$_SESSION["edit_success"]="";
-direct("buy_helka_invoice.php?invoice_id=$invoice_id");
-
-}
 
 ?>
 
 
 <div class="container-fluid mt-4">
-<a href="buy_helka.php" class="btn btn-sm btn-info shadow" >
+<a href="buy_qa3a.php" class="btn btn-sm btn-info shadow" >
  <span class="fa fa-arsrow-right"></span>
- گەڕانەوە بۆ وەسڵەکان
+ گەڕانەوە
   </a>
 </div>
 
-<form method="post" action="buy_helka_invoice.php?invoice_id=<?=$invoice_id?>">
 
-<div class="d-flex justify-content-center mt-3 flex-wrap">
-    <button  type="submit" name="update_invoice" class="btn btn-success pb-1 pt-1" >
+
+<form method="post" action="">
+
+<div class="d-flex justify-content-around mt-3 flex-wrap">
+    <a  id="add_more"  class="btn btn-success pb-1 pt-1" >
 
         <p style="transform:translate(0px,10px)">
-        <i class="fas fa-save "></i>  <span style="font-weight:bold">گۆڕانکاری</span>
+        <i class="fas fa-plus-circle "></i>  <span style="font-weight:bold">زیادکردنی تر </span>
+        </p>
+
+    </a>
+    <button  type="submit" name="add_invoice" class="btn btn-dark pb-1 pt-1" >
+
+        <p style="transform:translate(0px,10px)">
+        <i class="fas fa-save "></i>  <span style="font-weight:bold">سەیڤکردن</span>
         </p>
 
     </button>
 </div>
 
-<div class=" container-fluid px-5 d-flex mt-3 justify-content-around flex-wrap" style="align-items:center">
+<div class=" container-fluid px-5 d-flex justify-content-around mt-3 flex-wrap" style="align-items:center">
 <div class="form-group ">
-    <label>ناوی فرۆشیار</label>
-            <select name="dealer_id" id="dealer_id1"  class="form-control col-md-10 mx-auto">
+<label>ناوی فرۆشیار</label>
+            <select name="dealer_id" required   class="form-control col-md-10 mx-auto">
+                
+            <option selected disabled> فرۆشیار هەڵبژێرە</option>
                 <?php
                     $getdealer = show(" SELECT * FROM dealers");
                     foreach ($getdealer as $dealer) { ?>
-                                                
-                 <option <?php if($dealer_id==$dealer['id']) echo 'selected="selected"'; ?> value="<?=$dealer['id']?>"> <?=$dealer['name']?> </option>
+                
+                
+                 <option  value="<?=$dealer['id']?>"> <?=$dealer['name']?> </option>
                 <?php   } ?>
             </select>
-        </div> 
-
-        <div class="form-group col-lg-6">
-        <label>تێبینی</label>
-            <?php 
-                $getInvoice = show("SELECT * FROM invoice WHERE id='$invoice_id'");
-                foreach ($getInvoice as $invoiceList){
-            ?>
-            <textarea rows="3"  id="note1" placeholder="تێبینی بنووسە" class="form-control" name="note" >
-                <?=$invoiceList['note']?>
-            </textarea>
-            <?php } ?>
         </div>
 
+        <div class="form-group">
+        <label>شوێنی کڕین</label>
+            <input type="text" placeholder="شوێنی کڕین بنووسە"
+                class="form-control  mx-auto" name="place"
+                required="">
+        </div>  
+        
+        <div class="form-group col-lg-6">
+        <label>تێبینی</label>
+            <textarea rows="3"  id="note1" placeholder="تێبینی بنووسە" class="form-control" name="note" ></textarea>
+        </div>
+
+        
 </div>
 
 
@@ -107,6 +117,9 @@ direct("buy_helka_invoice.php?invoice_id=$invoice_id");
 <table  class="table  table-striped table-bordered  text-center" id="tab_logic" dir="rtl" style="zoom:85%">
         <thead class="bg-dark text-light">
             <tr>
+                <th>لابردن</th>
+                <th>ناوی شتوومەک</th>
+                <th>یەکەی کڕین</th>
                 <th> جۆر    </th>
                 <th> ژمارە    </th>
                 <th> نرخی تاک    </th>
@@ -120,48 +133,31 @@ direct("buy_helka_invoice.php?invoice_id=$invoice_id");
 
         <tbody id="item_table">
 
-        <?php 
-            $total_wasl=0;
-            $total_discount=0;
-            $total_mawa=0;
-            $total_all=0;
-           $invoice =show(" SELECT * FROM buy WHERE buy_type='helka' AND `status`='1' AND invoice_id={$invoice_id} ");
-            foreach($invoice as $invoice_list){
-                $id = $invoice_list['id'];
-                $dealer_id = $invoice_list['dealer_id'];
-                $num = $invoice_list['num'];
-                $cost_t = $invoice_list['cost_t'];
-                $cost_co = $invoice_list['cost_co'];
-                $type = $invoice_list['type'];
-                $cost_wasl = $invoice_list['cost_wasl'];
-                $cost_froshtn = $invoice_list['cost_fr'];
-                $cost_mawa = $cost_co-$cost_wasl;
-                $discount = $invoice_list['discount'];
-                $date = $invoice_list['date'];
-                $note=$invoice_list['note'];
+       <tr id="row_id_1">
+        <td></td>
 
-                // total
-                $total_wasl+=$cost_wasl;
-                $total_discount+=$discount;
-                $total_mawa+=$cost_mawa;
-
-                $total_all+=$cost_co;
-               
-                
-                $getdealer = getdata(" SELECT * FROM dealers WHERE id='$dealer_id' ");
-                $dealer_name = $getdealer['name'];
-
-
-        ?>
-
-
-
-       <tr id="row_id_1" class="text-center">
         <td>
-
-        <input type="hidden" value="<?=$id?>" name="id[]">
         <div class="form-group">
-                      <input type="text" value="<?=$type?>" placeholder="   جۆری هێلکە  " class="form-control  col-md-10 mx-auto"
+                <input type="text" placeholder="   ناوی شتوومەک  "
+                    class="form-control mx-auto" name="name_product[]"
+                    id="name_product1"
+                    required="">
+            </div>
+        </td>
+
+        <td>
+            <div class="form-group">
+                <select name="unit[]" id="unit1" class="form-control  mx-auto" required>
+                    <option value="مەتر">مەتر</option>
+                    <option value="دانە">دانە</option>
+                    <option value="کیلۆ">کیلۆ</option>
+                </select>
+            </div>
+        </td>
+     
+        <td>
+        <div class="form-group">
+                      <input type="text" placeholder="   جۆر  " class="form-control col-md-10 mx-auto"
                         name="type[]" id="type1" required="">
         </div>
 
@@ -170,21 +166,21 @@ direct("buy_helka_invoice.php?invoice_id=$invoice_id");
 
         <td>
         <div class="form-group">
-                      <input id="num1" value="<?=$num?>" type="number" placeholder=" بڕ " class="form-control qty col-md-10 mx-auto" name="num[]"
+                      <input id="num1" type="number" placeholder=" بڕ " class="form-control qty col-md-10 mx-auto" name="num[]"
                         required="">
                     </div>
         </td>
 
         <td>
         <div class="form-group">
-                      <input type="text" value="<?=$cost_t?>" placeholder="  نرخی تاک" class="form-control cost_t col-md-10 mx-auto"
+                      <input type="text" placeholder="  نرخی تاک" class="form-control cost_t col-md-10 mx-auto"
                         name="cost_t[]" id="cost_t1" required="">
                     </div>
         </td>
 
         <td>
         <div class="form-group">
-                      <input type="text" value="<?=$cost_wasl?>" placeholder=" بڕی واسڵ " class="form-control cost_wasl col-md-10 mx-auto"
+                      <input type="text" placeholder=" بڕی واسڵ " class="form-control cost_wasl col-md-10 mx-auto"
                         name="cost_wasl[]" id="cost_wasl1" required="">
                     </div>
 
@@ -193,27 +189,23 @@ direct("buy_helka_invoice.php?invoice_id=$invoice_id");
         <td>
             
         <div class="form-group">
-                      <input type="text" value="<?=$cost_froshtn?>" placeholder="  نرخی فرۆشتن بە دانە " class="form-control col-md-10 mx-auto"
+                      <input type="text" placeholder="  نرخی فرۆشتن بە دانە " class="form-control col-md-10 mx-auto"
                         name="cost_fr[]" id="cost_fr1" required="">
                     </div>
         </td>
 
         <td>
         <div class="form-group">
-                      <input type="text" value="<?=$discount?>" placeholder="  نرخی داشکاندن " class="form-control cost_discount col-md-10 mx-auto"
+                      <input type="text" placeholder="  نرخی داشکاندن " class="form-control cost_discount col-md-10 mx-auto"
                         name="discount[]" id="discount1" required="">
                     </div>
         </td>
 
-
-
-        <td><div class="form-group"><input value="<?=$cost_co?>" type="text"  class="form-control total col-md-10 mx-auto" disabled></div></td>
+        <td><div class="form-group"><input type="text"  class="form-control total col-md-10 mx-auto" disabled></div></td>
 
         
         
       </tr>
-
-      <?php } ?>
  
         </tbody>
     </table>
@@ -229,21 +221,21 @@ direct("buy_helka_invoice.php?invoice_id=$invoice_id");
                     <td class="left">
                     <strong>کۆی گشتی نرخی واسڵکراو</strong>
                     </td>
-                    <td class="right" id="total_wasl"><?=$total_wasl?></td>
+                    <td class="right" id="total_wasl">0</td>
                 </tr>
 
                 <tr>
                     <td class="left">
                     <strong>کۆی گشتی نرخی داشکاندن</strong>
                     </td>
-                    <td class="right" id="total_discount"><?=$total_discount?></td>
+                    <td class="right" id="total_discount">0</td>
                 </tr>
 
                 <tr>
                     <td class="left">
                     <strong>کۆی گشتی نرخی ماوە</strong>
                     </td>
-                    <td class="right" id="total_mawa"><?=$total_mawa?></td>
+                    <td class="right" id="total_mawa">0</td>
                 </tr>
 
                 <tr class="bg-dark text-light" >
@@ -252,7 +244,7 @@ direct("buy_helka_invoice.php?invoice_id=$invoice_id");
                     <input type="hidden" id="input_price" name="price">
                     </td>
                     <td class="right">
-                    <strong id="total_gshty"><?=$total_all?></strong>
+                    <strong id="total_gshty">0</strong>
                     </td>
                 </tr>
             </tbody>
@@ -281,7 +273,9 @@ direct("buy_helka_invoice.php?invoice_id=$invoice_id");
             count=count+1;
             var markup = '<tr id="row_id_'+count+'" >';
             markup+=' <td><button name="remove_row" id="'+count+'" class=" remove_row btn btn-danger btn-sm">x</button></td>';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" جۆری هێلکە " class="form-control col-md-10 mx-auto" name="type[]" id="type'+count+'" required=""> </div> </td>';
+            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" ناوی شتوومەک " id="name_product'+count+'" class="form-control mx-auto" name="name_product[]" required=""> </div> </td>';
+            markup+=' <td> <div class="form-group"> <select name="unit[]" id="unit'+count+'" class="form-control mx-auto" required> <option value="مەتر">مەتر</option> <option value="دانە">دانە</option> <option value="کیلۆ">کیلۆ</option> </select> </div> </td>';
+            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" جۆر " class="form-control col-md-10 mx-auto" name="type[]" id="type'+count+'" required=""> </div> </td>';
             markup+=' <td> <div class="form-group"> <input id="num1'+count+'" type="number" placeholder=" بڕ " class="form-control qty col-md-10 mx-auto" name="num[]" required=""> </div> </td> ';
             markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی تاک" class="form-control cost_t col-md-10 mx-auto" name="cost_t[]" id="cost_t'+count+'" required=""> </div> </td> ';
             markup+=' <td> <div class="form-group"> <input type="text" placeholder=" بڕی واسڵ " class="form-control cost_wasl col-md-10 mx-auto" name="cost_wasl[]" id="cost_wasl'+count+'" required=""> </div> </td> ';
@@ -343,6 +337,8 @@ function calc_total()
     $('#total_gshty').html(total.toFixed(2));
 
     $('#input_price').val(total);
+
+
     // total wasl
 
 	$('.cost_wasl').each(function() {
