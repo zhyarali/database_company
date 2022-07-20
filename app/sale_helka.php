@@ -2,8 +2,8 @@
 
 
 <div class="container-fluid mt-4">
-<a href="buy.php" class="btn btn-sm btn-info shadow" >
- <span class="fa fa-arsrow-right"></span>
+<a href="sale.php" class="btn btn-sm btn-info shadow" >
+ <span class="fa fa-arrow-right"></span>
  گەڕانەوە
   </a>
 </div>
