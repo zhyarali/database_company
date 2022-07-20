@@ -61,15 +61,15 @@ if (empty($data)) {
 
 
 
-<div class="container-fluid  mt-3 d-flex justify-content-around">
+<!-- <div class="container-fluid  mt-3 d-flex justify-content-around">
 <form method="post" action="view_report.php">
     <input type="hidden" name="user_id" value="<?=$user_id?>">
     <button type="submit" class="btn btn-dark" name="dealer_info" style="border:none;" > <i class="fas fa-print"></i> پرنتکردن</button>
 </form> 
-</div>
+</div> -->
 
 
-<div class="container-fluid d-flex justify-content-between">
+<div class="container-fluid d-flex justify-content-between mt-3">
 
 <div class="row col-lg-6 col-12 ">
         <div class="card border shadow-none m-auto " style="width: 25rem;border-radius:8px">
@@ -201,18 +201,18 @@ if (empty($data)) {
 
     <div class="container-fluid  mt-3 d-flex justify-content-around flex-wrap">
        
-        <a href="dealer_detail.php?id=<?=$user_id?>" class="btn btn-success shadow">زانیاری گشتی بهێنەوە</a>
+        <!-- <a href="dealer_detail.php?id=<?=$user_id?>" class="btn btn-success shadow">زانیاری گشتی بهێنەوە</a> -->
 
         
         <div class="d-flex flex-wrap justify-content-center">
 
-            <div class="form-group mx-3">
+            <!-- <div class="form-group mx-3">
             <input type="date" 
              class="form-control  mx-auto" id="get_by_date" required>
             <input type="hidden" 
              class="form-control mx-auto" value="<?=$user_id?>" id="user_id">
            </div>
-           <p class="btn btn-dark shadow" id="btn_search">زانیاری بەپێی ڕۆژ بهێنەوە</p>
+           <p class="btn btn-dark shadow" id="btn_search">زانیاری بەپێی ڕۆژ بهێنەوە</p> -->
 
 
            <button style="background-color:#7868E6 !important;outline:none;shadow:none" data-bs-toggle="modal" href="#exampleModalToggle" role="button" type="button" class="btn btn-primary mx-3 border-0  position-relative">
@@ -230,185 +230,130 @@ if (empty($data)) {
     
 <div id="show_data">
   
+<div class="container-fluid mt-2">
+<div class="row m-auto" >
 
-    <div class="row col-lg-12 col-12 m-auto p-4 table-responsive">
-
-        <table class="table table-bordered text-center" style="zoom:80%">
-            <!-- <caption>List of users</caption> -->
-            <thead>
-                <tr>
-                    <th scope="col">ناوی شتوومەک</th>
-                    <th scope="col">بەروار</th>
-                    <th scope="col">بڕ</th>
-                    <th scope="col">جۆر</th>
-                    <th scope="col">شوێن</th>
-                    <th scope="col">جۆری دراو</th>
-                    <th scope="col">نرخی تاک</th>
-                    <th scope="col">نرخی واسڵکراو</th>
-                    <th scope="col">نرخی داشکاندن</th>
-                    <th scope="col">نرخی گشتی</th>
-                    <th scope="col">نرخی ماوە</th>                   
-                    <th scope="col">شۆفێر</th>
-                    <th scope="col"><i class="fas fa-print"></i></th>
-                    <th scope="col">گەڕاندنەوە</th>
-
-                </tr>
-            </thead>
-            <tbody>
+<div class="col-md-12">
+  <div class="table-responsive">
+<table id="example" class="table table-hover   table-striped table-bordered  text-center" dir="rtl" style="zoom:85%">
+        <thead  class="bg-dark text-light">
+            <tr>
+                <th>ژمارەی وەسڵ</th>
+                <th>جۆری کڕین</th>
+                <th>کۆی گشتی نرخ</th>
+                <th>بەروار</th>
+                <th>پرنتکردن</th>
+                <th>گۆڕانکاری</th>
+                <th>سڕینەوە</th> 
+            </tr>
+        </thead>
+        <tbody>
 <?php 
-$sum_wasl=0;
-$sum_discount=0;
-$sum_gshty=0;
-$sum_mawa=0;
-$sum_maway_peshw=0;
+                 $invoiceList =show("SELECT * from invoice  ORDER BY date DESC");
 
-$buys = show(" SELECT * FROM buy WHERE dealer_id=$user_id AND `status`=1");
-foreach ($buys as $buy) {
-  $id = $buy['id'];
-  $dealer_id = $buy['dealer_id'];
-  $driver_id = $buy['driver_id'];
-  $num = $buy['num'];
-  $cost_t = $buy['cost_t'];
-  $cost_co = $buy['cost_co'];
-  $cost_wasl = $buy['cost_wasl'];
-  $type = $buy['type'];
+                 foreach($invoiceList as $invoiceDetails){
+                 $invoiceDate = date("d/M/Y, H:i:s", strtotime($invoiceDetails["date"]));
+                 $invoice_status=$invoiceDetails['status'];
 
-  $cost_mawa = $cost_co-$cost_wasl;
+                 if ($invoice_status==1) {
+                  
 
-  $place = $buy['place'];
-  $cost_froshtn = $buy['cost_fr'];
-  $discount = $buy['discount'];
-  $date = $buy['date'];
-  $unit = $buy['unit'];
-  $per=$buy['percentage'];
-  $product_name=$buy['name_product'];
-  $buy_type=$buy['buy_type'];
-
-//   koy gshty
-$sum_wasl=$sum_wasl+$cost_wasl;
-$sum_maway_peshw=$sum_maway_peshw+$cost_mawa;
-$sum_gshty=$sum_gshty+$cost_co;
-$sum_discount+=$discount;
 ?>
-                <tr>
-                    <td>
-                    <?php 
-                    $buy_type_name='';
-                    if ($buy_type=="qa3a") {
-                        $buy_type_name='ئەشیای ناو قاعە';
-                        echo $buy_type_name."<br>";
-                        echo $product_name;}
 
-                    if ($buy_type=="asn") {echo 'ئاسن';}
 
-                    if ($buy_type=="helka") {echo 'هێلکە';}
+          
 
-                    if ($buy_type=="3alaf") {echo 'عەلەف';}
-                    ?> 
-                    </td>
-                    <td><?=$date?></td>
-                    <td>
-                        <?=$num?> <?=$unit?>
-                        <?php
-                        if ($buy_type=="3alaf") {
-                            echo "<br>".$per." کیلۆگرام";
-                        }
-                        ?>
-                    </td>
-                    <td><?=$type?></td>
-                    <td>
-                        <?php
-                            if (!empty($place)) {
-                                echo $place;
-                            }else{
-                                echo "-";
-                            }
-                        ?>
-                   </td>
-                   <td><?=$currency_type?></td>
-                    <td><?=$cost_t?></td>
-                    <td><?=$cost_wasl?></td>
-                    <td><?=$discount?></td>
-                    <td><?=$cost_co?></td>
-                    <td><?=$cost_mawa?></td>
-                    <td class="driver-info">
-                        <?php
-                        if ($driver_id!=0) {
-                            $getdriver = getdata(" SELECT * FROM drivers WHERE id='$driver_id' ");
-                            $driver_name = $getdriver['name'];
-                            $driver_phone = $getdriver['phone'];
-                            $driver_car_number = $getdriver['car_number'];
-                            echo "<span>$driver_name</span>"."<br>";
-                            echo $driver_car_number."<br>";
-                            echo $driver_phone."<br>";
-                        }else{
-                            echo "-";
-                        }
+       <tr>
+          <td><?=$invoiceDetails['id']?></td>
+          <td>
                         
-                        ?>
-                    </td>
-                <td> 
-                <form method="post" action="view_report.php">
-                    <input type="hidden" name="user_id" value="<?=$user_id?>">
-                    <input type="hidden" name="con_id" value="<?=$id?>">
-                    <button type="submit" name="dealer_info" style="border:none;background:none" > <i class="fas fa-print"></i> </button>
-                </form>    
-               </td>
-                <td> 
-                <form method="post" action="dealer_detail.php?id=<?=$user_id?>">
-                    <input type="hidden" name="id" value="<?=$id?>">
-                    <input type="hidden" name="userId" value="<?=$user_id?>">
-                    <button type="submit" name="return_buy" style="border:none;background:none" > <i class="fas fa-sync"></i> </button>
-                </form>    
-               </td>
-                </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+          <?php 
+          $buy_type="";
+          if ($invoiceDetails['type']=="buy_helka"){
+                  $buy_type="هێلکە";
+          }
+          if ($invoiceDetails['type']=="buy_qa3a"){
+                  $buy_type="ئەشیای ناو قاعە";
+          }
+          if ($invoiceDetails['type']=="buy_3alaf"){
+                  $buy_type="عەلەف";
+          }
+          if ($invoiceDetails['type']=="buy_asn"){
+                  $buy_type="ئاسن";
+          }
+          echo $buy_type;
+          ?>
 
+         </td>
+          <td><?=$invoiceDetails['price']?></td>
+          <td><?=$invoiceDetails['date']?></td>
+          <td><a href="print_invoice.php?print_type=<?=$invoiceDetails['type']?>&&invoice_id=<?=$invoiceDetails['id']?>"><i class="fa fa-print"></i></a></td>
+          <td><a href="<?=$invoiceDetails['type']?>_invoice.php?invoice_id=<?=$invoiceDetails['id']?>"><i class="fa fa-edit"></i></a></td>
+          <td><a href="#" data-toggle="modal" data-target="#delete<?php echo $invoiceDetails['id'] ?>"><i class="fa fa-trash-alt"></i></a></td>
+        
+      </tr>
+
+
+
+
+          <!-- delete modal -->
+          <div class="modal fade" id="delete<?php echo $invoiceDetails['id'] ?>" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content" style="background-color: white;border-radius: 15px;">
+                                    <div class="modal-body text-center">
+                                        <div class="container-fluid">
+                                            <div class="row row-cols-1 row-cols-md-3">
+                                                <div class="col-md-12 mb-3 mx-auto">
+                                                    <div class="h-100">
+                                                        <i class="fa fa-times-circle" style="float:left;color: black"
+                                                            data-dismiss="modal"></i>
+                                                        <div class="card-body">
+                                                            <h5 class="container col-md-6 mt-3  text-center">
+                                                                دڵنیای لە سڕینەوەی ئەم وەسڵە لەناو سیستەمەکەت ؟
+                                                            </h5>
+                                                            <br>
+                                                            <form dir="rtl" method="POST">
+                                                                <div class="form-group">
+                                                                    <input type="hidden" placeholder="  ناو  " name="id"
+                                                                        value="<?=$invoiceDetails['id'];?> "
+                                                                        class="form-control col-md-10 mx-auto">
+                                                                </div>
+ 
+                                                                <button type="submit" name="del"
+                                                                    class="btn btn-danger btn-block"> سڕینەوە </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+      
+
+  
+<?php
+} }
+?>
+        </tbody>
+    </table>
     </div>
 
+ </div>
 
-<div class="row  d-flex justify-content-center">
-    <div class="col-lg-4 col-sm-5 ml-auto">
-        <table class="table table-clear text-center">
-            <tbody>
-                <tr>
-                    <td class="left">
-                    <strong>کۆی گشتی نرخی واسڵکراو</strong>
-                    </td>
-                    <td class="right"><?=$sum_wasl?></td>
-                </tr>
-
-                <tr>
-                    <td class="left">
-                    <strong>کۆی گشتی نرخی داشکاندن</strong>
-                    </td>
-                    <td class="right"><?=$sum_discount?></td>
-                </tr>
-
-                <tr>
-                    <td class="left">
-                    <strong>کۆی گشتی نرخی ماوە</strong>
-                    </td>
-                    <td class="right"><?=$cost_maway_peshw?></td>
-                </tr>
-
-                <tr class="bg-dark text-light">
-                    <td class="left">
-                    <strong>کۆی گشتی نرخ</strong>
-                    </td>
-                    <td class="right">
-                    <strong><?=$sum_gshty?></strong>
-                    </td>
-                </tr>
-            </tbody>
-
-        </table>
-    </div>
 </div>
 
 </div>
+  
+</div>
+
+
+
+
 
 
 <!-- return -->
@@ -444,16 +389,35 @@ $sum_discount+=$discount;
 
 
 
+
+<?php 
+
+if (isset($_SESSION["delete"])) {
+    msg('ئاگاداری','سەرکەوتووانە سڕایەوە ','warning');
+    unset($_SESSION["delete"]);
+ }
+
+
+if (post('del')) {
+    $id = secure($_POST['id']);
+    $sql = execute(" DELETE  FROM `invoice` WHERE id = '$id'");
+    $sql = execute(" DELETE  FROM `buy` WHERE invoice_id = '$id'");
+    $_SESSION["delete"] = "";
+    $loc="dealer_detail.php?id=".$_GET['id'];
+    direct($loc);
+}
+
+
+?>
+
+
 <?php 
 
 if (isset($_SESSION["add_success"])) {
     msg('سەرکەتووبوو','سەرکەوتووانە  بڕی پارەی دیاریکراو گەڕێنرایەوە ','success');
      unset($_SESSION["add_success"]);
  }
-if (isset($_SESSION["update_return"])) {
-    msg('سەرکەتووبوو','بە سەرکەوتوویی ئەم کڕینە گەڕێندرایەوە','success');
-     unset($_SESSION["update_return"]);
- }
+
 if (isset($_SESSION["delete_return"])) {
     msg('سەرکەتووبوو','بە سەرکەوتوویی ئەم کڕینە سڕایەوە','success');
      unset($_SESSION["delete_return"]);

@@ -153,11 +153,16 @@
 
 <?php 
 
+if (isset($_SESSION["delete"])) {
+    msg('ئاگاداری','سەرکەوتووانە سڕایەوە ','warning');
+    unset($_SESSION["delete"]);
+ }
 
 
 if (post('del')) {
     $id = secure($_POST['id']);
     $sql = execute(" DELETE  FROM `invoice` WHERE id = '$id'");
+    $sql = execute(" DELETE  FROM `buy` WHERE invoice_id = '$id'");
     $_SESSION["delete"] = "";
     direct('buy_helka.php');
 }

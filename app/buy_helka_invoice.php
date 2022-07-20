@@ -114,6 +114,7 @@ direct("buy_helka_invoice.php?invoice_id=$invoice_id");
                 <th> نرخی فرۆشتن    </th>
                 <th> نرخی داشکاندن    </th>
                 <th> کۆی گشتی    </th>
+                <th>  گەڕانەوە    </th>
         
             </tr>
         </thead>
@@ -209,11 +210,25 @@ direct("buy_helka_invoice.php?invoice_id=$invoice_id");
 
         <td><div class="form-group"><input value="<?=$cost_co?>" type="text"  class="form-control total col-md-10 mx-auto" disabled></div></td>
 
+        <td>
+                 <form method="post" action="buy_helka_invoice.php?invoice_id=<?=$invoice_id?>">
+                    <input type="hidden" name="id" value="<?=$id?>">
+                    <button type="submit" name="return_buy" style="border:none;background:none" > <i class="fas fa-sync"></i> </button>
+                </form>  
+            </td>
         
         
       </tr>
 
       <?php } ?>
+
+      <?php if (empty($invoice)) { 
+        execute("UPDATE `invoice` SET `status`='-1' WHERE id='$invoice_id' ");
+       ?>
+        <tr>
+            <td colspan="11">ببورە ئەم وەسڵە داتاکانی گەڕێندراونەتەوە !</td>
+        </tr>
+       <?php } ?>
  
         </tbody>
     </table>
@@ -269,7 +284,25 @@ direct("buy_helka_invoice.php?invoice_id=$invoice_id");
 
 
 
-<?php require_once('footer.php'); ?>
+<?php 
+require_once('footer.php'); 
+
+if (isset($_SESSION["update_return"])) {
+    msg('سەرکەتووبوو','بە سەرکەوتوویی ئەم کڕینە گەڕێندرایەوە','success');
+     unset($_SESSION["update_return"]);
+ }
+
+if (post('return_buy')) {
+    $id = secure($_POST['id']);
+  
+    execute("UPDATE buy SET `status`='-1' WHERE id='$id' ");
+    $_SESSION["update_return"] = "";
+    $loc="buy_helka_invoice.php?invoice_id=".$invoice_id;
+    direct($loc);
+  }
+
+
+?>
 
 
 

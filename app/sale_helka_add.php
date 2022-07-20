@@ -2,6 +2,8 @@
 
 require_once('header.php'); 
 
+
+
 if (isset($_SESSION["add_success"])) {
     msg('سەرکەوتوبوو','سەرکەوتووانە وەسڵەکە زیادکرا','success');
      unset($_SESSION["add_success"]);
@@ -11,13 +13,18 @@ if (isset($_SESSION["add_success"])) {
 if (post("add_invoice")){
     
 $total=$_POST['price'];
-$type_invoice="buy_helka";
+$type_invoice="sale_helka";
 $unit ="دانە";
 $date=date("Y-m-d");
 $note =$_POST['note'];
-$dealer_id = $_POST['dealer_id'];
+$customer_id = $_POST['dealer_id'];
+$name_product ="هێلکە";
 
-$sqlInsert = "INSERT INTO invoice (`price`,`type`,`note`,`dealer_id`) VALUES ('$total','$type_invoice','$note','$dealer_id')";
+
+
+
+
+$sqlInsert = "INSERT INTO invoice (`price`,`type`,`note`,`dealer_id`) VALUES ('$total','$type_invoice','$note','$customer_id')";
 mysqli_query($conn, $sqlInsert);
 $lastInsertId = mysqli_insert_id($conn);
 
@@ -35,12 +42,16 @@ $discount =$_POST['discount'][$i];
 $cost_co = $cost_t*$num;
 $cost_co=$cost_co-$discount;
 
-execute("INSERT INTO `buy` (`invoice_id`,`dealer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`cost_fr`,`discount`,`unit`,`name_product`,`buy_type`,`status`,`note`) VALUES('$lastInsertId','$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$cost_fr','$discount','$unit','هێلکە','helka','1','$note') ");
+
+
+
+execute("INSERT INTO `sale` (`invoice_id`,`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`sale_type`,`status`,`note`) VALUES('$lastInsertId','$customer_id
+','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','هێلکە','helka','1','$note') ");
 
 }
 
  $_SESSION["add_success"] = "";
-direct("buy_helka_add.php");
+direct("sale_helka_add.php");
 
 }
 
@@ -49,7 +60,7 @@ direct("buy_helka_add.php");
 
 
 <div class="container-fluid mt-4">
-<a href="buy_helka.php" class="btn btn-sm btn-info shadow" >
+<a href="sale_helka.php" class="btn btn-sm btn-info shadow" >
  <span class="fa fa-arsrow-right"></span>
  گەڕانەوە
   </a>
@@ -78,11 +89,11 @@ direct("buy_helka_add.php");
 
 <div class=" container-fluid px-5 d-flex justify-content-around mt-3 flex-wrap" style="align-items:center">
 <div class="form-group ">
-    <label>ناوی فرۆشیار</label>
+    <label>ناوی کڕیار</label>
             <select name="dealer_id"   class="form-control col-md-10 mx-auto">
-                <option disabled selected>فرۆشیار هەڵبژێرە</option>
+                <option disabled selected>کڕیار هەڵبژێرە</option>
                 <?php
-                    $getdealer = show(" SELECT * FROM dealers");
+                    $getdealer = show(" SELECT * FROM customer");
                     foreach ($getdealer as $dealer) { ?>
                                                 
                  <option  value="<?=$dealer['id']?>"> <?=$dealer['name']?> </option>
@@ -109,7 +120,6 @@ direct("buy_helka_add.php");
                 <th> ژمارە    </th>
                 <th> نرخی تاک    </th>
                 <th> نرخی واسڵکراو    </th>
-                <th> نرخی فرۆشتن    </th>
                 <th> نرخی داشکاندن    </th>
                 <th> کۆی گشتی    </th>
         
@@ -152,13 +162,7 @@ direct("buy_helka_add.php");
 
         </td>
 
-        <td>
-            
-        <div class="form-group">
-                      <input type="text" placeholder="  نرخی فرۆشتن بە دانە " class="form-control col-md-10 mx-auto"
-                        name="cost_fr[]" id="cost_fr1" required="">
-                    </div>
-        </td>
+
 
         <td>
         <div class="form-group">
@@ -213,6 +217,7 @@ direct("buy_helka_add.php");
                     <strong id="total_gshty">0</strong>
                     </td>
                 </tr>
+      
             </tbody>
 
         </table>
@@ -236,18 +241,91 @@ direct("buy_helka_add.php");
         var count=1;
         var price=0;
         $('#add_more').click(function() {
-            count=count+1;
-            var markup = '<tr id="row_id_'+count+'" >';
-            markup+=' <td><button name="remove_row" id="'+count+'" class=" remove_row btn btn-danger btn-sm">x</button></td>';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" جۆری هێلکە " class="form-control col-md-10 mx-auto" name="type[]" id="type'+count+'" required=""> </div> </td>';
-            markup+=' <td> <div class="form-group"> <input id="num1'+count+'" type="number" placeholder=" بڕ " class="form-control qty col-md-10 mx-auto" name="num[]" required=""> </div> </td> ';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی تاک" class="form-control cost_t col-md-10 mx-auto" name="cost_t[]" id="cost_t'+count+'" required=""> </div> </td> ';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" بڕی واسڵ " class="form-control cost_wasl col-md-10 mx-auto" name="cost_wasl[]" id="cost_wasl'+count+'" required=""> </div> </td> ';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی فرۆشتن بە دانە " class="form-control col-md-10 mx-auto" name="cost_fr[]" id="cost_fr'+count+'" required=""> </div> </td>';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی داشکاندن " class="form-control cost_discount col-md-10 mx-auto" name="discount[]" id="discount'+count+'" required=""> </div> </td>';
-            markup+=' <td><div class="form-group"><input type="text"  class="form-control total col-md-10 mx-auto" disabled></div></td> </tr>';
 
-            $('#item_table').append(markup);
+            var type=$('#type'+count).val()
+            var qty=$('#num'+count).val()
+            var cost_t=$('#cost_t'+count).val()
+            var cost_wasl=$('#cost_wasl'+count).val()
+            var discount=$('#discount'+count).val()
+
+
+            if (type=="") {
+              alert("جۆری هێلکە پڕ بکەوە")
+            }else{
+                if (qty=="") {
+                    alert("بڕی ژمارە دیاری بکە")
+                }else{
+
+                    let check=false; 
+
+                    $.ajax({
+                    url: "check_number_product.php",
+                    method: "POST",
+                    data: {sale_helka:true,qty:qty,type:type},
+                    success: function (data) {
+                        if (data=="success") {
+                           check=true
+                        }else{
+                            alert(data)
+                            check=false
+                        }
+                    }
+                 });
+
+              
+
+                    if (cost_t=="") {
+                      alert("نرخی تاک بەتاڵە !");
+                    }else{
+
+                    if (cost_wasl=="") {
+                      alert("نرخی واسڵکراو بەتاڵە !");
+                    }else{
+
+                        if (cost_t=="") {
+                          alert("نرخی تاک بەتاڵە !");
+                        }else{
+                            if (discount=="") {
+                              alert("نرخی داشکاندن بەتاڵە !");
+                            }else{
+
+
+
+                                count=count+1;
+                                var markup = '<tr id="row_id_'+count+'" >';
+                                markup+=' <td><button name="remove_row" id="'+count+'" class=" remove_row btn btn-danger btn-sm">x</button></td>';
+                                markup+=' <td> <div class="form-group"> <input type="text" placeholder=" جۆری هێلکە " class="form-control col-md-10 mx-auto" name="type[]" id="type'+count+'" required=""> </div> </td>';
+                                markup+=' <td> <div class="form-group"> <input id="num'+count+'" type="number" placeholder=" بڕ " class="form-control qty col-md-10 mx-auto" name="num[]" required=""> </div> </td> ';
+                                markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی تاک" class="form-control cost_t col-md-10 mx-auto" name="cost_t[]" id="cost_t'+count+'" required=""> </div> </td> ';
+                                markup+=' <td> <div class="form-group"> <input type="text" placeholder=" بڕی واسڵ " class="form-control cost_wasl col-md-10 mx-auto" name="cost_wasl[]" id="cost_wasl'+count+'" required=""> </div> </td> ';
+                                markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی داشکاندن " class="form-control cost_discount col-md-10 mx-auto" name="discount[]" id="discount'+count+'" required=""> </div> </td>';
+                                markup+=' <td><div class="form-group"><input type="text"  class="form-control total col-md-10 mx-auto" disabled></div></td> </tr>';
+
+                                $('#item_table').append(markup);
+
+
+
+
+
+                            }
+                        }
+
+                    }
+
+                    }
+
+
+                 
+
+
+                }
+            }
+          
+            
+
+
+
+
 
             });
 
@@ -275,6 +353,8 @@ function calc()
 	
 			var qty = $(this).find('.qty').val();
 
+            
+
             // alert(qty)
 			var price = $(this).find('.cost_t').val();
 			var discount = $(this).find('.cost_discount').val();
@@ -293,6 +373,14 @@ function calc_total()
 	total=0;
     let total_discount=0;
     let total_wasl=0;
+
+    let total_num=0;
+
+    // $('.qty').each(function() {
+    //     total_num += parseInt($(this).val());
+    // });
+
+    // $("#total_num").html(total_num); 
 
     // total
 	$('.total').each(function() {
@@ -323,15 +411,13 @@ function calc_total()
 
     $('#total_mawa').html(mawa.toFixed(2));
 
-
-
-
-
-
-
-	
 	
 }
+
+
+
+
+
 
 
 

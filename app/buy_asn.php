@@ -158,6 +158,7 @@
 if (post('del')) {
     $id = secure($_POST['id']);
     $sql = execute(" DELETE  FROM `invoice` WHERE id = '$id'");
+    $sql = execute(" DELETE  FROM `buy` WHERE invoice_id = '$id'");
     $_SESSION["delete"] = "";
     direct('buy_asn.php');
 }
