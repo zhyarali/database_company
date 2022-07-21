@@ -25,6 +25,7 @@ if (post("update_invoice")) {
 
 
  execute("UPDATE invoice SET `price`='$total',`type`='$type_invoice',`note`='$note',`dealer_id`='$dealer_id' WHERE id='$invoice_id'");
+ execute("DELETE FROM sale WHERE `status`='1' AND  `invoice_id`='$invoice_id' ");
 
 
 for ($i = 0; $i < count($_POST['num']); $i++) {
@@ -42,7 +43,7 @@ for ($i = 0; $i < count($_POST['num']); $i++) {
     $cost_co = $cost_t*$num;
     $cost_co=$cost_co-$discount;
 
-execute("UPDATE  `sale` SET  `invoice_id`='$invoice_id',`customer_id`='$dealer_id',`num`='$num',`cost_t`='$cost_t',`cost_co`='$cost_co',`type`='$type',`place`='$place',`cost_wasl`='$cost_wasl',`note`='$note',`discount`='$discount',`unit`='$unit'  WHERE id='$id'");
+    execute("INSERT INTO `sale` (`invoice_id`,`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`place`,`sale_type`,`status`,`note`) VALUES('$invoice_id','$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','ئاسن','$place','asn','1','$note') ");
 
 }
 

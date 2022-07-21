@@ -14,18 +14,26 @@ $getInvoice = getdata(" SELECT * FROM invoice WHERE id='$invoice_id' ");
 $dealer_id=$getInvoice['dealer_id'];
 
 
+$getInvoice = getdata(" SELECT * FROM  sale WHERE invoice_id='$invoice_id' ");
+$driverId=$getInvoice['driver_id'];
+
+
 if (post("update_invoice")) {
     $total=$_POST['price'];
-    $type_invoice="buy_asn";
+    $type_invoice="sale_3alaf";
     $date=date("Y-m-d");
     $note =$_POST['note'];
     $place =$_POST['place'];
+    $driver_id =$_POST['driver_id'];
     $dealer_id = $_POST['dealer_id'];
 
 
 
  execute("UPDATE invoice SET `price`='$total',`type`='$type_invoice',`note`='$note',`dealer_id`='$dealer_id' WHERE id='$invoice_id'");
- execute("DELETE FROM buy WHERE `status`='1' AND  `invoice_id`='$invoice_id' ");
+
+
+ execute("DELETE FROM sale WHERE `status`='1' AND  `invoice_id`='$invoice_id' ");
+
 
 for ($i = 0; $i < count($_POST['num']); $i++) {
 
@@ -34,20 +42,23 @@ for ($i = 0; $i < count($_POST['num']); $i++) {
     $num =$_POST['num'][$i];
     $cost_t =$_POST['cost_t'][$i];
     $unit =$_POST['unit'][$i];
+    $percentage =$_POST['percentage'][$i];
     
     $cost_wasl =$_POST['cost_wasl'][$i];
-    $cost_fr =$_POST['cost_fr'][$i];
     $discount =$_POST['discount'][$i];
     
     $cost_co = $cost_t*$num;
     $cost_co=$cost_co-$discount;
 
-    execute("INSERT INTO `buy` (`invoice_id`,`dealer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`cost_fr`,`discount`,`unit`,`name_product`,`place`,`buy_type`,`status`,`note`) VALUES('$invoice_id','$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$cost_fr','$discount','$unit','ئاسن','$place','asn','1','$note') ");
+
+    execute("INSERT INTO `sale` (`invoice_id`,`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`place`,`percentage`,`driver_id`,`sale_type`,`status`,`note`) VALUES('$invoice_id','$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','عەلەف','$place','$percentage','$driver_id','3alaf','1','$note') ");
+
+
 
 }
 
 $_SESSION["edit_success"]="";
-direct("buy_asn_invoice.php?invoice_id=$invoice_id");
+direct("sale_3alaf_invoice.php?invoice_id=$invoice_id");
 
 }
 
@@ -55,13 +66,13 @@ direct("buy_asn_invoice.php?invoice_id=$invoice_id");
 
 
 <div class="container-fluid mt-4">
-<a href="buy_asn.php" class="btn btn-sm btn-info shadow" >
- <span class="fa fa-arsrow-right"></span>
+<a href="sale_3alaf.php" class="btn btn-sm btn-info shadow" >
+ <span class="fa fa-arrow-right"></span>
  گەڕانەوە بۆ وەسڵەکان
   </a>
 </div>
 
-<form method="post" action="buy_asn_invoice.php?invoice_id=<?=$invoice_id?>">
+<form method="post" action="sale_3alaf_invoice.php?invoice_id=<?=$invoice_id?>">
 
 <div class="d-flex justify-content-center mt-3 flex-wrap">
     <button  type="submit" name="update_invoice" class="btn btn-success pb-1 pt-1" >
@@ -76,12 +87,12 @@ direct("buy_asn_invoice.php?invoice_id=$invoice_id");
 <div class=" container-fluid px-5 d-flex mt-3 justify-content-around flex-wrap" style="align-items:center">
 <div class="form-group ">
 
-            <label>ناوی فرۆشیار</label>
+            <label>ناوی کڕیار</label>
 
             <select name="dealer_id" id="dealer_id1"  class="form-control col-md-10 mx-auto">
-                <option disabled selected>فرۆشیار هەڵبژێرە</option>
+                <option disabled selected>کڕیار هەڵبژێرە</option>
                 <?php
-                    $getdealer = show(" SELECT * FROM dealers");
+                    $getdealer = show(" SELECT * FROM customer");
                     foreach ($getdealer as $dealer) { ?>
                                                 
                  <option <?php if($dealer_id==$dealer['id']) echo 'selected="selected"'; ?> value="<?=$dealer['id']?>"> <?=$dealer['name']?> </option>
@@ -89,13 +100,26 @@ direct("buy_asn_invoice.php?invoice_id=$invoice_id");
             </select>
         </div> 
 
+        <div class="form-group ">
+            <label>ناوی شۆفێر</label>
+        <select name="driver_id"  class="form-control col-md-10 mx-auto">
+       
+            <?php
+                $getdriver = show(" SELECT * FROM drivers ");
+                foreach ($getdriver as $driver) { ?>
+            
+            <option <?php if($driverId==$driver['id']) echo 'selected="selected"'; ?>  value="<?=$driver['id']?>"> <?=$driver['name']?> </option>
+            <?php   } ?>
+        </select>
+    </div> 
+
         <div class="form-group">
-        <label>شوێنی کڕین</label>
+        <label>شوێنی فرۆشتن</label>
         <?php 
-                $getPlace = show("SELECT * FROM buy WHERE invoice_id='$invoice_id' Limit 1");
+                $getPlace = show("SELECT * FROM sale WHERE invoice_id='$invoice_id' Limit 1");
                 foreach ($getPlace as $place) { 
             ?>
-            <input type="text" value="<?=$place['place']?>" placeholder="شوێنی کڕین"
+            <input type="text" value="<?=$place['place']?>" placeholder="شوێنی فرۆشتن"
                 class="form-control  mx-auto" name="place"
                 required="">
             <?php } ?>   
@@ -126,11 +150,11 @@ direct("buy_asn_invoice.php?invoice_id=$invoice_id");
             <tr>
                 <th>لابردن</th>
                 <th>یەکەی کڕین</th>
+                <th>ڕێژە بە کیلۆگرام</th>
                 <th> جۆر    </th>
                 <th> ژمارە    </th>
                 <th> نرخی تاک    </th>
                 <th> نرخی واسڵکراو    </th>
-                <th> نرخی فرۆشتن    </th>
                 <th> نرخی داشکاندن    </th>
                 <th> کۆی گشتی    </th>
                 <th>  گەڕانەوە    </th>
@@ -145,18 +169,18 @@ direct("buy_asn_invoice.php?invoice_id=$invoice_id");
                    $total_discount=0;
                    $total_mawa=0;
                    $total_all=0;
-                  $invoice =show(" SELECT * FROM buy WHERE buy_type='asn' AND `status`='1' AND invoice_id={$invoice_id} ");
+                  $invoice =show("SELECT * FROM sale WHERE sale_type='3alaf' AND `status`='1' AND invoice_id=$invoice_id ");
                    foreach($invoice as $invoice_list){
                        $id = $invoice_list['id'];
-                       $dealer_id = $invoice_list['dealer_id'];
+                       $dealer_id = $invoice_list['customer_id'];
                        $num = $invoice_list['num'];
                        $cost_t = $invoice_list['cost_t'];
                        $cost_co = $invoice_list['cost_co'];
                        $type = $invoice_list['type'];
                        $unit = $invoice_list['unit'];
-                       $product_name = $invoice_list['name_product'];
+                       $percentage = $invoice_list['percentage'];
+                  
                        $cost_wasl = $invoice_list['cost_wasl'];
-                       $cost_froshtn = $invoice_list['cost_fr'];
                        $cost_mawa = $cost_co-$cost_wasl;
                        $discount = $invoice_list['discount'];
                        $date = $invoice_list['date'];
@@ -170,7 +194,7 @@ direct("buy_asn_invoice.php?invoice_id=$invoice_id");
                        $total_all+=$cost_co;
                       
                        
-                       $getdealer = getdata(" SELECT * FROM dealers WHERE id='$dealer_id' ");
+                       $getdealer = getdata(" SELECT * FROM customer WHERE id='$dealer_id' ");
                        $dealer_name = $getdealer['name'];
        
         
@@ -178,7 +202,7 @@ direct("buy_asn_invoice.php?invoice_id=$invoice_id");
 
        <tr id="row_id_1">
         <td></td>
-        <input type="hidden" value="<?=$id?>" name="id[]">
+        <input type="hidden" value="<?=$id?>" name="id[]"> 
 
 
         <td>
@@ -188,6 +212,13 @@ direct("buy_asn_invoice.php?invoice_id=$invoice_id");
                     <option <?php if($unit=="کیلۆ") echo 'selected="selected"'; ?> value="کیلۆ">کیلۆ</option>
                     <option <?php if($unit=="تەن") echo 'selected="selected"'; ?> value="تەن">تەن</option>
                 </select>
+            </div>
+        </td>
+
+        <td>
+            <div class="form-group">
+               <input type="text" value="<?=$percentage?>" id="percentage1" placeholder="ڕێژە بە کیلۆگرام"
+                class="form-control col-md-10 mx-auto" name="percentage[]" required="">
             </div>
         </td>
      
@@ -224,13 +255,7 @@ direct("buy_asn_invoice.php?invoice_id=$invoice_id");
 
             </td>
 
-            <td>
-                
-            <div class="form-group">
-                        <input type="text" value="<?=$cost_froshtn?>" placeholder="  نرخی فرۆشتن بە دانە " class="form-control col-md-10 mx-auto"
-                            name="cost_fr[]" id="cost_fr1" required="">
-                        </div>
-            </td>
+
 
             <td>
             <div class="form-group">
@@ -244,7 +269,7 @@ direct("buy_asn_invoice.php?invoice_id=$invoice_id");
             <td><div class="form-group"><input value="<?=$cost_co?>" type="text"  class="form-control total col-md-10 mx-auto" disabled></div></td>
 
             <td>
-                 <form method="post" action="buy_asn_invoice.php?invoice_id=<?=$invoice_id?>">
+                 <form method="post" action="sale_3alaf_invoice.php?invoice_id=<?=$invoice_id?>">
                     <input type="hidden" name="id" value="<?=$id?>">
                     <button type="submit" name="return_buy" style="border:none;background:none" > <i class="fas fa-sync"></i> </button>
                 </form>  
@@ -327,9 +352,9 @@ if (isset($_SESSION["update_return"])) {
 if (post('return_buy')) {
     $id = secure($_POST['id']);
   
-    execute("UPDATE buy SET `status`='-1' WHERE id='$id' ");
+    execute("UPDATE sale SET `status`='-1' WHERE id='$id' ");
     $_SESSION["update_return"] = "";
-    $loc="buy_asn_invoice.php?invoice_id=".$invoice_id;
+    $loc="sale_3alaf_invoice.php?invoice_id=".$invoice_id;
     direct($loc);
   }
 

@@ -30,7 +30,7 @@ if (post("update_invoice")) {
 
 
  execute("UPDATE invoice SET `price`='$total',`type`='$type_invoice',`note`='$note',`dealer_id`='$dealer_id' WHERE id='$invoice_id'");
-
+ execute("DELETE FROM buy WHERE `status`='1' AND  `invoice_id`='$invoice_id' ");
 
 for ($i = 0; $i < count($_POST['num']); $i++) {
 
@@ -48,7 +48,8 @@ for ($i = 0; $i < count($_POST['num']); $i++) {
     $cost_co = $cost_t*$num;
     $cost_co=$cost_co-$discount;
 
-execute("UPDATE  `buy` SET  `invoice_id`='$invoice_id',`dealer_id`='$dealer_id',`num`='$num',`cost_t`='$cost_t',`cost_co`='$cost_co',`type`='$type',`place`='$place',`cost_wasl`='$cost_wasl',`cost_fr`='$cost_fr',`note`='$note',`discount`='$discount',`unit`='$unit',`percentage`='$percentage',`driver_id`='$driver_id'  WHERE id='$id' ");
+    execute("INSERT INTO `buy` (`invoice_id`,`dealer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`cost_fr`,`discount`,`unit`,`name_product`,`place`,`percentage`,`driver_id`,`buy_type`,`status`,`note`) VALUES('$invoice_id','$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$cost_fr','$discount','$unit','عەلەف','$place','$percentage','$driver_id','3alaf','1','$note')");
+
 
 }
 
