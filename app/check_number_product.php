@@ -3,6 +3,36 @@
 include_once("../server/conn.php");
 
 
+
+if (isset($_POST['asn_count'])) {
+    $type=$_POST['type'];
+
+    $gettotalbuy = show("  SELECT sum(num) as 'totalbuy' FROM  buy WHERE   type='$type' AND buy_type='asn' AND `status`='1' ");
+    $totalbuy = $gettotalbuy[0]['totalbuy']; 
+  
+    $gettotalsale = show("  SELECT sum(num) as 'totalsale' FROM  sale WHERE  type='$type' AND sale_type='asn' AND `status`='1' ");
+    $totalsale = $gettotalsale[0]['totalsale']; 
+    $remainqty = $totalbuy-$totalsale;
+
+ if (empty($remainqty)) {
+    echo "false";
+ } else{
+    if ($remainqty<0){
+        echo "0";
+    } 
+    else{
+           echo $remainqty;
+   
+    }
+ }
+
+
+}
+
+
+
+
+
 if (isset($_POST['halaf_count'])) {
     $type=$_POST['type'];
 

@@ -43,9 +43,21 @@ for ($i = 0; $i < count($_POST['num']); $i++) {
     $cost_co = $cost_t*$num;
     $cost_co=$cost_co-$discount;
 
+    $gettotalbuy = show("  SELECT sum(num) as 'totalbuy' FROM  buy WHERE   type='$type' AND buy_type='asn' AND `status`='1' ");
+    $totalbuy = $gettotalbuy[0]['totalbuy']; 
+    
+    $gettotalsale = show("  SELECT sum(num) as 'totalsale' FROM  sale WHERE  type='$type' AND sale_type='asn' AND `status`='1' ");
+    $totalsale = $gettotalsale[0]['totalsale']; 
+    $remainqty = $totalbuy-$totalsale;
+    
+    if ($remainqty<$num) {
+    
+    }else{
+    
     execute("INSERT INTO `sale` (`invoice_id`,`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`place`,`sale_type`,`status`,`note`) VALUES('$invoice_id','$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','ئاسن','$place','asn','1','$note') ");
-
-}
+    }
+    
+    }
 
 $_SESSION["edit_success"]="";
 direct("sale_asn_invoice.php?invoice_id=$invoice_id");
@@ -64,8 +76,17 @@ direct("sale_asn_invoice.php?invoice_id=$invoice_id");
 
 <form method="post" action="sale_asn_invoice.php?invoice_id=<?=$invoice_id?>">
 
-<div class="d-flex justify-content-center mt-3 flex-wrap">
-    <button  type="submit" name="update_invoice" class="btn btn-success pb-1 pt-1" >
+<div class="d-flex justify-content-around mt-3 flex-wrap">
+
+<a  id="add_more"  class="btn btn-success pb-1 pt-1" >
+
+<p style="transform:translate(0px,10px)">
+<i class="fas fa-plus-circle "></i>  <span style="font-weight:bold">زیادکردنی تر </span>
+</p>
+
+</a>
+
+    <button  type="submit" name="update_invoice" class="btn btn-dark pb-1 pt-1" >
 
         <p style="transform:translate(0px,10px)">
         <i class="fas fa-save "></i>  <span style="font-weight:bold">گۆڕانکاری</span>
@@ -125,9 +146,8 @@ direct("sale_asn_invoice.php?invoice_id=$invoice_id");
   <table  class="table  table-striped table-bordered  text-center" id="tab_logic" dir="rtl" style="zoom:85%">
         <thead class="bg-dark text-light">
             <tr>
-                <th>لابردن</th>
+                <th> جۆری ئاسن    </th>
                 <th>یەکەی فرۆشتن</th>
-                <th> جۆر    </th>
                 <th> ژمارە    </th>
                 <th> نرخی تاک    </th>
                 <th> نرخی واسڵکراو    </th>
@@ -145,6 +165,7 @@ direct("sale_asn_invoice.php?invoice_id=$invoice_id");
                    $total_discount=0;
                    $total_mawa=0;
                    $total_all=0;
+                   $count=0;
                   $invoice =show(" SELECT * FROM sale WHERE sale_type='asn' AND `status`='1' AND invoice_id={$invoice_id} ");
                    foreach($invoice as $invoice_list){
                        $id = $invoice_list['id'];
@@ -172,13 +193,38 @@ direct("sale_asn_invoice.php?invoice_id=$invoice_id");
                        
                        $getdealer = getdata(" SELECT * FROM customer WHERE id='$dealer_id' ");
                        $dealer_name = $getdealer['name'];
-       
+                       $count=$count+1;
         
         ?>
 
        <tr id="row_id_1">
-        <td></td>
+
         <input type="hidden" value="<?=$id?>" name="id[]">
+
+
+        <td>
+     
+     <div class="form-group">
+                  
+                  <select index="<?=$count?>" name="type[]" id="type1"  class="form-control type col-md-10 mx-auto">
+                      <option disabled selected>جۆری ئاسن هەڵبژێرە</option>
+                      <?php 
+      
+                          $alldata=show("SELECT * FROM buy WHERE  `status`='1' AND buy_type='asn'  GROUP BY `type` ");
+      
+                          foreach ($alldata as $data) {
+                              echo $data['type'];
+                  
+                          ?>
+                                                      
+                       <option <?php if($type==$data['type']) echo 'selected="selected"'; ?> value="<?=$data['type']?>"> <?=$data['type']?> </option>
+                      <?php   } ?>
+                  </select>
+                  <p id="bry_mawa<?=$count?>"></p>
+              </div>
+      
+
+     </td>
 
 
         <td>
@@ -191,15 +237,6 @@ direct("sale_asn_invoice.php?invoice_id=$invoice_id");
             </div>
         </td>
      
-        <td>
-
-
-            <div class="form-group">
-                        <input type="text" value="<?=$type?>" placeholder="   جۆر  " class="form-control  col-md-10 mx-auto"
-                            name="type[]" id="type1" required="">
-            </div>
-
-            </td>
 
 
             <td>
@@ -293,6 +330,7 @@ direct("sale_asn_invoice.php?invoice_id=$invoice_id");
                     </td>
                     <td class="right">
                     <strong id="total_gshty"><?=$total_all?></strong>
+                    <input type="hidden" id="rowCount"  value="<?=$count?>">
                     </td>
                 </tr>
             </tbody>
@@ -333,25 +371,62 @@ if (post('return_buy')) {
 
 <script>
       $(document).ready(function() {
-        var count=1;
+        var count=$('#rowCount').val();
         var price=0;
-        $('#add_more').click(function() {
-            count=count+1;
-            var markup = '<tr id="row_id_'+count+'" >';
-            markup+=' <td><button name="remove_row" id="'+count+'" class=" remove_row btn btn-danger btn-sm">x</button></td>';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" ناوی شتوومەک " id="name_product'+count+'" class="form-control mx-auto" name="name_product[]" required=""> </div> </td>';
-            markup+=' <td> <div class="form-group"> <select name="unit[]" id="unit'+count+'" class="form-control mx-auto" required> <option value="مەتر">مەتر</option> <option value="دانە">دانە</option> <option value="کیلۆ">کیلۆ</option> </select> </div> </td>';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" جۆر " class="form-control col-md-10 mx-auto" name="type[]" id="type'+count+'" required=""> </div> </td>';
-            markup+=' <td> <div class="form-group"> <input id="num1'+count+'" type="number" placeholder=" بڕ " class="form-control qty col-md-10 mx-auto" name="num[]" required=""> </div> </td> ';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی تاک" class="form-control cost_t col-md-10 mx-auto" name="cost_t[]" id="cost_t'+count+'" required=""> </div> </td> ';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" بڕی واسڵ " class="form-control cost_wasl col-md-10 mx-auto" name="cost_wasl[]" id="cost_wasl'+count+'" required=""> </div> </td> ';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی فرۆشتن بە دانە " class="form-control col-md-10 mx-auto" name="cost_fr[]" id="cost_fr'+count+'" required=""> </div> </td>';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی داشکاندن " class="form-control cost_discount col-md-10 mx-auto" name="discount[]" id="discount'+count+'" required=""> </div> </td>';
-            markup+=' <td><div class="form-group"><input type="text"  class="form-control total col-md-10 mx-auto" disabled></div></td> </tr>';
 
-            $('#item_table').append(markup);
+
+
+        $(document).on('change', 'select[name="type[]"]', function(){
+    
+    var index= $(this).attr("index");
+    var value= $(this).val();
+
+                 $.ajax({
+                    url: "check_number_product.php",
+                    method: "POST",
+                    data: {asn_count:true,type:value},
+                    success: function (data) {
+                        if (data=="0") {
+                            $('#bry_mawa'+index).html("بڕی ماوە : "+data);
+                        }else{
+                            $('#bry_mawa'+index).html("بڕی ماوە : "+data);
+                            
+                        }
+                    }
+                  });
+    
+ });
+ 
+
+
+        $('#add_more').click(function() {
+
+
+            
+            var type=$('#type'+count).val()
+            var qty=$('#num'+count).val()
+            var cost_t=$('#cost_t'+count).val()
+            var cost_wasl=$('#cost_wasl'+count).val()
+            var discount=$('#discount'+count).val()
+
+
+                                count=parseInt(count)+1;
+                                var markup = '<tr id="row_id_'+count+'" >';
+                                markup+=' <td> <div class="form-group"> <select index="'+count+'" name="type[]" id="type'+count+'" class="form-control type col-md-10 mx-auto"> <option disabled selected>جۆری ئاسن هەڵبژێرە</option> <?php $alldata=show("SELECT * FROM buy WHERE `status`='1' AND buy_type='asn' GROUP BY `type` "); foreach ($alldata as $data) { echo $data['type']; ?> <option value="<?=$data['type']?>"> <?=$data['type']?> </option> <?php } ?> </select> <p id="bry_mawa'+count+'"></p> </div> </td>';
+                                markup+=' <td> <div class="form-group"> <select name="unit[]" id="unit'+count+'" class="form-control mx-auto" required> <option value="دانە">دانە</option> <option value="کیلۆ">کیلۆ</option> <option value="تەن">تەن</option> </select> </div> </td>';
+                                markup+=' <td> <div class="form-group"> <input id="num'+count+'" type="number" placeholder=" بڕ " class="form-control qty col-md-10 mx-auto" name="num[]" required=""> </div> </td> ';
+                                markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی تاک" class="form-control cost_t col-md-10 mx-auto" name="cost_t[]" id="cost_t'+count+'" required=""> </div> </td> ';
+                                markup+=' <td> <div class="form-group"> <input type="text" placeholder=" بڕی واسڵ " class="form-control cost_wasl col-md-10 mx-auto" name="cost_wasl[]" id="cost_wasl'+count+'" required=""> </div> </td> ';
+                                markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی داشکاندن " class="form-control cost_discount col-md-10 mx-auto" name="discount[]" id="discount'+count+'" required=""> </div> </td>';
+                                markup+=' <td><div class="form-group"><input type="text"  class="form-control total col-md-10 mx-auto" disabled></div></td> ';
+                                markup+=' <td><button name="remove_row" id="'+count+'" class=" remove_row btn btn-danger btn-sm">x</button></td></tr>';
+
+                                $('#item_table').append(markup);
+
+
 
             });
+
 
 
 

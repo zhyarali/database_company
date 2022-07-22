@@ -36,7 +36,20 @@ $discount =$_POST['discount'][$i];
 $cost_co = $cost_t*$num;
 $cost_co=$cost_co-$discount;
 
+$gettotalbuy = show("  SELECT sum(num) as 'totalbuy' FROM  buy WHERE   type='$type' AND buy_type='asn' AND `status`='1' ");
+$totalbuy = $gettotalbuy[0]['totalbuy']; 
+
+$gettotalsale = show("  SELECT sum(num) as 'totalsale' FROM  sale WHERE  type='$type' AND sale_type='asn' AND `status`='1' ");
+$totalsale = $gettotalsale[0]['totalsale']; 
+$remainqty = $totalbuy-$totalsale;
+
+if ($remainqty<$num) {
+
+}else{
+
 execute("INSERT INTO `sale` (`invoice_id`,`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`place`,`sale_type`,`status`,`note`) VALUES('$lastInsertId','$customer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','ئاسن','$place','asn','1','$note') ");
+}
+
 }
 
  $_SESSION["add_success"] = "";
@@ -117,10 +130,10 @@ direct("sale_asn_add.php");
         <thead class="bg-dark text-light">
             <tr>
                 <th>لابردن</th>
+                <th> جۆری ئاسن    </th>
                 <th>یەکەی فرۆشتن</th>
-                <th> جۆر    </th>
                 <th> ژمارە    </th>
-                <th> نرخی تاک    </th>
+                <th> نرخی فرۆشتن    </th>
                 <th> نرخی واسڵکراو    </th>
                 <th> نرخی داشکاندن    </th>
                 <th> کۆی گشتی    </th>
@@ -133,6 +146,29 @@ direct("sale_asn_add.php");
        <tr id="row_id_1">
         <td></td>
 
+        <td>
+     
+     <div class="form-group">
+                  
+                  <select index="1" name="type[]" id="type1"  class="form-control type col-md-10 mx-auto">
+                      <option disabled selected>جۆری ئاسن هەڵبژێرە</option>
+                      <?php 
+      
+                          $alldata=show("SELECT * FROM buy WHERE  `status`='1' AND buy_type='asn'  GROUP BY `type` ");
+      
+                          foreach ($alldata as $data) {
+                              echo $data['type'];
+                  
+                          ?>
+                                                      
+                       <option value="<?=$data['type']?>"> <?=$data['type']?> </option>
+                      <?php   } ?>
+                  </select>
+                  <p id="bry_mawa1"></p>
+              </div>
+      
+
+     </td>
 
         <td>
             <div class="form-group">
@@ -143,14 +179,7 @@ direct("sale_asn_add.php");
                 </select>
             </div>
         </td>
-     
-        <td>
-        <div class="form-group">
-                      <input type="text" placeholder="   جۆر  " class="form-control col-md-10 mx-auto"
-                        name="type[]" id="type1" required="">
-        </div>
 
-        </td>
 
 
         <td>
@@ -251,6 +280,31 @@ direct("sale_asn_add.php");
       $(document).ready(function() {
         var count=1;
         var price=0;
+
+
+$(document).on('change', 'select[name="type[]"]', function(){
+    
+    var index= $(this).attr("index");
+    var value= $(this).val();
+
+                 $.ajax({
+                    url: "check_number_product.php",
+                    method: "POST",
+                    data: {asn_count:true,type:value},
+                    success: function (data) {
+                        if (data=="0") {
+                            $('#bry_mawa'+index).html("بڕی ماوە : "+data);
+                        }else{
+                            $('#bry_mawa'+index).html("بڕی ماوە : "+data);
+                            
+                        }
+                    }
+                  });
+    
+ });
+ 
+
+
         $('#add_more').click(function() {
 
 
@@ -262,53 +316,11 @@ direct("sale_asn_add.php");
             var discount=$('#discount'+count).val()
 
 
-            if (type=="") {
-              alert("جۆری هێلکە پڕ بکەوە")
-            }else{
-                if (qty=="") {
-                    alert("بڕی ژمارە دیاری بکە")
-                }else{
-
-                    let check=false; 
-
-                    $.ajax({
-                    url: "check_number_product.php",
-                    method: "POST",
-                    data: {sale_asn:true,qty:qty,type:type},
-                    success: function (data) {
-                        if (data=="success") {
-                           check=true
-                        }else{
-                            alert(data)
-                            check=false
-                        }
-                    }
-                 });
-
-              
-
-                    if (cost_t=="") {
-                      alert("نرخی تاک بەتاڵە !");
-                    }else{
-
-                    if (cost_wasl=="") {
-                      alert("نرخی واسڵکراو بەتاڵە !");
-                    }else{
-
-                        if (cost_t=="") {
-                          alert("نرخی تاک بەتاڵە !");
-                        }else{
-                            if (discount=="") {
-                              alert("نرخی داشکاندن بەتاڵە !");
-                            }else{
-
-
-
                                 count=count+1;
                                 var markup = '<tr id="row_id_'+count+'" >';
                                 markup+=' <td><button name="remove_row" id="'+count+'" class=" remove_row btn btn-danger btn-sm">x</button></td>';
+                                markup+=' <td> <div class="form-group"> <select index="'+count+'" name="type[]" id="type'+count+'" class="form-control type col-md-10 mx-auto"> <option disabled selected>جۆری ئاسن هەڵبژێرە</option> <?php $alldata=show("SELECT * FROM buy WHERE `status`='1' AND buy_type='asn' GROUP BY `type` "); foreach ($alldata as $data) { echo $data['type']; ?> <option value="<?=$data['type']?>"> <?=$data['type']?> </option> <?php } ?> </select> <p id="bry_mawa'+count+'"></p> </div> </td>';
                                 markup+=' <td> <div class="form-group"> <select name="unit[]" id="unit'+count+'" class="form-control mx-auto" required> <option value="دانە">دانە</option> <option value="کیلۆ">کیلۆ</option> <option value="تەن">تەن</option> </select> </div> </td>';
-                                markup+=' <td> <div class="form-group"> <input type="text" placeholder=" جۆر " class="form-control col-md-10 mx-auto" name="type[]" id="type'+count+'" required=""> </div> </td>';
                                 markup+=' <td> <div class="form-group"> <input id="num'+count+'" type="number" placeholder=" بڕ " class="form-control qty col-md-10 mx-auto" name="num[]" required=""> </div> </td> ';
                                 markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی تاک" class="form-control cost_t col-md-10 mx-auto" name="cost_t[]" id="cost_t'+count+'" required=""> </div> </td> ';
                                 markup+=' <td> <div class="form-group"> <input type="text" placeholder=" بڕی واسڵ " class="form-control cost_wasl col-md-10 mx-auto" name="cost_wasl[]" id="cost_wasl'+count+'" required=""> </div> </td> ';
@@ -316,21 +328,6 @@ direct("sale_asn_add.php");
                                 markup+=' <td><div class="form-group"><input type="text"  class="form-control total col-md-10 mx-auto" disabled></div></td> </tr>';
 
                                 $('#item_table').append(markup);
-
-
-
-
-
-                            }
-                        }
-
-                    }
-
-                    }
-
-
-                }
-            }
 
 
 
