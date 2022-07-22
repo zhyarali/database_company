@@ -24,6 +24,7 @@ $name_product ="هێلکە";
 
 
 
+
 $sqlInsert = "INSERT INTO invoice (`price`,`type`,`note`,`dealer_id`) VALUES ('$total','$type_invoice','$note','$customer_id')";
 mysqli_query($conn, $sqlInsert);
 $lastInsertId = mysqli_insert_id($conn);
@@ -42,11 +43,24 @@ $discount =$_POST['discount'][$i];
 $cost_co = $cost_t*$num;
 $cost_co=$cost_co-$discount;
 
+$gettotalbuy = show("  SELECT sum(num) as 'totalbuy' FROM  buy WHERE   type='$type' AND buy_type='helka' AND `status`='1' ");
+$totalbuy = $gettotalbuy[0]['totalbuy']; 
+
+$gettotalsale = show("  SELECT sum(num) as 'totalsale' FROM  sale WHERE  type='$type' AND sale_type='helka' AND `status`='1' ");
+$totalsale = $gettotalsale[0]['totalsale']; 
+$remainqty = $totalbuy-$totalsale;
+
+if ($remainqty<$num) {
+    
+}else{
+
+    execute("INSERT INTO `sale` (`invoice_id`,`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`sale_type`,`status`,`note`) VALUES('$lastInsertId','$customer_id
+    ','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','هێلکە','helka','1','$note') ");
+    
+
+}
 
 
-
-execute("INSERT INTO `sale` (`invoice_id`,`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`sale_type`,`status`,`note`) VALUES('$lastInsertId','$customer_id
-','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','هێلکە','helka','1','$note') ");
 
 }
 
@@ -68,12 +82,15 @@ direct("sale_helka_add.php");
 
 
 
+
+
+
 <form method="post" action="">
 
 <div class="d-flex justify-content-around mt-3 flex-wrap">
     <a  id="add_more"  class="btn btn-success pb-1 pt-1" >
 
-        <p style="transform:translate(0px,10px)">
+        <p style="trxansform:translate(0px,10px)">
         <i class="fas fa-plus-circle "></i>  <span style="font-weight:bold">زیادکردنی تر </span>
         </p>
 
@@ -118,7 +135,7 @@ direct("sale_helka_add.php");
                 <th>لابردن</th>
                 <th> جۆر    </th>
                 <th> ژمارە    </th>
-                <th> نرخی تاک    </th>
+                <th> نرخی فرۆشتن    </th>
                 <th> نرخی واسڵکراو    </th>
                 <th> نرخی داشکاندن    </th>
                 <th> کۆی گشتی    </th>
@@ -133,8 +150,22 @@ direct("sale_helka_add.php");
      
         <td>
         <div class="form-group">
-                      <input type="text" placeholder="   جۆری هێلکە  " class="form-control col-md-10 mx-auto"
-                        name="type[]" id="type1" required="">
+                     
+            <select index="1" name="type[]" id="type1"  class="form-control type col-md-10 mx-auto">
+                <option disabled selected>جۆری هێلکە هەڵبژێرە</option>
+                <?php 
+
+                    $alldata=show("SELECT * FROM buy WHERE  `status`='1' AND buy_type='helka'  GROUP BY `type` ");
+
+                    foreach ($alldata as $data) {
+                        echo $data['type'];
+            
+                    ?>
+                                                
+                 <option value="<?=$data['type']?>"> <?=$data['type']?> </option>
+                <?php   } ?>
+            </select>
+            <p id="bry_mawa1"></p>
         </div>
 
         </td>
@@ -142,16 +173,20 @@ direct("sale_helka_add.php");
 
         <td>
         <div class="form-group">
+            
                       <input id="num1" type="number" placeholder=" بڕ " class="form-control qty col-md-10 mx-auto" name="num[]"
                         required="">
+                        
                     </div>
+                  
         </td>
 
         <td>
         <div class="form-group">
-                      <input type="text" placeholder="  نرخی تاک" class="form-control cost_t col-md-10 mx-auto"
+                      <input type="text" placeholder="  نرخی فرۆشتن" class="form-control cost_t col-md-10 mx-auto"
                         name="cost_t[]" id="cost_t1" required="">
                     </div>
+                    
         </td>
 
         <td>
@@ -212,6 +247,7 @@ direct("sale_helka_add.php");
                     <td class="left">
                     <strong>کۆی گشتی نرخ</strong>
                     <input type="hidden" id="input_price" name="price">
+           
                     </td>
                     <td class="right">
                     <strong id="total_gshty">0</strong>
@@ -240,6 +276,47 @@ direct("sale_helka_add.php");
       $(document).ready(function() {
         var count=1;
         var price=0;
+
+        var countIn=$("#count").val();
+
+
+        var type=$('#type'+count).val();
+
+
+
+        // $('#type'+count).on('change', function() {
+        // alert( this.value );
+        // });
+
+
+     
+
+$(document).on('change', 'select[name="type[]"]', function(){
+    
+    var index= $(this).attr("index");
+    var value= $(this).val();
+
+                 $.ajax({
+                    url: "check_number_product.php",
+                    method: "POST",
+                    data: {helka_count:true,type:value},
+                    success: function (data) {
+                        if (data=="false") {
+                          alert("false")
+                        }
+                        if (data=="0") {
+                           alert("0");
+                        }else{
+                            $('#bry_mawa'+index).html("بڕی ماوە : "+data);
+                            
+                        }
+                    }
+                 });
+    
+ });
+ 
+
+
         $('#add_more').click(function() {
 
             var type=$('#type'+count).val()
@@ -249,80 +326,19 @@ direct("sale_helka_add.php");
             var discount=$('#discount'+count).val()
 
 
-            if (type=="") {
-              alert("جۆری هێلکە پڕ بکەوە")
-            }else{
-                if (qty=="") {
-                    alert("بڕی ژمارە دیاری بکە")
-                }else{
-
-                    let check=false; 
-
-                    $.ajax({
-                    url: "check_number_product.php",
-                    method: "POST",
-                    data: {sale_helka:true,qty:qty,type:type},
-                    success: function (data) {
-                        if (data=="success") {
-                           check=true
-                        }else{
-                            alert(data)
-                            check=false
-                        }
-                    }
-                 });
-
-              
-
-                    if (cost_t=="") {
-                      alert("نرخی تاک بەتاڵە !");
-                    }else{
-
-                    if (cost_wasl=="") {
-                      alert("نرخی واسڵکراو بەتاڵە !");
-                    }else{
-
-                        if (cost_t=="") {
-                          alert("نرخی تاک بەتاڵە !");
-                        }else{
-                            if (discount=="") {
-                              alert("نرخی داشکاندن بەتاڵە !");
-                            }else{
-
 
 
                                 count=count+1;
                                 var markup = '<tr id="row_id_'+count+'" >';
                                 markup+=' <td><button name="remove_row" id="'+count+'" class=" remove_row btn btn-danger btn-sm">x</button></td>';
-                                markup+=' <td> <div class="form-group"> <input type="text" placeholder=" جۆری هێلکە " class="form-control col-md-10 mx-auto" name="type[]" id="type'+count+'" required=""> </div> </td>';
+                                markup+=' <td> <div class="form-group"> <select name="type[]" index="'+count+'" id="type'+count+'" class="form-control type col-md-10 mx-auto"> <option disabled selected>جۆری هێلکە هەڵبژێرە</option> <?php $alldata=show("SELECT * FROM buy WHERE `status`='1' AND buy_type='helka' GROUP BY `type` "); foreach ($alldata as $data) { echo $data['type']; ?> <option value="<?=$data['type']?>"> <?=$data['type']?> </option> <?php } ?> </select> <p id="bry_mawa'+count+'"></p> </div> </td>';
                                 markup+=' <td> <div class="form-group"> <input id="num'+count+'" type="number" placeholder=" بڕ " class="form-control qty col-md-10 mx-auto" name="num[]" required=""> </div> </td> ';
-                                markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی تاک" class="form-control cost_t col-md-10 mx-auto" name="cost_t[]" id="cost_t'+count+'" required=""> </div> </td> ';
+                                markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی فرۆشتن" class="form-control cost_t col-md-10 mx-auto" name="cost_t[]" id="cost_t'+count+'" required=""> </div> </td> ';
                                 markup+=' <td> <div class="form-group"> <input type="text" placeholder=" بڕی واسڵ " class="form-control cost_wasl col-md-10 mx-auto" name="cost_wasl[]" id="cost_wasl'+count+'" required=""> </div> </td> ';
                                 markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی داشکاندن " class="form-control cost_discount col-md-10 mx-auto" name="discount[]" id="discount'+count+'" required=""> </div> </td>';
                                 markup+=' <td><div class="form-group"><input type="text"  class="form-control total col-md-10 mx-auto" disabled></div></td> </tr>';
 
                                 $('#item_table').append(markup);
-
-
-
-
-
-                            }
-                        }
-
-                    }
-
-                    }
-
-
-                 
-
-
-                }
-            }
-          
-            
-
 
 
 
@@ -336,6 +352,7 @@ direct("sale_helka_add.php");
                     var row_id=$(this).attr("id");
                 $('#row_id_'+row_id).remove();
                 count=count-1;
+    
                 calc();
                 });
 

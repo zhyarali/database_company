@@ -99,12 +99,12 @@ direct("buy_3alaf_invoice.php?invoice_id=$invoice_id");
         <div class="form-group ">
             <label>ناوی شۆفێر</label>
         <select name="driver_id"  class="form-control col-md-10 mx-auto">
-        <option selected disabled> شۆفێر هەڵبژێرە</option>
+        <option selected d<?php if($driverId==$driver['id']) echo 'selected="selected"'; ?>isabled> شۆفێر هەڵبژێرە</option>
             <?php
                 $getdriver = show(" SELECT * FROM drivers ");
                 foreach ($getdriver as $driver) { ?>
             
-            <option <?php if($driverId==$driver['id']) echo 'selected="selected"'; ?>  value="<?=$driver['id']?>"> <?=$driver['name']?> </option>
+            <option   value="<?=$driver['id']?>"> <?=$driver['name']?> </option>
             <?php   } ?>
         </select>
     </div> 

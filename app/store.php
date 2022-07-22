@@ -43,6 +43,11 @@ foreach ($store as $all) {
   $gettotalsale = show("  SELECT sum(num) as 'totalsale' FROM  sale WHERE name_product='$name_product' AND type='$type' AND `status`='1' ");
   $totalsale = $gettotalsale[0]['totalsale']; 
   $remainqty = $totalbuy-$totalsale;
+
+  if ($remainqty<0) {
+    $remainqty=0;
+  }
+
 ?>
 <div class=" col-6 col-sm-6 col-md-4 col-lg-3  col-xl-3  text-center mt-5 mt-lg-0 p-2">
 <div class="card h-100">
