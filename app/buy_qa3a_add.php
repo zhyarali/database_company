@@ -8,11 +8,11 @@ if (isset($_SESSION["add_success"])) {
  }
 
 
-if (post("add_invoice")){
 
+if (post("add_category")) {
 
     $piece_number=$_POST['piece_number'];
-
+    $category_name=$_POST['category_name'];
 
     $invoiceId=0;
     $lasts=show("SELECT * FROM invoice  ORDER BY id DESC LIMIT 1 ");
@@ -28,32 +28,32 @@ if (post("add_invoice")){
     }
 
 
+
+    $sqlInsert = "INSERT INTO sale_category (`name`,`invoice_id`) VALUES ('$category_name','$invoiceId')";
+
+    mysqli_query($conn, $sqlInsert);
+    $lastInsertId = mysqli_insert_id($conn);
+
+
     for ($i = 0; $i < count($piece_number); $i++) {
 
-    
-        
-
-        $category_name=$_POST['category_name'][$i];
 
         $piece_name=$_POST['piece_name'][$i];
         $pieceNumber=$_POST['piece_number'][$i];
         $piece_price=$_POST['piece_price'][$i];
 
-      
-
-    
-    $sqlInsert = "INSERT INTO sale_category (`name`,`invoice_id`) VALUES ('$category_name','$invoiceId')";
-
-    if(mysqli_query($conn, $sqlInsert)){
-        $lastInsertId = mysqli_insert_id($conn);
         execute("INSERT INTO piece (name,qty,price,category_id) VALUES ('$piece_name','$pieceNumber','$piece_price','$lastInsertId')");
 
+    
     }
+    
+}
 
-    
-    }
-    
-    
+
+
+
+if (post("add_invoice")){
+
         
     $total=$_POST['price'];
     $type_invoice="buy_qa3a";
@@ -94,7 +94,7 @@ if (post("add_invoice")){
 
 ?>
 
-<form method="post" action="">
+
 
 <div class="container-fluid d-flex justify-content-between mt-4" style="zoom:80%">
 
@@ -108,14 +108,6 @@ if (post("add_invoice")){
 </a>
 
 
-  <button  type="submit" name="add_invoice" class="btn btn-dark pb-1 pt-1" >
-
-<p style="transform:translate(0px,10px)">
-<i class="fas fa-save "></i>  <span style="font-weight:bold">سەیڤکردن</span>
-</p>
-
-</button>
-
 </div>
 
 
@@ -129,24 +121,45 @@ if (post("add_invoice")){
 
 
 
-<div class=" mt-5 mb-4  d-flex justify-content-center">
-<button class="btn  btn-success " id="addmore" > <i class="fas fa-plus-circle "></i>  زیادکردنی بەشی تر</button>
 
+<form method="post" action="">
+
+
+<div class="container mb-5 p-5" style="background:#E7F6F2;border-radius:10px" id="item_cat">
+
+
+
+<div class="d-flex justify-content-around text-center">
+
+<div>
+<p style="transform:translate(0px,30px)"  class="btn  btn-success " id="addmore" > <i class="fas fa-plus-circle "></i>  زیادکردنی پارچەی تر</p>
 </div>
-
-<div class="container mb-5" id="item_cat">
-
-
-
-<div class="d-flex justify-content-center " style="align-items:center" id="row__cat_id_1">
-    
 
 <div class="form-group mx-2">
         <label>ناوی بەش</label>
             <input type="text" id="category_name1"
-                class="form-control  mx-auto" name="category_name[]"
+                class="form-control  mx-auto" name="category_name" required
             >
- </div>  
+ </div> 
+ 
+ 
+
+
+<div>
+<button style="transform:translate(0px,30px)" type="submit" name="add_category" class="btn btn-secondary">
+<i class="fas fa-save "></i>  <span style="font-weight:bold">زیادکردنی بەش</span>
+</button>
+</div>
+
+
+
+
+
+</div>
+
+
+<div class="d-flex justify-content-center text-center " style="align-items:center" id="row__cat_id_1">
+    
 
 
 
@@ -176,12 +189,15 @@ if (post("add_invoice")){
  
 
 </div>
-
-
-
     
 </div>
+</form>
 
+
+
+
+<form method="post" action="">
+    
 
 
 
@@ -193,6 +209,17 @@ if (post("add_invoice")){
         </p>
 
     </a>
+
+
+    
+  <button  type="submit" name="add_invoice" class="btn btn-dark pb-1 pt-1" >
+
+<p style="transform:translate(0px,10px)">
+<i class="fas fa-save "></i>  <span style="font-weight:bold">سەیڤکردن</span>
+</p>
+
+</button>
+
 
 </div>
 
@@ -399,7 +426,7 @@ $('#addmore').click(function() {
 
                 countCat=countCat+1;
                 var markup = '<div class="d-flex justify-content-center " style="align-items:center" id="row__cat_id_'+countCat+'" >';
-                markup+=' <div class="form-group mx-2"> <label>ناوی بەش</label> <input type="text" id="category_name'+countCat+'" class="form-control mx-auto" name="category_name[]" > </div> <div class="form-group mx-2"> <label>ناوی پارچە</label> <input type="text" id="peice_name'+countCat+'" class="form-control mx-auto" name="piece_name[]" > </div> <div class="form-group mx-2"> <label>ژمارەی پارچە</label> <input type="text" id="piece_number'+countCat+'" class="form-control mx-auto" name="piece_number[]" > </div> <div class="form-group mx-2"> <label>نرخی پارچە</label> <input type="text" id="piece_price'+countCat+'" class="form-control mx-auto" name="piece_price[]" > </div> ';
+                markup+=' <div class="form-group mx-2"> <label>ناوی پارچە</label> <input type="text" id="peice_name'+countCat+'" class="form-control mx-auto" name="piece_name[]" > </div> <div class="form-group mx-2"> <label>ژمارەی پارچە</label> <input type="text" id="piece_number'+countCat+'" class="form-control mx-auto" name="piece_number[]" > </div> <div class="form-group mx-2"> <label>نرخی پارچە</label> <input type="text" id="piece_price'+countCat+'" class="form-control mx-auto" name="piece_price[]" > </div> ';
                 markup+=' <p id="'+countCat+'" style="transform:translate(0px,17px);zoom:80%" class="btn remove_cat btn-sm btn-danger" >X</p>';
                 markup+='</div>';
        
