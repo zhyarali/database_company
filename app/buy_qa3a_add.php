@@ -9,72 +9,191 @@ if (isset($_SESSION["add_success"])) {
 
 
 if (post("add_invoice")){
+
+
+    $piece_number=$_POST['piece_number'];
+
+
+    $invoiceId=0;
+    $lasts=show("SELECT * FROM invoice  ORDER BY id DESC LIMIT 1 ");
+
+    if (empty($lasts)) {
+        $invoiceId=0;
+    }else{
+
+    foreach ($lasts as $last) {
+        $invoiceId=$last['id'];
+    }
+    $invoiceId+=1;
+    }
+
+
+    for ($i = 0; $i < count($piece_number); $i++) {
+
     
-$total=$_POST['price'];
-$type_invoice="buy_qa3a";
-$date=date("Y-m-d");
-$note =$_POST['note'];
-$place =$_POST['place'];
-$dealer_id = $_POST['dealer_id'];
+        
 
-$sqlInsert = "INSERT INTO invoice (`price`,`type`,`note`,`dealer_id`) VALUES ('$total','$type_invoice','$note','$dealer_id')";
-mysqli_query($conn, $sqlInsert);
-$lastInsertId = mysqli_insert_id($conn);
+        $category_name=$_POST['category_name'][$i];
 
-for ($i = 0; $i < count($_POST['num']); $i++) {
+        $piece_name=$_POST['piece_name'][$i];
+        $pieceNumber=$_POST['piece_number'][$i];
+        $piece_price=$_POST['piece_price'][$i];
 
+      
 
-$name_product =$_POST['name_product'][$i];
-$type =$_POST['type'][$i];
-$num =$_POST['num'][$i];
-$cost_t =$_POST['cost_t'][$i];
-$unit =$_POST['unit'][$i];
+    
+    $sqlInsert = "INSERT INTO sale_category (`name`,`invoice_id`) VALUES ('$category_name','$invoiceId')";
 
-$cost_wasl =$_POST['cost_wasl'][$i];
-$cost_fr =$_POST['cost_fr'][$i];
-$discount =$_POST['discount'][$i];
+    if(mysqli_query($conn, $sqlInsert)){
+        $lastInsertId = mysqli_insert_id($conn);
+        execute("INSERT INTO piece (name,qty,price,category_id) VALUES ('$piece_name','$pieceNumber','$piece_price','$lastInsertId')");
 
-$cost_co = $cost_t*$num;
-$cost_co=$cost_co-$discount;
+    }
 
-execute("INSERT INTO `buy` (`invoice_id`,`dealer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`cost_fr`,`discount`,`unit`,`name_product`,`place`,`buy_type`,`status`,`note`) VALUES('$lastInsertId','$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$cost_fr','$discount','$unit','$name_product','$place','qa3a','1','$note') ");
-}
+    
+    }
+    
+    
+        
+    $total=$_POST['price'];
+    $type_invoice="buy_qa3a";
+    $date=date("Y-m-d");
+    $note =$_POST['note'];
+    $place =$_POST['place'];
+    $dealer_id = $_POST['dealer_id'];
+    
+    $sqlInsert = "INSERT INTO invoice (`price`,`type`,`note`,`dealer_id`) VALUES ('$total','$type_invoice','$note','$dealer_id')";
+    mysqli_query($conn, $sqlInsert);
+    $lastInsertId = mysqli_insert_id($conn);
+    
+    for ($i = 0; $i < count($_POST['num']); $i++) {
+    
+    
+    $name_product =$_POST['name_product'][$i];
+    $type =$_POST['type'][$i];
+    $num =$_POST['num'][$i];
+    $cost_t =$_POST['cost_t'][$i];
+    $unit =$_POST['unit'][$i];
+    
+    $cost_wasl =$_POST['cost_wasl'][$i];
+    $cost_fr =$_POST['cost_fr'][$i];
+    $discount =$_POST['discount'][$i];
+    
+    $cost_co = $cost_t*$num;
+    $cost_co=$cost_co-$discount;
+    
+    execute("INSERT INTO `buy` (`invoice_id`,`dealer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`cost_fr`,`discount`,`unit`,`name_product`,`place`,`buy_type`,`status`,`note`) VALUES('$lastInsertId','$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$cost_fr','$discount','$unit','$name_product','$place','qa3a','1','$note') ");
+    }
+    
+     $_SESSION["add_success"] = "";
+    direct("buy_qa3a_add.php");
 
- $_SESSION["add_success"] = "";
-direct("buy_qa3a_add.php");
 
 }
 
 
 ?>
 
+<form method="post" action="">
 
-<div class="container-fluid mt-4">
-<a href="buy_qa3a.php" class="btn btn-sm btn-info shadow" >
- <span class="fa fa-arsrow-right"></span>
- گەڕانەوە
-  </a>
+<div class="container-fluid d-flex justify-content-between mt-4" style="zoom:80%">
+
+<a href="buy_qa3a.php"   class="btn btn-info pb-1 pt-1" >
+
+<p style="transform:translate(0px,10px)">
+<i class="fas fa-arrow-right "></i>  <span style="font-weight:bold"> گەڕانەوە
+</span>
+</p>
+
+</a>
+
+
+  <button  type="submit" name="add_invoice" class="btn btn-dark pb-1 pt-1" >
+
+<p style="transform:translate(0px,10px)">
+<i class="fas fa-save "></i>  <span style="font-weight:bold">سەیڤکردن</span>
+</p>
+
+</button>
+
 </div>
 
 
 
-<form method="post" action="">
+
+
+
+    
+
+
+
+
+
+<div class=" mt-5 mb-4  d-flex justify-content-center">
+<button class="btn  btn-success " id="addmore" > <i class="fas fa-plus-circle "></i>  زیادکردنی بەشی تر</button>
+
+</div>
+
+<div class="container mb-5" id="item_cat">
+
+
+
+<div class="d-flex justify-content-center " style="align-items:center" id="row__cat_id_1">
+    
+
+<div class="form-group mx-2">
+        <label>ناوی بەش</label>
+            <input type="text" id="category_name1"
+                class="form-control  mx-auto" name="category_name[]"
+            >
+ </div>  
+
+
+
+ <div class="form-group mx-2">
+        <label>ناوی پارچە</label>
+            <input type="text" id="peice_name1"
+                class="form-control  mx-auto" name="piece_name[]"
+            >
+ </div>  
+
+ <div class="form-group mx-2">
+        <label>ژمارەی پارچە</label>
+            <input type="text" id="piece_number1"
+                class="form-control  mx-auto" name="piece_number[]"
+            >
+ </div>  
+ <div class="form-group mx-2">
+        <label>نرخی پارچە</label>
+            <input type="text" id="piece_price1"
+                class="form-control  mx-auto" name="piece_price[]"
+            >
+ </div>  
+
+
+
+
+ 
+
+</div>
+
+
+
+    
+</div>
+
+
+
 
 <div class="d-flex justify-content-around mt-3 flex-wrap">
     <a  id="add_more"  class="btn btn-success pb-1 pt-1" >
 
         <p style="transform:translate(0px,10px)">
-        <i class="fas fa-plus-circle "></i>  <span style="font-weight:bold">زیادکردنی تر </span>
+        <i class="fas fa-plus-circle "></i>  <span style="font-weight:bold">زیادکردنی کڕینی تر </span>
         </p>
 
     </a>
-    <button  type="submit" name="add_invoice" class="btn btn-dark pb-1 pt-1" >
 
-        <p style="transform:translate(0px,10px)">
-        <i class="fas fa-save "></i>  <span style="font-weight:bold">سەیڤکردن</span>
-        </p>
-
-    </button>
 </div>
 
 <div class=" container-fluid px-5 d-flex justify-content-around mt-3 flex-wrap" style="align-items:center">
@@ -269,6 +388,30 @@ direct("buy_qa3a_add.php");
       $(document).ready(function() {
         var count=1;
         var price=0;
+
+
+
+        var countCat=1;
+
+
+$('#addmore').click(function() {
+
+
+                countCat=countCat+1;
+                var markup = '<div class="d-flex justify-content-center " style="align-items:center" id="row__cat_id_'+countCat+'" >';
+                markup+=' <div class="form-group mx-2"> <label>ناوی بەش</label> <input type="text" id="category_name'+countCat+'" class="form-control mx-auto" name="category_name[]" > </div> <div class="form-group mx-2"> <label>ناوی پارچە</label> <input type="text" id="peice_name'+countCat+'" class="form-control mx-auto" name="piece_name[]" > </div> <div class="form-group mx-2"> <label>ژمارەی پارچە</label> <input type="text" id="piece_number'+countCat+'" class="form-control mx-auto" name="piece_number[]" > </div> <div class="form-group mx-2"> <label>نرخی پارچە</label> <input type="text" id="piece_price'+countCat+'" class="form-control mx-auto" name="piece_price[]" > </div> ';
+                markup+=' <p id="'+countCat+'" style="transform:translate(0px,17px);zoom:80%" class="btn remove_cat btn-sm btn-danger" >X</p>';
+                markup+='</div>';
+       
+                $('#item_cat').append(markup);
+
+
+});
+
+
+
+
+
         $('#add_more').click(function() {
             count=count+1;
             var markup = '<tr id="row_id_'+count+'" >';
@@ -288,6 +431,13 @@ direct("buy_qa3a_add.php");
             });
 
 
+
+                // remove row
+                $(document).on('click','.remove_cat',function(){
+                    var row_id=$(this).attr("id");
+                $('#row__cat_id_'+row_id).remove();
+                countCat=countCat-1;
+                });
 
                 // remove row
                 $(document).on('click','.remove_row',function(){
