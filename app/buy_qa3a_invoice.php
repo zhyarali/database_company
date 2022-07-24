@@ -14,6 +14,33 @@ $getInvoice = getdata(" SELECT * FROM invoice WHERE id='$invoice_id' ");
 $dealer_id=$getInvoice['dealer_id'];
 
 
+
+
+
+
+if (post('category_id')) {
+    $category_id=$_POST['category_id'];
+    $piece_number=$_POST['piece_number'];
+
+
+    for ($i = 0; $i < count($piece_number); $i++) {
+
+        $piece_name=$_POST['piece_name'][$i];
+        $pieceNumber=$_POST['piece_number'][$i];
+        $piece_price=$_POST['piece_price'][$i];
+
+        execute("UPDATE piece SET `name`='$piece_name',`qty`='$pieceNumber',`price`='$piece_price'  WHERE category_id='$category_id' ");
+
+    
+    }
+
+   
+  
+}
+
+
+
+
 if (post("update_invoice")) {
     $total=$_POST['price'];
     $type_invoice="buy_qa3a";
@@ -29,7 +56,7 @@ if (post("update_invoice")) {
  execute("DELETE FROM buy WHERE `status`='1' AND  `invoice_id`='$invoice_id' ");
 
 for ($i = 0; $i < count($_POST['num']); $i++) {
-
+ 
     $id =$_POST['id'][$i];
     $name_product =$_POST['name_product'][$i];
     $type =$_POST['type'][$i];
@@ -63,6 +90,66 @@ direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
  گەڕانەوە بۆ وەسڵەکان
   </a>
 </div>
+
+
+
+
+
+
+<form method="post" action="">
+
+
+<div class="container mb-5 p-5" style="background:#E7F6F2;border-radius:10px" id="item_cat">
+
+
+<div class="d-flex justify-content-around">
+    
+<!-- <div>
+<p style="transform:translate(0px,30px)"  class="btn  btn-success " id="addmore" > <i class="fas fa-plus-circle "></i>  زیادکردنی پارچەی تر</p>
+
+</div> -->
+
+<div class="form-group text-center">
+<label>پارچەکان</label>
+            <select name="category"   class="form-control col-md-10 mx-auto">
+                <option selected disabled>پارچەیەک هەڵبژێرە</option>
+                <?php
+                    $category=show("SELECT * FROM sale_category WHERE invoice_id='$invoice_id'");
+                    foreach ($category as $cat) { ?>
+                                                
+                 <option  value="<?=$cat['id']?>"> <?=$cat['name']?> </option>
+                <?php   } ?>
+            </select>
+        </div> 
+
+
+        <div>
+<button style="transform:translate(0px,16px)" type="submit" name="edit_category" class="btn btn-secondary">
+<i class="fas fa-save "></i>  <span style="font-weight:bold">گۆڕانکاری</span>
+</button>
+</div>
+
+
+</div>
+
+
+
+<div id="show_data">
+    
+</div>
+
+
+    
+</div>
+</form>
+
+
+
+
+
+
+
+
 
 <form method="post" action="buy_qa3a_invoice.php?invoice_id=<?=$invoice_id?>">
 
@@ -331,6 +418,48 @@ direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
 <?php 
 require_once('footer.php'); 
 
@@ -357,6 +486,36 @@ if (post('return_buy')) {
       $(document).ready(function() {
         var count=1;
         var price=0;
+
+
+
+
+ $(document).on('change', 'select[name="category"]', function(){
+
+    var value= $(this).val();
+
+
+
+                 $.ajax({
+                    url: "get_piece.php",
+                    method: "POST",
+                    data: {piece:true,catId:value},
+                    success: function (data) {
+                        if (data) {
+                          $("#show_data").html(data)
+                        }
+                       
+                    }
+                 });
+    
+ });
+
+
+
+
+
+
+
         $('#add_more').click(function() {
             count=count+1;
             var markup = '<tr id="row_id_'+count+'" >';

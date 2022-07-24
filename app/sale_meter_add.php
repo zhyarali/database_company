@@ -7,9 +7,9 @@ if (isset($_SESSION["add_success"])) {
      unset($_SESSION["add_success"]);
  }
 
- if (isset($_SESSION["add_category"])) {
+ if (isset($_SESSION["add_category_meter"])) {
     msg('سەرکەتووبوو','بەسەرکەوتوویی ئەم بەشە زیادکرا ','success');
-     unset($_SESSION["add_category"]);
+     unset($_SESSION["add_category_meter"]);
   }
 
 
@@ -17,7 +17,8 @@ if (isset($_SESSION["add_success"])) {
 if (post("add_category")) {
 
     $piece_number=$_POST['piece_number'];
-    $category_name=$_POST['category_name'];
+    $category_id=$_POST['category'];
+
 
     $invoiceId=0;
     $lasts=show("SELECT * FROM invoice  ORDER BY id DESC LIMIT 1 ");
@@ -34,26 +35,52 @@ if (post("add_category")) {
 
 
 
-    $sqlInsert = "INSERT INTO sale_category (`name`,`invoice_id`) VALUES ('$category_name','$invoiceId')";
 
-    mysqli_query($conn, $sqlInsert);
-    $lastInsertId = mysqli_insert_id($conn);
+
+
+    $sale_piece=show("SELECT * FROM sale_piece WHERE invoice_id='$invoiceId'");
+
+
+
 
 
     for ($i = 0; $i < count($piece_number); $i++) {
 
+        $piece_id=$_POST['piece_id'][$i];
 
-        $piece_name=$_POST['piece_name'][$i];
+    if (empty($sale_piece)) {
+        
+    }else{
+        execute("DELETE FROM sale_piece WHERE piece_id='$piece_id' ");
+    }
+
+    }
+
+    for ($i = 0; $i < count($piece_number); $i++) {
+
+
+        $piece_id=$_POST['piece_id'][$i];
+        $current_qty=$_POST['current_qty'][$i];
         $pieceNumber=$_POST['piece_number'][$i];
         $piece_price=$_POST['piece_price'][$i];
 
-        execute("INSERT INTO piece (name,qty,price,category_id) VALUES ('$piece_name','$pieceNumber','$piece_price','$lastInsertId')");
+        $qty=$current_qty-$pieceNumber;
+
+        execute("UPDATE piece SET qty='$qty',price='$piece_price' WHERE id='$piece_id' ");
+
+        $cat=getdata("SELECT * FROM piece  WHERE id='$piece_id'");
+        $piece_name=$cat['name'];
+
+
+            execute("INSERT INTO sale_piece (name,piece_id,invoice_id) VALUES ('$piece_name','$piece_id','$invoiceId')");
+        
+
 
     
     }
 
-    $_SESSION["add_category"]="";
-    direct("buy_qa3a_add.php");
+    $_SESSION["add_category_meter"]="";
+    direct("sale_meter_add.php");
 
 
     
@@ -61,7 +88,7 @@ if (post("add_category")) {
 
 
 
-
+// era
 if (post("add_invoice")){
 
         
@@ -141,16 +168,25 @@ if (post("add_invoice")){
 
 <div class="d-flex justify-content-around text-center">
 
-<div>
+<!-- <div>
 <p style="transform:translate(0px,30px)"  class="btn  btn-success " id="addmore" > <i class="fas fa-plus-circle "></i>  زیادکردنی پارچەی تر</p>
-</div>
+</div> -->
 
-<div class="form-group mx-2">
-        <label>ناوی بەش</label>
-            <input type="text" id="category_name1"
-                class="form-control  mx-auto" name="category_name" required
-            >
- </div> 
+<div class="form-group text-center">
+<label>پارچەکان</label>
+            <select name="category"   class="form-control col-md-10 mx-auto">
+                <option selected disabled>پارچەیەک هەڵبژێرە</option>
+                <?php
+                    $category=show("SELECT * FROM sale_category ");
+                    foreach ($category as $cat) { ?>
+                                                
+                 <option  value="<?=$cat['id']?>"> <?=$cat['name']?> </option>
+                <?php   } ?>
+            </select>
+        </div> 
+
+
+       
  
  
 
@@ -168,37 +204,12 @@ if (post("add_invoice")){
 </div>
 
 
-<div class="d-flex justify-content-center text-center " style="align-items:center" id="row__cat_id_1">
+<div id="show_data">
     
 
-
-
- <div class="form-group mx-2">
-        <label>ناوی پارچە</label>
-            <input type="text" id="peice_name1"
-                class="form-control  mx-auto" name="piece_name[]"
-            >
- </div>  
-
- <div class="form-group mx-2">
-        <label>ژمارەی پارچە</label>
-            <input type="text" id="piece_number1"
-                class="form-control  mx-auto" name="piece_number[]"
-            >
- </div>  
- <div class="form-group mx-2">
-        <label>نرخی پارچە</label>
-            <input type="text" id="piece_price1"
-                class="form-control  mx-auto" name="piece_price[]"
-            >
- </div>  
-
-
-
-
- 
-
 </div>
+
+
     
 </div>
 </form>
@@ -433,6 +444,34 @@ if (post("add_invoice")){
 
         
 
+        
+ $(document).on('change', 'select[name="category"]', function(){
+
+var value= $(this).val();
+
+
+
+             $.ajax({
+                url: "get_piece.php",
+                method: "POST",
+                data: {sale_piece:true,catId:value},
+                success: function (data) {
+                    if (data) {
+                      $("#show_data").html(data)
+                    }
+                   
+                }
+             });
+
+});
+
+
+
+$(document).on('click','.remove_piece',function(){
+    var row_id=$(this).attr("id");
+    $('#row'+row_id).remove();
+    
+})
 
 
 
@@ -444,7 +483,7 @@ $('#addmore').click(function() {
 
                 countCat=countCat+1;
                 var markup = '<div class="d-flex justify-content-center " style="align-items:center" id="row__cat_id_'+countCat+'" >';
-                markup+=' <div class="form-group mx-2"> <label>ناوی پارچە</label> <input type="text" id="peice_name'+countCat+'" class="form-control mx-auto" name="piece_name[]" > </div> <div class="form-group mx-2"> <label>ژمارەی پارچە</label> <input type="text" id="piece_number'+countCat+'" class="form-control mx-auto" name="piece_number[]" > </div> <div class="form-group mx-2"> <label>نرخی پارچە</label> <input type="text" id="piece_price'+countCat+'" class="form-control mx-auto" name="piece_price[]" > </div> ';
+                markup+=' <div class="form-group mx-2"> <label>ناوی پارچە</label> <input type="text" id="piece_name'+countCat+'" class="form-control mx-auto" name="piece_name[]" > </div> <div class="form-group mx-2"> <label>ژمارەی پارچە</label> <input type="text" id="piece_number'+countCat+'" class="form-control mx-auto" name="piece_number[]" > </div> <div class="form-group mx-2"> <label>نرخی پارچە</label> <input type="text" id="piece_price'+countCat+'" class="form-control mx-auto" name="piece_price[]" > </div> ';
                 markup+=' <p id="'+countCat+'" style="transform:translate(0px,17px);zoom:80%" class="btn remove_cat btn-sm btn-danger" >X</p>';
                 markup+='</div>';
        

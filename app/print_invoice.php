@@ -340,6 +340,32 @@ if($print_type=="buy_qa3a"){
             <p>جۆری دراو : <?=$currency_type?></p>
             
         </div>
+
+
+        <div>
+            <div class="d-flex justify-content-center">
+                <p>پارچەکان</p>
+            </div>
+            <?php 
+            
+            $category=show("SELECT * FROM sale_category WHERE invoice_id='$invoice_id'");
+            foreach ($category as $cat) {
+                $catId=$cat['id'];
+              $pieces=show("SELECT * FROM piece WHERE category_id='$catId'");  
+                foreach ($pieces as $piece) {
+            ?>
+
+    
+          
+            
+         
+               <button type="button" class="btn btn-outline-light btn-sm text-dark"> <p> <?=$piece['qty']?> </p> <?=$piece['name']?> </button>
+               
+   
+
+
+<?php }} ?>
+        </div>
         
 
   
