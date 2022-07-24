@@ -9,42 +9,141 @@
 </div>
 
 
-<div class="container d-flex justify-content-around mt-2 flex-wrap">
-<?php if ($is_admin==1) {?>
-    <a href="sale_dana.php" style="font-size:16px" class="btn btn-success "><i
-            class="fas fa-dollar-sign "></i>  فرۆشتن بە دانە</a>
-<?php } ?>
-            <a href="sale_meter.php" style="font-size:16px;background:#7868E6 !important;" class="btn btn-danger"> فرۆشتن  بەمەتر</a>
+<div class="d-flex justify-content-around mt-3 flex-wrap">
+    <a  href="sale_qa3a_add.php"  class="btn btn-success pb-1 pt-1" >
 
-    <!-- <div onclick="window.print()" class="btn  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن
-    </div> -->
+        <p style="transform:translate(0px,10px)">
+        <i class="fas fa-plus-circle "></i>  <span style="font-weight:bold">زیادکردن</span>
+        </p>
+
+    </a>
+</div>
+
+
+<div class="container-fluid mt-2">
+<div class="row m-auto" >
+
+<div class="col-md-12">
+  <div class="table-responsive">
+<table id="example" class="table table-hover   table-striped table-bordered  text-center" dir="rtl" style="zoom:85%">
+        <thead  class="bg-dark text-light">
+            <tr>
+                <th>ژمارەی وەسڵ</th>
+                <th>ناوی کڕیار</th>
+                <th>کۆی گشتی نرخ</th>
+                <th>بەروار</th>
+                <th>پرنتکردن</th>
+                <th>گۆڕانکاری</th>
+                <th>سڕینەوە</th>
+            </tr>
+        </thead>
+        <tbody>
+<?php 
+                 $invoiceList =show("SELECT * from invoice WHERE type='sale_qa3a' ORDER BY date DESC");
+
+                 foreach($invoiceList as $invoiceDetails){
+                 $invoiceDate = date("d/M/Y, H:i:s", strtotime($invoiceDetails["date"]));
+
+?>
+
+       <tr>
+          <td><?=$invoiceDetails['id']?></td>
+          <td>
+              
+          
+            <?php  
+              $dealer_id=$invoiceDetails['dealer_id'];         
+              $getdealer = getdata(" SELECT * FROM customer WHERE id='$dealer_id' "); ?>
+             <a href="customer_detail.php?id=<?=$getdealer['id']?>">
+                <?=$getdealer['name']?>
+             </a>
+            <?php  ?>
+          
+            
+        </td>
+          <td><?=$invoiceDetails['price']?></td>
+          <td><?=$invoiceDetails['date']?></td>
+          <td><a href="print_invoice.php?print_type=sale_qa3a&&invoice_id=<?=$invoiceDetails['id']?>"><i class="fa fa-print"></i></a></td>
+          <td><a href="sale_qa3a_invoice.php?invoice_id=<?=$invoiceDetails['id']?>"><i class="fa fa-edit"></i></a></td>
+          <td><a href="#" data-toggle="modal" data-target="#delete<?php echo $invoiceDetails['id'] ?>"><i class="fa fa-trash-alt"></i></a></td>
+        
+      </tr>
+
+
+
+
+          <!-- delete modal -->
+          <div class="modal fade" id="delete<?php echo $invoiceDetails['id'] ?>" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content" style="background-color: white;border-radius: 15px;">
+                                    <div class="modal-body text-center">
+                                        <div class="container-fluid">
+                                            <div class="row row-cols-1 row-cols-md-3">
+                                                <div class="col-md-12 mb-3 mx-auto">
+                                                    <div class="h-100">
+                                                        <i class="fa fa-times-circle" style="float:left;color: black"
+                                                            data-dismiss="modal"></i>
+                                                        <div class="card-body">
+                                                            <h5 class="container col-md-6 mt-3  text-center">
+                                                                دڵنیای لە سڕینەوەی ئەم وەسڵە لەناو سیستەمەکەت ؟
+                                                            </h5>
+                                                            <br>
+                                                            <form dir="rtl" method="POST">
+                                                                <div class="form-group">
+                                                                    <input type="hidden" placeholder="  ناو  " name="id"
+                                                                        value="<?=$invoiceDetails['id'];?> "
+                                                                        class="form-control col-md-10 mx-auto">
+                                                                </div>
+ 
+                                                                <button type="submit" name="del"
+                                                                    class="btn btn-danger btn-block"> سڕینەوە </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+      
+
+  
+<?php
+}
+?>
+        </tbody>
+    </table>
+    </div>
+
+ </div>
+
 </div>
 
 
 
 
+   <!-- add krdn -->
 
 
-    <?php
- if (isset($_SESSION["edit_success"])) {
-    msg('سەرکەتووبوو','سەرکەوتووانە  گۆڕانکاری لەزانیارییەکان کرا ','success');
-     unset($_SESSION["edit_success"]);
- }
 
- if (isset($_SESSION["add_success"])) {
-    msg('سەرکەتووبوو','سەرکەوتووانە زانیارییەکان تۆمارکرا ','success');
-     unset($_SESSION["add_success"]);
- }
+
+
+
+
+ 
+ 
+<?php
 
  if (isset($_SESSION["delete"])) {
     msg('ئاگاداری','سەرکەوتووانە سڕایەوە ','warning');
     unset($_SESSION["delete"]);
  }
 
- if (isset($_SESSION["update_return"])) {
-    msg('سەرکەتووبوو','بە سەرکەوتوویی ئەم فرۆشتنە گەڕێندرایەوە','success');
-     unset($_SESSION["update_return"]);
-  }
+
 
  
  ?>
@@ -54,91 +153,20 @@
 
 <?php 
 
-if (post('return_sale')) {
-    $id = secure($_POST['id']);
-    execute("UPDATE sale SET `status`='-1' WHERE id='$id' ");
-    $_SESSION["update_return"] = "";
-    direct('sale_qa3a.php');
-  }
+if (isset($_SESSION["delete"])) {
+    msg('ئاگاداری','سەرکەوتووانە سڕایەوە ','warning');
+    unset($_SESSION["delete"]);
+ }
 
-if (post('edit')) {
-  $id = secure($_POST['id']);
-  $customer_id = secure($_POST['customer_id']);
-  $name_product = secure($_POST['name_product']);
-  $num = secure($_POST['num']);
-  $cost_t = secure($_POST['cost_t']);
-  $type = secure($_POST['type']);
-  $place = secure($_POST['place']);
-  $cost_wasl = secure($_POST['cost_wasl']);
-  $note = secure($_POST['note']);
-  $discount = secure($_POST['discount']);
-  $unit = secure($_POST['unit']);
-  $cost_co = $cost_t*$num;
-  $cost_co=$cost_co - $discount;
-  $cost_mawa =$cost_co-$cost_wasl;
-
-$getoldqty = getdata(" SELECT * FROM  sale WHERE id='$id' ");
-$oldnum = $getoldqty['num'];
-$gettotalbuy = show("  SELECT sum(num) as 'totalbuy' FROM  buy WHERE name_product='$name_product' AND type='$type' AND  `status`='1' ");
-$totalbuy = $gettotalbuy[0]['totalbuy']; 
-$gettotalsale = show("  SELECT sum(num) as 'totalsale' FROM  sale WHERE name_product='$name_product' AND type='$type' AND `status`='1' ");
-$totalsale = $gettotalsale[0]['totalsale']; 
-$remainqty = $totalbuy-$totalsale;
-// zhika lussssssssssssssss Ufffffffffffffffffffffffffffffffffff
-if($num > ($remainqty+$oldnum)) {
-    msg('ئاگاداربە !','ئەوەندە بڕ لەم کاڵەیە بەردەست نیە ','warning');
-}
-else {
-
-  $sql=execute("UPDATE  `sale` SET `customer_id`='$customer_id',`name_product`='$name_product',`num`='$num',`cost_t`='$cost_t',`cost_co`='$cost_co',`type`='$type',`place`='$place',`cost_wasl`='$cost_wasl',`note`='$note',`discount`='$discount',`unit`='$unit'  WHERE id='$id' ");
-  $_SESSION["edit_success"] = "";
-  direct('sale_qa3a.php');
-
-}
-}
 
 if (post('del')) {
     $id = secure($_POST['id']);
-    $sql = execute(" DELETE  FROM `sale` WHERE id = '$id'");
+    $sql = execute(" DELETE  FROM `invoice` WHERE id = '$id'");
+    $sql = execute(" DELETE  FROM `sale` WHERE invoice_id = '$id'");
     $_SESSION["delete"] = "";
     direct('sale_qa3a.php');
 }
 
 
-
-if (post('add')) {
-    $customer_id = secure($_POST['customer_id']);
-    $name_product = secure($_POST['name_product']);
-    $num = secure($_POST['num']);
-    $cost_t = secure($_POST['cost_t']);
-    $type = secure($_POST['type']);
-    $unit = secure($_POST['unit']);
-    $place = secure($_POST['place']);
-    $cost_wasl = secure($_POST['cost_wasl']);
-    $note = secure($_POST['note']);
-    $date=date("Y-m-d");
-    $discount = secure($_POST['discount']);
-
-     $cost_co = $cost_t*$num;
-     $cost_co=$cost_co - $discount;
-
-
-     
-$gettotalbuy = show("  SELECT sum(num) as 'totalbuy' FROM  buy WHERE name_product='$name_product' AND type='$type' AND  `status`='1' ");
-$totalbuy = $gettotalbuy[0]['totalbuy']; 
-   
-$gettotalsale = show("  SELECT sum(num) as 'totalsale' FROM  sale WHERE name_product='$name_product' AND type='$type' AND `status`='1' ");
-$totalsale = $gettotalsale[0]['totalsale']; 
-$remainqty = $totalbuy-$totalsale;
-// zhika lus
-if($num > $remainqty) {
-    msg('ئاگاداربە !','ئەوەندە بڕ لەم کاڵەیە بەردەست نیە ','warning');
-}
-else {
-$sql=execute("INSERT INTO `sale` (`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`place`,`sale_type`,`status`,`note`) VALUES('$customer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','$name_product','$place','qa3a','1','$note') ");
-$_SESSION["add_success"] = "";
-direct('sale_qa3a.php');
-}
-}
 ?>
-    <?php require_once('footer.php'); ?>
+<?php require_once('footer.php'); ?>

@@ -80,7 +80,7 @@ if (post("add_category")) {
     }
 
     $_SESSION["add_category_meter"]="";
-    direct("sale_meter_add.php");
+    direct("sale_qa3a_add.php");
 
 
     
@@ -93,7 +93,9 @@ if (post("add_invoice")){
 
         
     $total=$_POST['price'];
-    $type_invoice="buy_qa3a";
+    $type_invoice="sale_qa3a";
+    $type="sale_qa3a";
+
     $date=date("Y-m-d");
     $note =$_POST['note'];
     $place =$_POST['place'];
@@ -107,23 +109,36 @@ if (post("add_invoice")){
     
     
     $name_product =$_POST['name_product'][$i];
-    $type =$_POST['type'][$i];
     $num =$_POST['num'][$i];
     $cost_t =$_POST['cost_t'][$i];
     $unit =$_POST['unit'][$i];
     
     $cost_wasl =$_POST['cost_wasl'][$i];
-    $cost_fr =$_POST['cost_fr'][$i];
+
     $discount =$_POST['discount'][$i];
     
     $cost_co = $cost_t*$num;
     $cost_co=$cost_co-$discount;
-    
-    execute("INSERT INTO `buy` (`invoice_id`,`dealer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`cost_fr`,`discount`,`unit`,`name_product`,`place`,`buy_type`,`status`,`note`) VALUES('$lastInsertId','$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$cost_fr','$discount','$unit','$name_product','$place','qa3a','1','$note') ");
+
+
+    $gettotalbuy = show("  SELECT sum(num) as 'totalbuy' FROM  buy WHERE name_product='$name_product' AND type='$type' AND  `status`='1' ");
+$totalbuy = $gettotalbuy[0]['totalbuy']; 
+   
+$gettotalsale = show("  SELECT sum(num) as 'totalsale' FROM  sale WHERE name_product='$name_product' AND type='$type' AND `status`='1' ");
+$totalsale = $gettotalsale[0]['totalsale']; 
+$remainqty = $totalbuy-$totalsale;
+// zhika lus
+if($num > $remainqty) {
+    msg('ئاگاداربە !','ئەوەندە بڕ لەم کاڵەیە بەردەست نیە ','warning');
+}else{
+
+    execute("INSERT INTO `sale` (`invoice_id`,`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`place`,`sale_type`,`status`,`note`) VALUES('$lastInsertId','$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','$name_product','$place','qa3a','1','$note') ");
+
     }
+}
     
      $_SESSION["add_success"] = "";
-    direct("buy_qa3a_add.php");
+    direct("sale_qa3a_add.php");
 
 
 }
@@ -135,7 +150,7 @@ if (post("add_invoice")){
 
 <div class="container-fluid d-flex justify-content-between mt-4" style="zoom:80%">
 
-<a href="buy_qa3a.php"   class="btn btn-info pb-1 pt-1" >
+<a href="sale_qa3a.php"   class="btn btn-info pb-1 pt-1" >
 
 <p style="transform:translate(0px,10px)">
 <i class="fas fa-arrow-right "></i>  <span style="font-weight:bold"> گەڕانەوە
@@ -249,7 +264,7 @@ if (post("add_invoice")){
 <label>ناوی فرۆشیار</label>
             <select name="dealer_id" required   class="form-control col-md-10 mx-auto">
                 
-            <option selected disabled> فرۆشیار هەڵبژێرە</option>
+            <option selected disabled> کڕیار هەڵبژێرە</option>
                 <?php
                     $getdealer = show(" SELECT * FROM dealers");
                     foreach ($getdealer as $dealer) { ?>
@@ -261,7 +276,7 @@ if (post("add_invoice")){
         </div>
 
         <div class="form-group">
-        <label>شوێنی کڕین</label>
+        <label>شوێنی فرۆشتن</label>
             <input type="text" placeholder="شوێنی کڕین بنووسە"
                 class="form-control  mx-auto" name="place"
                 required="">
@@ -284,14 +299,11 @@ if (post("add_invoice")){
 <table  class="table  table-striped table-bordered  text-center" id="tab_logic" dir="rtl" style="zoom:85%">
         <thead class="bg-dark text-light">
             <tr>
-                <th>لابردن</th>
                 <th>ناوی شتوومەک</th>
-                <th>یەکەی کڕین</th>
-                <th> جۆر    </th>
+                <th>یەکەی فرۆشتن</th>
                 <th> ژمارە    </th>
                 <th> نرخی تاک    </th>
                 <th> نرخی واسڵکراو    </th>
-                <th> نرخی فرۆشتن    </th>
                 <th> نرخی داشکاندن    </th>
                 <th> کۆی گشتی    </th>
         
@@ -301,7 +313,7 @@ if (post("add_invoice")){
         <tbody id="item_table">
 
        <tr id="row_id_1">
-        <td></td>
+ 
 
         <td>
         <div class="form-group">
@@ -321,14 +333,7 @@ if (post("add_invoice")){
                 </select>
             </div>
         </td>
-     
-        <td>
-        <div class="form-group">
-                      <input type="text" placeholder="   جۆر  " class="form-control col-md-10 mx-auto"
-                        name="type[]" id="type1" required="">
-        </div>
 
-        </td>
 
 
         <td>
@@ -353,13 +358,7 @@ if (post("add_invoice")){
 
         </td>
 
-        <td>
-            
-        <div class="form-group">
-                      <input type="text" placeholder="  نرخی فرۆشتن بە دانە " class="form-control col-md-10 mx-auto"
-                        name="cost_fr[]" id="cost_fr1" required="">
-                    </div>
-        </td>
+
 
         <td>
         <div class="form-group">
