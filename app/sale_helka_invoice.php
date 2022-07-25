@@ -12,7 +12,7 @@ $invoice_id=$_GET['invoice_id'];
 
 $getInvoice = getdata(" SELECT * FROM invoice WHERE id='$invoice_id' ");
 
-$customerId=$getInvoice['dealer_id'];
+$customerId=$getInvoice['customer_id'];
 
 if (post("update_invoice")) {
     $total=$_POST['price'];
@@ -23,7 +23,7 @@ if (post("update_invoice")) {
 
 $customer_id = $_POST['dealer_id'];
 
- execute("UPDATE invoice SET `price`='$total',`type`='$type_invoice',`note`='$note',`dealer_id`='$customer_id' WHERE id='$invoice_id'");
+ execute("UPDATE invoice SET `price`='$total',`type`='$type_invoice',`note`='$note',`customer_id`='$customer_id' WHERE id='$invoice_id'");
 
  execute("DELETE FROM sale WHERE `status`='1' AND  `invoice_id`='$invoice_id' ");
 

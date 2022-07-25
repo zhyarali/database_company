@@ -52,7 +52,7 @@
               
           
             <?php  
-              $dealer_id=$invoiceDetails['dealer_id'];         
+              $dealer_id=$invoiceDetails['customer_id'];         
               $getdealer = getdata(" SELECT * FROM customer WHERE id='$dealer_id' "); ?>
              <a href="customer_detail.php?id=<?=$getdealer['id']?>">
                 <?=$getdealer['name']?>

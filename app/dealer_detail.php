@@ -249,7 +249,7 @@ if (empty($data)) {
         </thead>
         <tbody>
 <?php 
-                 $invoiceList =show("SELECT * from invoice  ORDER BY date DESC");
+                 $invoiceList =show("SELECT * from invoice WHERE customer_id='$user_id'  ORDER BY date DESC");
 
                  foreach($invoiceList as $invoiceDetails){
                  $invoiceDate = date("d/M/Y, H:i:s", strtotime($invoiceDetails["date"]));

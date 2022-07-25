@@ -25,7 +25,7 @@ $name_product ="هێلکە";
 
 
 
-$sqlInsert = "INSERT INTO invoice (`price`,`type`,`note`,`dealer_id`) VALUES ('$total','$type_invoice','$note','$customer_id')";
+$sqlInsert = "INSERT INTO invoice (`price`,`type`,`note`,`dealer_id`,`customer_id`) VALUES ('$total','$type_invoice','$note','0','$customer_id')";
 mysqli_query($conn, $sqlInsert);
 $lastInsertId = mysqli_insert_id($conn);
 

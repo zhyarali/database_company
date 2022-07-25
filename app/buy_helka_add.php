@@ -17,7 +17,7 @@ $date=date("Y-m-d");
 $note =$_POST['note'];
 $dealer_id = $_POST['dealer_id'];
 
-$sqlInsert = "INSERT INTO invoice (`price`,`type`,`note`,`dealer_id`) VALUES ('$total','$type_invoice','$note','$dealer_id')";
+$sqlInsert = "INSERT INTO invoice (`price`,`type`,`note`,`dealer_id`,`customer_id`) VALUES ('$total','$type_invoice','$note','$dealer_id','0')";
 mysqli_query($conn, $sqlInsert);
 $lastInsertId = mysqli_insert_id($conn);
 

@@ -16,7 +16,7 @@ if (isset($_SESSION["edit_category_not_qty"])) {
 $invoice_id=$_GET['invoice_id'];
 
 $getInvoice = getdata(" SELECT * FROM invoice WHERE id='$invoice_id' ");
-$dealer_id=$getInvoice['dealer_id'];
+$dealerId=$getInvoice['customer_id'];
 
 
 
@@ -76,7 +76,7 @@ if (post("update_invoice")) {
     $name_product ='qa3a';
 
 
- execute("UPDATE invoice SET `price`='$total',`type`='$type_invoice',`note`='$note',`dealer_id`='$dealer_id' WHERE id='$invoice_id'");
+ execute("UPDATE invoice SET `price`='$total',`type`='$type_invoice',`note`='$note',`customer_id`='$dealer_id' WHERE id='$invoice_id'");
 
  execute("DELETE FROM buy WHERE `status`='1' AND  `invoice_id`='$invoice_id' ");
 
@@ -102,7 +102,7 @@ execute("INSERT INTO `buy` (`invoice_id`,`dealer_id`,`cost_t`,`cost_co`,`num`,`t
 }
 
 $_SESSION["edit_success"]="";
-direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
+direct("sale_qa3a_invoice.php?invoice_id=$invoice_id");
 
 }
 
@@ -260,7 +260,7 @@ foreach ($sale_pieces as $sale_piece) {
 
 
 
-<form method="post" action="buy_qa3a_invoice.php?invoice_id=<?=$invoice_id?>">
+<form method="post" action="sale_qa3a_invoice.php?invoice_id=<?=$invoice_id?>">
 
 <div class="d-flex justify-content-center mt-3 flex-wrap">
     <button  type="submit" name="update_invoice" class="btn btn-success pb-1 pt-1" >
@@ -281,7 +281,7 @@ foreach ($sale_pieces as $sale_piece) {
                     $getdealer = show(" SELECT * FROM customer");
                     foreach ($getdealer as $dealer) { ?>
                                                 
-                 <option <?php if($dealer_id==$dealer['id']) echo 'selected="selected"'; ?> value="<?=$dealer['id']?>"> <?=$dealer['name']?> </option>
+                 <option <?php if($dealerId==$dealer['id']) echo 'selected="selected"'; ?> value="<?=$dealer['id']?>"> <?=$dealer['name']?> </option>
                 <?php   } ?>
             </select>
         </div> 
@@ -289,7 +289,7 @@ foreach ($sale_pieces as $sale_piece) {
         <div class="form-group">
         <label>شوێنی کڕین</label>
         <?php 
-                $getPlace = show("SELECT * FROM buy WHERE invoice_id='$invoice_id' Limit 1");
+                $getPlace = show("SELECT * FROM sale WHERE invoice_id='$invoice_id' Limit 1");
                 foreach ($getPlace as $place) { 
             ?>
             <input type="text" value="<?=$place['place']?>" placeholder="شوێنی کڕین"

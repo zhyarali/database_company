@@ -11,7 +11,7 @@ if (isset($_SESSION["edit_success"])) {
 $invoice_id=$_GET['invoice_id'];
 
 $getInvoice = getdata(" SELECT * FROM invoice WHERE id='$invoice_id' ");
-$dealer_id=$getInvoice['dealer_id'];
+$dealer_id=$getInvoice['customer_id'];
 
 
 $getInvoice = getdata(" SELECT * FROM  sale WHERE invoice_id='$invoice_id' ");
@@ -29,7 +29,7 @@ if (post("update_invoice")) {
 
 
 
- execute("UPDATE invoice SET `price`='$total',`type`='$type_invoice',`note`='$note',`dealer_id`='$dealer_id' WHERE id='$invoice_id'");
+ execute("UPDATE invoice SET `price`='$total',`type`='$type_invoice',`note`='$note',`customer_id`='$dealer_id' WHERE id='$invoice_id'");
 
 
  execute("DELETE FROM sale WHERE `status`='1' AND  `invoice_id`='$invoice_id' ");
