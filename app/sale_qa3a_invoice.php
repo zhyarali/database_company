@@ -8,6 +8,11 @@ if (isset($_SESSION["edit_success"])) {
      unset($_SESSION["edit_success"]);
  }
 
+if (isset($_SESSION["edit_category_not_qty"])) {
+    msg('ئاگاداربە','بڕی پێویست لە کاڵاکە بوونی نییە تکایە بڕی گونجاو بنووسە یاخود بڕی تر بکڕە','warning');
+     unset($_SESSION["edit_category_not_qty"]);
+ }
+
 $invoice_id=$_GET['invoice_id'];
 
 $getInvoice = getdata(" SELECT * FROM invoice WHERE id='$invoice_id' ");
@@ -18,19 +23,39 @@ $dealer_id=$getInvoice['dealer_id'];
 
 
 
-if (post('category_id')) {
-    $category_id=$_POST['category_id'];
+if (post('edit_category')) {
+    $invoice_id=$_GET['invoice_id'];
+    
     $piece_number=$_POST['piece_number'];
 
 
     for ($i = 0; $i < count($piece_number); $i++) {
 
+        $id=$_POST['id'][$i];
         $piece_name=$_POST['piece_name'][$i];
         $pieceNumber=$_POST['piece_number'][$i];
         $piece_price=$_POST['piece_price'][$i];
+        $category_id=$_POST['piece_id'][$i];
 
-        execute("UPDATE piece SET `name`='$piece_name',`qty`='$pieceNumber',`price`='$piece_price'  WHERE category_id='$category_id' ");
 
+        
+      $gettotalpiece = show("  SELECT sum(qty) as 'totalNum' FROM  piece WHERE name='$piece_name' ");
+      $totalpiece = $gettotalpiece[0]['totalNum']; 
+    
+      $gettotalsale = show("  SELECT sum(number) as 'totalsale' FROM  sale_piece WHERE name='$piece_name' ");
+      $totalsale = $gettotalsale[0]['totalsale']; 
+
+      $remainqty = $totalpiece-$totalsale;
+    
+      if ($remainqty< $pieceNumber) {
+        $remainqty=0;
+        $_SESSION["edit_category_not_qty"] = "";
+        $loc="sale_qa3a_invoice.php?invoice_id=".$invoice_id;
+        direct($loc);
+      }else{
+
+        execute("UPDATE sale_piece SET `name`='$piece_name',`number`='$pieceNumber',`price`='$piece_price', `piece_id`='$category_id'  WHERE id='$id' ");
+      }
     
     }
 
@@ -85,8 +110,8 @@ direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
 
 
 <div class="container-fluid mt-4">
-<a href="buy_qa3a.php" class="btn btn-sm btn-info shadow" >
- <span class="fa fa-arsrow-right"></span>
+<a href="sale_qa3a.php" class="btn btn-sm btn-info shadow" >
+ <span class="fa fa-arrow-right"></span>
  گەڕانەوە بۆ وەسڵەکان
   </a>
 </div>
@@ -109,21 +134,21 @@ direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
 
 </div> -->
 
-<div class="form-group text-center">
+<!-- <div class="form-group text-center">
 <label>پارچەکان</label>
             <select name="category"   class="form-control col-md-10 mx-auto">
                 <option selected disabled>پارچەیەک هەڵبژێرە</option>
                 <?php
-                    $category=show("SELECT * FROM sale_category WHERE invoice_id='$invoice_id'");
+                    $category=show("SELECT * FROM sale_piece WHERE invoice_id='$invoice_id'");
                     foreach ($category as $cat) { ?>
                                                 
-                 <option  value="<?=$cat['id']?>"> <?=$cat['name']?> </option>
+                 <option  value="<?=$cat['piece_id']?>"> <?=$cat['name']?> </option>
                 <?php   } ?>
             </select>
-        </div> 
+        </div>  -->
 
 
-        <div>
+<div>
 <button style="transform:translate(0px,16px)" type="submit" name="edit_category" class="btn btn-secondary">
 <i class="fas fa-save "></i>  <span style="font-weight:bold">گۆڕانکاری</span>
 </button>
@@ -134,8 +159,92 @@ direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
 
 
 
-<div id="show_data">
+<div class="mt-5">
     
+<?php
+
+
+
+$sale_pieces=show("SELECT * FROM sale_piece WHERE invoice_id='$invoice_id'");  
+
+foreach ($sale_pieces as $sale_piece) {
+      $id=$sale_piece['id'];
+      $piece_name=$sale_piece['name'];
+      $piece_number=$sale_piece['number'];
+      $piece_price=$sale_piece['price'];
+      $piece_id=$sale_piece['piece_id'];
+
+      $pieces=getdata("SELECT * FROM piece WHERE id='$piece_id'");  
+      
+
+
+      $gettotalpiece = show("  SELECT sum(qty) as 'totalNum' FROM  piece WHERE name='$piece_name' ");
+      $totalpiece = $gettotalpiece[0]['totalNum']; 
+    
+      $gettotalsale = show("  SELECT sum(number) as 'totalsale' FROM  sale_piece WHERE name='$piece_name' ");
+      $totalsale = $gettotalsale[0]['totalsale']; 
+
+      $remainqty = $totalpiece-$totalsale;
+    
+      if ($remainqty<0) {
+        $remainqty=0;
+      }
+
+
+    ?>
+
+<div class="d-flex justify-content-center text-center " style="align-items:center" id="row<?=$id?>">
+    
+
+
+ <input type="hidden" name="id[]" value="<?=$id?>">
+
+ <input type="hidden" name="piece_id[]" value="<?=$piece_id?>">
+
+<div class="form-group mx-2">
+        <label>ناوی پارچە</label>
+            <input  type="text" id="piece_name1" value="<?=$piece_name?>"
+                class="form-control  mx-auto" name="piece_name[]"
+            >
+ </div>  
+
+ <div class="form-group mx-2">
+        <label>ژمارەی پارچە</label>
+            <input type="text" id="piece_number1" value="<?=$piece_number?>"
+                class="form-control  mx-auto" name="piece_number[]"
+            >
+ </div>  
+ <div class="form-group mx-2">
+        <label>نرخی پارچە</label>
+            <input type="text" id="piece_price1" value="<?=$piece_price?>"
+                class="form-control  mx-auto" name="piece_price[]"
+            >
+ </div>  
+
+
+
+ <div>
+    <p class=" mx-2" style="transform:translate(0px,17px);zoom:80%" id="<?=$id?>" >بڕی ماوە :   <?=$remainqty?></p>
+ </div>
+
+
+ <div>
+    <a class="btn btn-danger btn-sm remove_piece" style="transform:translate(0px,17px);zoom:80%" id="<?=$id?>" >X</a>
+ </div>
+
+
+
+ </div>
+
+
+<?php
+
+}
+
+?>
+
+
+
 </div>
 
 
@@ -169,7 +278,7 @@ direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
             <select name="dealer_id" id="dealer_id1"  class="form-control col-md-10 mx-auto">
                 <option disabled selected> فرۆشیار هەڵبژێرە</option>
                 <?php
-                    $getdealer = show(" SELECT * FROM dealers");
+                    $getdealer = show(" SELECT * FROM customer");
                     foreach ($getdealer as $dealer) { ?>
                                                 
                  <option <?php if($dealer_id==$dealer['id']) echo 'selected="selected"'; ?> value="<?=$dealer['id']?>"> <?=$dealer['name']?> </option>
@@ -213,12 +322,10 @@ direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
         <thead class="bg-dark text-light">
             <tr>
         
-                <th>یەکەی کڕین</th>
-                <th> جۆر    </th>
+                <th>یەکەی فرۆشتن</th>
                 <th> ژمارە    </th>
                 <th> نرخی تاک    </th>
                 <th> نرخی واسڵکراو    </th>
-                <th> نرخی فرۆشتن    </th>
                 <th> نرخی داشکاندن    </th>
                 <th> کۆی گشتی    </th>
                 <th>  گەڕانەوە    </th>
@@ -233,13 +340,13 @@ direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
                    $total_discount=0;
                    $total_mawa=0;
                    $total_all=0;
-                  $invoice =show(" SELECT * FROM buy WHERE buy_type='qa3a' AND `status`='1' AND invoice_id={$invoice_id} ");
+                  $invoice =show(" SELECT * FROM sale WHERE sale_type='qa3a' AND `status`='1' AND invoice_id={$invoice_id} ");
                  
 
                  
                   foreach($invoice as $invoice_list){
                        $id = $invoice_list['id'];
-                       $dealer_id = $invoice_list['dealer_id'];
+                       $dealer_id = $invoice_list['customer_id'];
                        $num = $invoice_list['num'];
                        $cost_t = $invoice_list['cost_t'];
                        $cost_co = $invoice_list['cost_co'];
@@ -247,7 +354,7 @@ direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
                        $unit = $invoice_list['unit'];
                        $product_name = $invoice_list['name_product'];
                        $cost_wasl = $invoice_list['cost_wasl'];
-                       $cost_froshtn = $invoice_list['cost_fr'];
+            
                        $cost_mawa = $cost_co-$cost_wasl;
                        $discount = $invoice_list['discount'];
                        $date = $invoice_list['date'];
@@ -261,7 +368,7 @@ direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
                        $total_all+=$cost_co;
                       
                        
-                       $getdealer = getdata(" SELECT * FROM dealers WHERE id='$dealer_id' ");
+                       $getdealer = getdata(" SELECT * FROM customer WHERE id='$dealer_id' ");
                        $dealer_name = $getdealer['name'];
 
         
@@ -285,15 +392,7 @@ direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
             </div>
         </td>
      
-        <td>
 
-
-            <div class="form-group">
-                        <input type="text" value="<?=$type?>" placeholder="   جۆر  " class="form-control  col-md-10 mx-auto"
-                            name="type[]" id="type1" required="">
-            </div>
-
-            </td>
 
 
             <td>
@@ -318,13 +417,7 @@ direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
 
             </td>
 
-            <td>
-                
-            <div class="form-group">
-                        <input type="text" value="<?=$cost_froshtn?>" placeholder="  نرخی فرۆشتن بە دانە " class="form-control col-md-10 mx-auto"
-                            name="cost_fr[]" id="cost_fr1" required="">
-                        </div>
-            </td>
+
 
             <td>
             <div class="form-group">
@@ -491,7 +584,7 @@ if (post('return_buy')) {
                  $.ajax({
                     url: "get_piece.php",
                     method: "POST",
-                    data: {piece:true,catId:value},
+                    data: {sale_piece_invoice:true,catId:value},
                     success: function (data) {
                         if (data) {
                           $("#show_data").html(data)
@@ -501,6 +594,26 @@ if (post('return_buy')) {
                  });
     
  });
+
+
+ $(document).on('click','.remove_piece',function(){
+    var row_id=$(this).attr("id");
+
+           $.ajax({
+                    url: "get_piece.php",
+                    method: "POST",
+                    data: {remove_piece_invoice:true,id:row_id},
+                    success: function (data) {
+                        if (data=="success") {
+                            $('#row'+row_id).remove();
+                        }
+                       
+                    }
+                 });
+
+    
+    
+})
 
 
 

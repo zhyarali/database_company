@@ -14,6 +14,13 @@ if (isset($_SESSION["add_success"])) {
 
 
 
+  if (isset($_SESSION["edit_category_not_qty"])) {
+    msg('ئاگاداربە','بڕی پێویست لە کاڵاکە بوونی نییە تکایە بڕی گونجاو بنووسە یاخود بڕی تر بکڕە','warning');
+     unset($_SESSION["edit_category_not_qty"]);
+ }
+
+
+
 if (post("add_category")) {
 
     $piece_number=$_POST['piece_number'];
@@ -44,35 +51,48 @@ if (post("add_category")) {
 
 
 
-    for ($i = 0; $i < count($piece_number); $i++) {
-
-        $piece_id=$_POST['piece_id'][$i];
-
-    if (empty($sale_piece)) {
-        
-    }else{
-        execute("DELETE FROM sale_piece WHERE piece_id='$piece_id' ");
-    }
-
-    }
+   
 
     for ($i = 0; $i < count($piece_number); $i++) {
 
 
         $piece_id=$_POST['piece_id'][$i];
+
         $current_qty=$_POST['current_qty'][$i];
+
         $pieceNumber=$_POST['piece_number'][$i];
+
         $piece_price=$_POST['piece_price'][$i];
+
 
         $qty=$current_qty-$pieceNumber;
 
-        execute("UPDATE piece SET qty='$qty',price='$piece_price' WHERE id='$piece_id' ");
 
         $cat=getdata("SELECT * FROM piece  WHERE id='$piece_id'");
         $piece_name=$cat['name'];
 
+      $gettotalpiece = show("  SELECT sum(qty) as 'totalNum' FROM  piece WHERE name='$piece_name' ");
+      $totalpiece = $gettotalpiece[0]['totalNum']; 
+    
+      $gettotalsale = show("  SELECT sum(number) as 'totalsale' FROM  sale_piece WHERE name='$piece_name' ");
+      $totalsale = $gettotalsale[0]['totalsale']; 
 
-            execute("INSERT INTO sale_piece (name,piece_id,invoice_id) VALUES ('$piece_name','$piece_id','$invoiceId')");
+      $remainqty = $totalpiece-$totalsale;
+    
+      if ($remainqty< $pieceNumber) {
+        $_SESSION["edit_category_not_qty"] = "";
+        $loc="sale_qa3a_add.php";
+        direct($loc);
+      }else{
+        execute("INSERT INTO sale_piece (name,number,price,piece_id,invoice_id) VALUES ('$piece_name','$pieceNumber','$piece_price','$piece_id','$invoiceId')");
+
+      }
+        
+
+
+      
+
+
         
 
 
@@ -95,6 +115,7 @@ if (post("add_invoice")){
     $total=$_POST['price'];
     $type_invoice="sale_qa3a";
     $type="sale_qa3a";
+    $name_product ="qa3a";
 
     $date=date("Y-m-d");
     $note =$_POST['note'];
@@ -108,7 +129,7 @@ if (post("add_invoice")){
     for ($i = 0; $i < count($_POST['num']); $i++) {
     
     
-    $name_product =$_POST['name_product'][$i];
+   
     $num =$_POST['num'][$i];
     $cost_t =$_POST['cost_t'][$i];
     $unit =$_POST['unit'][$i];
@@ -121,20 +142,11 @@ if (post("add_invoice")){
     $cost_co=$cost_co-$discount;
 
 
-    $gettotalbuy = show("  SELECT sum(num) as 'totalbuy' FROM  buy WHERE name_product='$name_product' AND type='$type' AND  `status`='1' ");
-$totalbuy = $gettotalbuy[0]['totalbuy']; 
-   
-$gettotalsale = show("  SELECT sum(num) as 'totalsale' FROM  sale WHERE name_product='$name_product' AND type='$type' AND `status`='1' ");
-$totalsale = $gettotalsale[0]['totalsale']; 
-$remainqty = $totalbuy-$totalsale;
-// zhika lus
-if($num > $remainqty) {
-    msg('ئاگاداربە !','ئەوەندە بڕ لەم کاڵەیە بەردەست نیە ','warning');
-}else{
+
 
     execute("INSERT INTO `sale` (`invoice_id`,`customer_id`,`cost_t`,`cost_co`,`num`,`type`,`cost_wasl`,`date`,`discount`,`unit`,`name_product`,`place`,`sale_type`,`status`,`note`) VALUES('$lastInsertId','$dealer_id','$cost_t','$cost_co','$num','$type','$cost_wasl','$date','$discount','$unit','$name_product','$place','qa3a','1','$note') ");
 
-    }
+    
 }
     
      $_SESSION["add_success"] = "";
@@ -266,7 +278,7 @@ if($num > $remainqty) {
                 
             <option selected disabled> کڕیار هەڵبژێرە</option>
                 <?php
-                    $getdealer = show(" SELECT * FROM dealers");
+                    $getdealer = show(" SELECT * FROM customer ");
                     foreach ($getdealer as $dealer) { ?>
                 
                 
@@ -299,7 +311,7 @@ if($num > $remainqty) {
 <table  class="table  table-striped table-bordered  text-center" id="tab_logic" dir="rtl" style="zoom:85%">
         <thead class="bg-dark text-light">
             <tr>
-                <th>ناوی شتوومەک</th>
+                <th>لابردن</th>
                 <th>یەکەی فرۆشتن</th>
                 <th> ژمارە    </th>
                 <th> نرخی تاک    </th>
@@ -313,16 +325,9 @@ if($num > $remainqty) {
         <tbody id="item_table">
 
        <tr id="row_id_1">
- 
+                        
+       <td></td>
 
-        <td>
-        <div class="form-group">
-                <input type="text" placeholder="   ناوی شتوومەک  "
-                    class="form-control mx-auto" name="name_product[]"
-                    id="name_product1"
-                    required="">
-            </div>
-        </td>
 
         <td>
             <div class="form-group">
@@ -499,13 +504,10 @@ $('#addmore').click(function() {
             count=count+1;
             var markup = '<tr id="row_id_'+count+'" >';
             markup+=' <td><button name="remove_row" id="'+count+'" class=" remove_row btn btn-danger btn-sm">x</button></td>';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" ناوی شتوومەک " id="name_product'+count+'" class="form-control mx-auto" name="name_product[]" required=""> </div> </td>';
             markup+=' <td> <div class="form-group"> <select name="unit[]" id="unit'+count+'" class="form-control mx-auto" required> <option value="مەتر">مەتر</option> <option value="دانە">دانە</option> <option value="کیلۆ">کیلۆ</option> </select> </div> </td>';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" جۆر " class="form-control col-md-10 mx-auto" name="type[]" id="type'+count+'" required=""> </div> </td>';
             markup+=' <td> <div class="form-group"> <input id="num1'+count+'" type="number" placeholder=" بڕ " class="form-control qty col-md-10 mx-auto" name="num[]" required=""> </div> </td> ';
             markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی تاک" class="form-control cost_t col-md-10 mx-auto" name="cost_t[]" id="cost_t'+count+'" required=""> </div> </td> ';
             markup+=' <td> <div class="form-group"> <input type="text" placeholder=" بڕی واسڵ " class="form-control cost_wasl col-md-10 mx-auto" name="cost_wasl[]" id="cost_wasl'+count+'" required=""> </div> </td> ';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی فرۆشتن بە دانە " class="form-control col-md-10 mx-auto" name="cost_fr[]" id="cost_fr'+count+'" required=""> </div> </td>';
             markup+=' <td> <div class="form-group"> <input type="text" placeholder=" نرخی داشکاندن " class="form-control cost_discount col-md-10 mx-auto" name="discount[]" id="discount'+count+'" required=""> </div> </td>';
             markup+=' <td><div class="form-group"><input type="text"  class="form-control total col-md-10 mx-auto" disabled></div></td> </tr>';
 

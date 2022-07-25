@@ -71,6 +71,9 @@ if (post("add_invoice")){
     $note =$_POST['note'];
     $place =$_POST['place'];
     $dealer_id = $_POST['dealer_id'];
+
+        
+    $name_product ="qa3a";
     
     $sqlInsert = "INSERT INTO invoice (`price`,`type`,`note`,`dealer_id`) VALUES ('$total','$type_invoice','$note','$dealer_id')";
     mysqli_query($conn, $sqlInsert);
@@ -78,8 +81,7 @@ if (post("add_invoice")){
     
     for ($i = 0; $i < count($_POST['num']); $i++) {
     
-    
-    $name_product =$_POST['name_product'][$i];
+
     $type =$_POST['type'][$i];
     $num =$_POST['num'][$i];
     $cost_t =$_POST['cost_t'][$i];
@@ -274,7 +276,6 @@ if (post("add_invoice")){
         <thead class="bg-dark text-light">
             <tr>
                 <th>لابردن</th>
-                <th>ناوی شتوومەک</th>
                 <th>یەکەی کڕین</th>
                 <th> جۆر    </th>
                 <th> ژمارە    </th>
@@ -291,15 +292,6 @@ if (post("add_invoice")){
 
        <tr id="row_id_1">
         <td></td>
-
-        <td>
-        <div class="form-group">
-                <input type="text" placeholder="   ناوی شتوومەک  "
-                    class="form-control mx-auto" name="name_product[]"
-                    id="name_product1"
-                    required="">
-            </div>
-        </td>
 
         <td>
             <div class="form-group">
@@ -461,7 +453,6 @@ $('#addmore').click(function() {
             count=count+1;
             var markup = '<tr id="row_id_'+count+'" >';
             markup+=' <td><button name="remove_row" id="'+count+'" class=" remove_row btn btn-danger btn-sm">x</button></td>';
-            markup+=' <td> <div class="form-group"> <input type="text" placeholder=" ناوی شتوومەک " id="name_product'+count+'" class="form-control mx-auto" name="name_product[]" required=""> </div> </td>';
             markup+=' <td> <div class="form-group"> <select name="unit[]" id="unit'+count+'" class="form-control mx-auto" required> <option value="مەتر">مەتر</option> <option value="دانە">دانە</option> <option value="کیلۆ">کیلۆ</option> </select> </div> </td>';
             markup+=' <td> <div class="form-group"> <input type="text" placeholder=" جۆر " class="form-control col-md-10 mx-auto" name="type[]" id="type'+count+'" required=""> </div> </td>';
             markup+=' <td> <div class="form-group"> <input id="num1'+count+'" type="number" placeholder=" بڕ " class="form-control qty col-md-10 mx-auto" name="num[]" required=""> </div> </td> ';
