@@ -154,10 +154,23 @@ function backup($tables = '*')
 	}
 	
 	//save file
-$user = get_current_user();
-	$handle = fopen(getenv("HOMEDRIVE").getenv("HOMEPATH").'/Desktop/db-backup.sql','w+');
+// $user = get_current_user();
+
+$file_path='C:/Users/'.get_current_user().'/Desktop/backup';
+
+if (!file_exists($file_path)) {
+  
+    mkdir($file_path, 0777, true);
+	$handle = fopen('C:/Users/'.get_current_user().'/Desktop/backup/'.date('Y-m-d').'_db_backup.sql','w+');
 	fwrite($handle,$return);
 	fclose($handle);
+}else{
+	$handle = fopen('C:/Users/'.get_current_user().'/Desktop/backup/'.date('Y-m-d').'_db_backup.sql','w+');
+	fwrite($handle,$return);
+	fclose($handle);
+}
+
+
 }
 
 

@@ -47,7 +47,7 @@
             <tbody>
 
                 <?php
-       $debts=show("SELECT * FROM debt");
+       $debts=show("SELECT * FROM debt WHERE mawa!=0");
     
     foreach ($debts as $debt) {
             $debt_id=$debt['id_debt'];

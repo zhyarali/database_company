@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2022 at 03:56 PM
+-- Generation Time: Jul 25, 2022 at 04:52 PM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 8.0.7
 
@@ -41,7 +41,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `uname`, `pass`, `type`, `name`, `avatar`) VALUES
-(11, 'zarda', '526eeeda337d4f5c42efe210c81ccd4f', '0', 'زەردە دیڤ', '60fed6be33a022.03406613.png'),
+(11, 'zarda', '526eeeda337d4f5c42efe210c81ccd4f', '1', 'زەردە دیڤ', '60fed6be33a022.03406613.png'),
 (12, 'admin', '21232f297a57a5a743894a0e4a801fc3', '1', 'ئەدمین', '60feda87d180d2.94392251.png'),
 (13, 'zhyar ufffffffffff', 'a9f744f1e591a1f0a8075ed40231ff0d', '0', '3alm', '61081638e214d1.40387889.jpg'),
 (14, 'rzwan', '827ccb0eea8a706c4c34a16891f84e7b', '0', 'rzwan jalal', '61f31cebd4e3a8.86096203.jpg'),
@@ -80,6 +80,7 @@ INSERT INTO `budget` (`id_budget`, `budget_amount`, `punish`, `reward`, `date`, 
 
 CREATE TABLE `buy` (
   `id` int(11) NOT NULL,
+  `invoice_id` int(11) NOT NULL DEFAULT 1,
   `dealer_id` int(11) NOT NULL,
   `cost_t` varchar(255) NOT NULL,
   `cost_co` varchar(255) NOT NULL,
@@ -103,16 +104,27 @@ CREATE TABLE `buy` (
 -- Dumping data for table `buy`
 --
 
-INSERT INTO `buy` (`id`, `dealer_id`, `cost_t`, `cost_co`, `num`, `type`, `cost_wasl`, `date`, `cost_fr`, `discount`, `unit`, `name_product`, `place`, `percentage`, `driver_id`, `buy_type`, `status`, `note`) VALUES
-(10, 2, '5000', '45000', '10', 'spy', '20000', '2021-08-14', '6000', '5000', 'دانە', 'مێز', 'سلێمانی', '', 0, 'qa3a', 1, ''),
-(11, 2, '10000', '49000', '5', 'iran', '20000', '2021-08-14', '25000', '1000', 'تەن', 'ئاسن', 'ڕانیە', '', 0, 'asn', 1, 'um'),
-(16, 2, '7000', '34000', '5', 'سپی', '15000', '2021-08-15', '80000', '1000', 'دانە', 'helka', '', '', 0, 'helka', -1, 'note'),
-(17, 1, '20000', '395000', '20', 'عەرەبی', '10000', '2021-08-15', '5000', '5000', 'کیلۆ', '3alaf', 'ڕانیە', '10', 6, '3alaf', -1, 'note'),
-(18, 2, '10000', '199545', '20', 'عەرەبی', '50000', '2021-08-15', '5000', '455', 'دانە', 'مێز', 'ڕانیە', '', 0, 'qa3a', -1, 'تێبینی'),
-(19, 2, '10000', '40000', '5', 'arabi', '40000', '2021-08-15', '5000', '10000', 'تەن', 'asn', 'slemany', '', 0, 'asn', -1, 'note'),
-(31, 1, '10000', '100000', '10', 'سپی', '40000', '2022-03-04', '6000', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'azsas'),
-(32, 1, '10000', '100000', '10', 'سپی', '40000', '2022-03-07', '6000', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'azsas'),
-(33, 1, '5000', '15000', '3', 'سپی', '15000', '2022-03-07', '5000', '0', 'دانە', 'عەلەف', 'ڕانیە', '5', 6, '3alaf', 1, 'sdsd');
+INSERT INTO `buy` (`id`, `invoice_id`, `dealer_id`, `cost_t`, `cost_co`, `num`, `type`, `cost_wasl`, `date`, `cost_fr`, `discount`, `unit`, `name_product`, `place`, `percentage`, `driver_id`, `buy_type`, `status`, `note`) VALUES
+(1, 1, 1, '4000', '40000', '20', 'سپی', '30000', '2022-07-19', '5000', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'همممممممممممممم'),
+(2, 2, 1, '4000', '12000', '3', ' تورکی', '10000', '2022-07-19', '1000', '0', 'دانە', 'کارتۆن مۆز', 'هەولێر', '', 0, 'qa3a', -1, '                                                                                                sdsdsd                                                                        '),
+(3, 2, 1, '10000', '10000', '1', 'ئێرانی', '10000', '2022-07-19', '1000', '0', 'کیلۆ', 'sdsd', 'هەولێر', '', 0, 'qa3a', -1, '                                                                                                sdsdsd                                                                        '),
+(4, 3, 3, '1000', '34000', '34', 'sdsd', '20000', '2022-07-20', '1000', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'dsfsd'),
+(5, 4, 6, '10000', '20000', '2', 'تورکی', '10000', '2022-07-20', '1000', '0', 'دانە', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, 'asasasa'),
+(6, 4, 6, '10000', '30000', '3', 'sdsd', '10000', '2022-07-20', '1000', '0', 'کیلۆ', 'ئاسن', 'هەولێر', '', 0, 'asn', -1, 'asasasa'),
+(10, 18, 3, '10000', '20000', '2', 'سپی', '20000', '2022-07-21', '1000', '0', 'دانە', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, 'sdsd'),
+(11, 18, 3, '10000', '920000', '92', 'سپی', '20000', '2022-07-21', '1000', '0', 'دانە', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, '                                                sdsd                                    '),
+(12, 16, 7, '10000', '30000', '3', 'سپی', '20000', '2022-07-21', '1000', '0', 'دانە', 'عەلەف', 'هەولێر', '4', 9, '3alaf', 1, '                                                                sds                                                '),
+(13, 24, 6, '10000', '20000', '2', 'popopo', '20000', '2022-07-22', '1000', '0', 'دانە', 'کارتۆن مۆزڤڤڤڤ', 'هەولێر', '', 0, 'qa3a', 1, 'سادسدسدسد'),
+(14, 25, 1, '4000', '11000', '3', 'jajajajaja', '2000', '2022-07-23', '5000', '1000', 'مەتر', 'newww', 'هەولێر', '', 0, 'qa3a', 1, 'defd'),
+(15, 26, 2, '90000', '180000', '2', 'popopo', '30000', '2022-07-23', '1000', '0', 'دانە', 'کارتۆن مۆزڤڤڤڤ', 'هەولێر', '', 0, 'qa3a', 1, 'sdsdsd'),
+(16, 27, 2, '10000', '20000', '2', 'sdsd', '20000', '2022-07-23', '1000', '0', 'مەتر', 'کارتۆن مۆز', 'هەولێر', '', 0, 'qa3a', 1, 'hjhjhjhjh'),
+(17, 32, 2, '10000', '20000', '2', 'سپی', '20000', '2022-07-25', '1000', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'sdsds'),
+(18, 17, 2, '10000', '20000', '2', 'hahahha', '20000', '2022-07-25', '1000', '0', 'دانە', 'عەلەف', 'sss', '2', 8, '3alaf', 1, '                                                                                edfe                                                            '),
+(19, 17, 2, '10000', '100000', '10', 'yyyyyyyyyyyyyyyyy', '20000', '2022-07-25', '1000', '0', 'دانە', 'عەلەف', 'sss', '2', 8, '3alaf', 1, '                                                                                edfe                                                            '),
+(20, 31, 4, '10000', '30000', '4', '', '20000', '2022-07-25', '', '10000', 'دانە', 'qa3a', '', '', 0, 'qa3a', 1, '                asasasas            '),
+(21, 31, 4, '90000', '530000', '6', '', '20000', '2022-07-25', '', '10000', 'دانە', 'qa3a', '', '', 0, 'qa3a', 1, '                asasasas            '),
+(26, 30, 3, '10000', '30000', '3', '', '20000', '2022-07-25', '', '0', 'دانە', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, '                                                sdsdsdsd                                    '),
+(27, 30, 3, '90000', '540000', '6', '', '20000', '2022-07-25', '', '0', 'دانە', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, '                                                sdsdsdsd                                    ');
 
 -- --------------------------------------------------------
 
@@ -216,7 +228,9 @@ INSERT INTO `dealers` (`id`, `name`, `phone`, `address`, `work_place`, `note`, `
 (1, 'ژیار علی محمود', '07501520479', 'ڕانیە', 'کۆمپانیا', 'تێبینی', 'dinar'),
 (2, 'شاناز عبدالواحید', '07501520479', 'چەمچەماڵ', 'کۆمپانیا', 'تێبینی بنووسە', 'dollar'),
 (3, 'سۆڤین احمد محمد', '07501520479', 'سڵیمانی', 'کۆمپانیا', 'لە کۆمپانیای () گرێبەستی هەیە لەگەڵمان', 'tman'),
-(5, 'کارمەند حمە علی', '07501520479', 'سلێمانی', 'کۆمپانیا', 'تێبینی .....', 'dollar');
+(5, 'کارمەند حمە علی', '07501520479', 'سلێمانی', 'کۆمپانیا', 'تێبینی .....', 'dollar'),
+(6, 'ساوێن سەردار سالار', '٠٧٧٠١٢١٠٠١٢', 'کۆڵێن سیتی', 'شەقڵاوە', 'خوشکی ژیلام', 'dollar'),
+(7, 'ژیلا علی محموود', '07501234567', 'کۆڵین سیتی', 'بەردەم ماڵی خەوینی', 'ئەم کچە خوشکی ساوێن و خەوینە', 'dollar');
 
 -- --------------------------------------------------------
 
@@ -244,7 +258,8 @@ INSERT INTO `debt` (`id_debt`, `debt_amount`, `date_start`, `date_end`, `gerawa`
 (23, 50000, '2021-07-16', '2021-08-15', 300000, 100000, 1, 'ژیار علی محمود', '07501520479'),
 (24, 25000, '2021-08-17', '2021-09-30', 100000, 0, 0, 'حسن حسێن', '123'),
 (26, 50000, '2021-08-20', '2021-09-19', 0, 100000, 2, 'محمد احمد محمد', '07501520479'),
-(27, 200, '2021-08-13', '2021-09-12', 0, 200, 5, 'شاناز عبدالواحید', '07501520479');
+(27, 200, '2021-08-13', '2021-09-12', 0, 200, 5, 'شاناز عبدالواحید', '07501520479'),
+(33, 20000, '2022-07-25', '2022-08-24', 20000, 0, 14, 'سۆما احمد عمر', '07823782738');
 
 -- --------------------------------------------------------
 
@@ -309,6 +324,56 @@ INSERT INTO `driver_work` (`id`, `from`, `to`, `time`, `price`, `money_owner`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `invoice`
+--
+
+CREATE TABLE `invoice` (
+  `id` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `price` int(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `note` text NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `dealer_id` int(255) NOT NULL,
+  `customer_id` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `invoice`
+--
+
+INSERT INTO `invoice` (`id`, `date`, `price`, `type`, `note`, `status`, `dealer_id`, `customer_id`) VALUES
+(1, '2022-07-25 03:10:40', 40000, 'buy_helka', 'همممممممممممممم', 1, 1, 0),
+(2, '2022-07-25 03:10:36', 22000, 'buy_qa3a', '                                                                                                sdsdsd                                                                        ', -1, 0, 0),
+(3, '2022-07-25 03:10:33', 34000, 'buy_helka', 'dsfsd', 1, 3, 0),
+(4, '2022-07-25 03:10:29', 50000, 'buy_asn', 'asasasa', 1, 6, 0),
+(6, '2022-07-25 03:11:49', 42000, 'sale_helka', '                    ffffffffffffffffffff        ', 1, 0, 2),
+(10, '2022-07-25 03:11:49', 0, 'sale_helka', '                            ', 1, 0, 2),
+(11, '2022-07-25 03:11:49', 0, 'sale_asn', '                                sdsdsdsdsdsd                        ', 1, 0, 2),
+(13, '2022-07-25 03:11:49', 0, 'sale_3alaf', '                                                                                                                                                                                                                                                                                                                sdsd                                                                                                                                                                                                                                    ', 1, 0, 2),
+(14, '2022-07-25 03:11:49', 70000, 'sale_3alaf', '                sdsd            ', 1, 0, 2),
+(15, '2022-07-25 03:11:49', 49000, 'sale_3alaf', '                                                                                                                                                                                                                                                                                                                                dcdf                                                                                                                                                                                                                                                ', 1, 0, 2),
+(16, '2022-07-25 03:09:53', 0, 'buy_3alaf', '                                                                sds                                                ', 1, 7, 0),
+(17, '2022-07-25 03:09:48', 0, 'buy_3alaf', '                                                                                edfe                                                            ', 1, 2, 0),
+(18, '2022-07-25 03:09:42', 940000, 'buy_asn', '                                                sdsd                                    ', 1, 3, 0),
+(19, '2022-07-25 03:11:49', 40000, 'sale_asn', '                                                dsdsdsd                                    ', 1, 0, 2),
+(20, '2022-07-25 03:11:49', 0, 'sale_helka', '                            ', 1, 0, 2),
+(21, '2022-07-25 03:09:29', 10000, 'sale_helka', '                                فففففففففففففف                        ', 1, 0, 4),
+(22, '2022-07-25 03:09:25', 0, 'sale_3alaf', '                                                                                sdsdsd                                                            ', -1, 0, 2),
+(23, '2022-07-25 03:09:10', 0, 'sale_asn', '                                                                dfdfdfd                                                ', 1, 0, 4),
+(24, '2022-07-25 03:09:02', 20000, 'buy_qa3a', 'سادسدسدسد', 1, 6, 0),
+(25, '2022-07-25 03:08:58', 11000, 'buy_qa3a', 'defd', 1, 1, 0),
+(26, '2022-07-25 03:08:55', 180000, 'buy_qa3a', 'sdsdsd', 1, 2, 0),
+(27, '2022-07-25 03:08:50', 20000, 'buy_qa3a', 'hjhjhjhjh', 1, 2, 0),
+(28, '2022-07-25 03:09:17', 20000, 'sale_qa3a', 'sdsd', -1, 0, 2),
+(30, '2022-07-25 03:06:02', 0, 'buy_qa3a', '                                                sdsdsdsd                                    ', 1, 3, 0),
+(31, '2022-07-25 03:08:38', 0, 'buy_qa3a', '                asasasas            ', 1, 4, 0),
+(32, '2022-07-25 02:10:57', 20000, 'buy_helka', 'sdsds', 1, 2, 0),
+(33, '2022-07-25 03:06:29', 20000, 'sale_qa3a', 'sdsdsd', 1, 0, 3);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `parts`
 --
 
@@ -357,6 +422,8 @@ INSERT INTO `person` (`id`, `name`, `phone`, `note`) VALUES
 CREATE TABLE `piece` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `qty` int(11) NOT NULL DEFAULT 1,
+  `price` varchar(255) NOT NULL DEFAULT '0',
   `category_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -364,14 +431,12 @@ CREATE TABLE `piece` (
 -- Dumping data for table `piece`
 --
 
-INSERT INTO `piece` (`id`, `name`, `category_id`) VALUES
-(1, 'صەمونە', 1),
-(2, 'بۆڕی تەوزیح دان', 1),
-(3, 'دیلەمۆی تەوزیح دان', 2),
-(4, ' عکس', 1),
-(5, 'بەرینەی تەوزیح دان', 1),
-(6, 'تەقسیم(سوور) + برغی ڕەقەم (١٠)', 1),
-(7, 'hama', 1);
+INSERT INTO `piece` (`id`, `name`, `qty`, `price`, `category_id`) VALUES
+(26, 'sadsds', 9, '10000', 13),
+(27, 'dddd', 10, '10000', 13),
+(28, 'updated', 8, '10000', 14),
+(29, 'updated', 10, '10000', 11),
+(30, 'kkkk', 6, '10000', 15);
 
 -- --------------------------------------------------------
 
@@ -427,6 +492,7 @@ INSERT INTO `refund_customer` (`id`, `customer_id`, `price`, `refund_type`, `dat
 
 CREATE TABLE `sale` (
   `id` int(11) NOT NULL,
+  `invoice_id` int(11) NOT NULL DEFAULT 1,
   `customer_id` int(11) NOT NULL,
   `cost_t` varchar(255) NOT NULL,
   `cost_co` varchar(255) NOT NULL,
@@ -442,6 +508,7 @@ CREATE TABLE `sale` (
   `driver_id` int(11) NOT NULL,
   `sale_type` enum('3alaf','helka','panel','qa3a','asn') NOT NULL DEFAULT 'helka',
   `status` int(2) NOT NULL DEFAULT 1,
+  `sale_status` varchar(255) NOT NULL DEFAULT 'null',
   `note` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -449,14 +516,44 @@ CREATE TABLE `sale` (
 -- Dumping data for table `sale`
 --
 
-INSERT INTO `sale` (`id`, `customer_id`, `cost_t`, `cost_co`, `num`, `type`, `cost_wasl`, `date`, `discount`, `unit`, `name_product`, `place`, `percentage`, `driver_id`, `sale_type`, `status`, `note`) VALUES
-(6, 2, '20000', '120000', '6', 'سپی', '20000', '2021-08-15', '0', 'دانە', 'helka', '', '', 0, 'helka', -1, 'تێبینی'),
-(7, 2, '10000', '30000', '3', 'سپی', '50000', '2021-08-15', '0', 'مەتر', 'مێز', 'ڕانیە', '', 0, 'qa3a', -1, 'تێبینی بنووسە'),
-(8, 2, '10000', '45000', '5', 'spy', '20000', '2021-08-15', '5000', 'دانە', '3alaf', 'slemany', '20', 6, '3alaf', -1, 'تێبینی'),
-(9, 3, '10000', '90000', '10', 'سپی', '50000', '2021-08-15', '10000', 'دانە', 'asn', 'ڕانیە', '', 0, 'asn', -1, 'tYbyny'),
-(20, 2, '5000', '25000', '5', 'سپی', '10000', '2022-03-05', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'sds'),
-(21, 2, '5000', '35000', '7', 'spy', '15000', '2022-03-07', '0', 'مەتر', 'مێز', 'ڕانیە', '', 0, 'qa3a', 1, 'rtrt'),
-(22, 2, '5000', '5000', '1', 'سپی', '10000', '2022-03-07', '0', 'دانە', 'عەلەف', 'ڕانیە', '10', 5, '3alaf', 1, 'sds');
+INSERT INTO `sale` (`id`, `invoice_id`, `customer_id`, `cost_t`, `cost_co`, `num`, `type`, `cost_wasl`, `date`, `discount`, `unit`, `name_product`, `place`, `percentage`, `driver_id`, `sale_type`, `status`, `sale_status`, `note`) VALUES
+(7, 1, 2, '10000', '30000', '3', 'سپی', '50000', '2021-08-15', '0', 'مەتر', 'مێز', 'ڕانیە', '', 0, 'qa3a', -1, 'null', 'تێبینی بنووسە'),
+(8, 1, 2, '10000', '45000', '5', 'spy', '20000', '2021-08-15', '5000', 'دانە', '3alaf', 'slemany', '20', 6, '3alaf', -1, 'null', 'تێبینی'),
+(9, 1, 3, '10000', '90000', '10', 'سپی', '50000', '2021-08-15', '10000', 'دانە', 'asn', 'ڕانیە', '', 0, 'asn', -1, 'null', 'tYbyny'),
+(20, 1, 2, '5000', '25000', '5', 'سپی', '10000', '2022-03-05', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', -1, 'null', 'sds'),
+(21, 1, 2, '5000', '35000', '7', 'spy', '15000', '2022-03-07', '0', 'مەتر', 'مێز', 'ڕانیە', '', 0, 'qa3a', -1, 'null', 'rtrt'),
+(22, 1, 2, '5000', '5000', '1', 'سپی', '10000', '2022-03-07', '0', 'دانە', 'عەلەف', 'ڕانیە', '10', 5, '3alaf', -1, 'null', 'sds'),
+(23, 1, 2, '10000', '10000', '1', 'سپی', '10000', '2022-07-12', '0', 'دانە', 'عەلەف', 'sss', '1', 5, '3alaf', 1, 'null', 'سدسد'),
+(24, 1, 2, '10000', '10000', '1', 'iran', '10000', '2022-07-12', '0', 'دانە', 'ئاسن', 'sss', '', 0, 'asn', -1, 'null', 'sdsd'),
+(27, 9, 2, '10000', '50000', '5', 'سپی', '20000', '2022-07-21', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', ''),
+(29, 10, 2, '10000', '120000', '12', 'sdsd', '20000', '2022-07-21', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', -1, 'null', ''),
+(30, 11, 3, '10000', '10000', '1', 'hahahha', '20000', '2022-07-21', '0', 'دانە', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, 'null', 'sdsdsdsdsdsd'),
+(31, 11, 4, '10000', '10000', '1', 'hahahha', '20000', '2022-07-21', '0', 'دانە', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, 'null', '                                sdsdsdsdsdsd                        '),
+(35, 14, 2, '10000', '70000', '7', 'سپی', '20000', '2022-07-21', '0', 'دانە', 'عەلەف', 'هەولێر', '2', 6, '3alaf', 1, 'null', 'sdsd'),
+(39, 15, 4, '10000', '49000', '5', 'france', '2000', '2022-07-21', '1000', 'تەن', 'عەلەف', 'Ranye', '8', 6, '3alaf', 1, 'null', '                                                                                                                                                                                                                                                                                                                                dcdf                                                                                                                                                                                                                                                '),
+(40, 13, 2, '10000', '30000', '3', 'sdsd', '20000', '2022-07-21', '0', 'دانە', 'عەلەف', 'هەولێر', '2', 8, '3alaf', 1, 'null', '                                                                                                                                                                                                                                                                                                                sdsd                                                                                                                                                                                                                                    '),
+(47, 19, 3, '10000', '20000', '2', 'سپی', '20000', '2022-07-21', '0', 'کیلۆ', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, 'null', '                                                dsdsdsd                                    '),
+(48, 19, 3, '10000', '20000', '2', 'france', '20000', '2022-07-21', '0', 'کیلۆ', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, 'null', '                                                dsdsdsd                                    '),
+(49, 10, 4, '10000', '230000', '23', 'hahahha', '20000', '2022-07-21', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                            '),
+(51, 20, 3, '10000', '50000', '5', 'سپی', '20000', '2022-07-22', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                            '),
+(53, 6, 2, '10000', '20000', '2', 'سپی', '20000', '2022-07-22', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                    ffffffffffffffffffff        '),
+(54, 6, 2, '10000', '20000', '2', 'سپی', '10000', '2022-07-22', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                    ffffffffffffffffffff        '),
+(55, 6, 2, '2000', '2000', '1', 'سپی', '1000', '2022-07-22', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                    ffffffffffffffffffff        '),
+(59, 0, 3, '10000', '20000', '2', 'yyyyyyyyyyyyyyyyy', '20000', '2022-07-22', '0', 'دانە', 'عەلەف', 'هەولێر', '2', 6, '3alaf', 1, 'null', '                sdsdsd            '),
+(60, 28, 3, '40000', '40000', '1', 'hahahha', '20000', '2022-07-22', '0', 'دانە', 'عەلەف', 'هەولێر', '2', 6, '3alaf', 1, 'null', '                sdsdsd            '),
+(61, 0, 3, '90000', '270000', '3', 'yyyyyyyyyyyyyyyyy', '20000', '2022-07-22', '0', 'تەن', 'عەلەف', 'هەولێر', '3', 6, '3alaf', 1, 'null', '                sdsdsd            '),
+(65, 22, 3, '10000', '10000', '1', 'hahahha', '30000', '2022-07-22', '0', 'تەن', 'عەلەف', 'هەولێر', '2', 5, '3alaf', -1, 'null', '                                                                sdsdsd                                                '),
+(77, 28, 3, '40000', '40000', '1', 'hahahha', '20000', '2022-07-22', '0', 'دانە', 'qa3a', 'هەولێر', '2', 6, 'qa3a', 1, 'null', '                sdsdsd            '),
+(78, 30, 2, '10000', '30000', '3', 'sale_qa3a', '20000', '2022-07-25', '0', 'دانە', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, 'null', 'sdsdsdsd'),
+(79, 30, 2, '90000', '540000', '6', 'sale_qa3a', '20000', '2022-07-25', '0', 'دانە', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, 'null', 'sdsdsdsd'),
+(80, 31, 4, '10000', '30000', '4', 'sale_qa3a', '20000', '2022-07-25', '10000', 'دانە', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, 'null', 'asasasas'),
+(81, 31, 4, '90000', '530000', '6', 'sale_qa3a', '20000', '2022-07-25', '10000', 'دانە', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, 'null', 'asasasas'),
+(82, 21, 4, '10000', '10000', '1', 'سپی', '20000', '2022-07-25', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                                فففففففففففففف                        '),
+(83, 22, 2, '40000', '80000', '2', 'yyyyyyyyyyyyyyyyy', '20000', '2022-07-25', '0', 'کیلۆ', 'عەلەف', 'هەولێر', '2', 5, '3alaf', 1, 'null', '                                                                                sdsdsd                                                            '),
+(84, 23, 4, '10000', '30000', '3', 'سپی', '20000', '2022-07-25', '0', 'دانە', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, 'null', '                                                                dfdfdfd                                                '),
+(85, 23, 4, '90000', '89000', '1', 'تورکی', '20000', '2022-07-25', '1000', 'کیلۆ', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, 'null', '                                                                dfdfdfd                                                '),
+(86, 23, 4, '10000', '80000', '8', 'سپی', '20000', '2022-07-25', '0', 'تەن', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, 'null', '                                                                dfdfdfd                                                '),
+(87, 33, 4, '10000', '20000', '2', 'sale_qa3a', '20000', '2022-07-25', '0', 'مەتر', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, 'null', 'sdsdsd');
 
 -- --------------------------------------------------------
 
@@ -467,17 +564,17 @@ INSERT INTO `sale` (`id`, `customer_id`, `cost_t`, `cost_co`, `num`, `type`, `co
 CREATE TABLE `sale_category` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `type` varchar(255) NOT NULL,
-  `price` int(255) NOT NULL
+  `invoice_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sale_category`
 --
 
-INSERT INTO `sale_category` (`id`, `name`, `type`, `price`) VALUES
-(1, 'تەوزیح دان', 'مەتر', 100000),
-(2, 'نیپل', 'مەتر', 200000);
+INSERT INTO `sale_category` (`id`, `name`, `invoice_id`) VALUES
+(13, 'tawezeh', 27),
+(14, 'hmmm', 27),
+(15, 'nweee', 28);
 
 -- --------------------------------------------------------
 
@@ -507,6 +604,38 @@ INSERT INTO `sale_meter` (`id`, `id_category`, `customer_id`, `piece`, `num_mete
 (20, 2, 2, 'دیلەمۆی تەوزیح دان', 5, 0, 'ڕانیە', 50000, '2021-09-25', 'szdsd'),
 (22, 1, 2, 'صەمونە,بۆڕی تەوزیح دان,تەقسیم(سوور) + برغی ڕەقەم (١٠)', 1, 0, 'ڕانیە', 40000, '2021-09-25', 'jhjhj'),
 (23, 1, 2, 'صەمونە,بۆڕی تەوزیح دان', 1, 0, 'ڕانیە', 50000, '2021-09-25', 'jhjh');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sale_piece`
+--
+
+CREATE TABLE `sale_piece` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `number` int(11) NOT NULL,
+  `price` varchar(255) NOT NULL,
+  `piece_id` int(11) NOT NULL,
+  `invoice_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `sale_piece`
+--
+
+INSERT INTO `sale_piece` (`id`, `name`, `number`, `price`, `piece_id`, `invoice_id`) VALUES
+(16, 'sadsds', 1, '1000', 26, 28),
+(17, 'dddd', 5, '1000', 27, 28),
+(24, 'updated', 2, '1000', 28, 28),
+(26, 'kkkk', 2, '10000', 30, 29),
+(27, 'sadsds', 2, '10000', 26, 29),
+(28, 'dddd', 2, '10000', 27, 29),
+(29, 'sadsds', 2, '10000', 26, 29),
+(30, 'dddd', 2, '10000', 27, 29),
+(31, 'kkkk', 2, '10000', 30, 31),
+(32, 'sadsds', 2, '10000', 26, 33),
+(33, 'dddd', 1, '10000', 27, 33);
 
 -- --------------------------------------------------------
 
@@ -628,7 +757,11 @@ INSERT INTO `user_tokens` (`token`, `user_id`, `id`) VALUES
 ('2aff00c2c7b407e4dfdc4902f4a7961162224b78020d4', 11, 22),
 ('cf9899ab62f80c1d344e645b8f0775346223a97dd5529', 11, 23),
 ('ab24dd43574f5732ea29361f8da6bc2f6223e38ebd4cf', 11, 24),
-('2dc3f83a06a46c607d24c7d9c856e99462260804e6cd4', 15, 25);
+('2dc3f83a06a46c607d24c7d9c856e99462260804e6cd4', 15, 25),
+('06b42e58b0515daa2ff59413020e7c2362c741bf3b8a6', 11, 26),
+('88b42b9f30865a8c7411b1518f9d02e562d80a8244e69', 11, 27),
+('dc8f50a67b40d8e94910197ba567f94662d80abff2a21', 15, 28),
+('049b294dab94853a6182073e0f15bb9062dbe22e25be7', 15, 29);
 
 -- --------------------------------------------------------
 
@@ -753,6 +886,12 @@ ALTER TABLE `driver_work`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `invoice`
+--
+ALTER TABLE `invoice`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `parts`
 --
 ALTER TABLE `parts`
@@ -798,6 +937,12 @@ ALTER TABLE `sale_category`
 -- Indexes for table `sale_meter`
 --
 ALTER TABLE `sale_meter`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sale_piece`
+--
+ALTER TABLE `sale_piece`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -862,7 +1007,7 @@ ALTER TABLE `budget`
 -- AUTO_INCREMENT for table `buy`
 --
 ALTER TABLE `buy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `client`
@@ -886,13 +1031,13 @@ ALTER TABLE `customer`
 -- AUTO_INCREMENT for table `dealers`
 --
 ALTER TABLE `dealers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `debt`
 --
 ALTER TABLE `debt`
-  MODIFY `id_debt` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id_debt` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `drivers`
@@ -905,6 +1050,12 @@ ALTER TABLE `drivers`
 --
 ALTER TABLE `driver_work`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `invoice`
+--
+ALTER TABLE `invoice`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `parts`
@@ -922,7 +1073,7 @@ ALTER TABLE `person`
 -- AUTO_INCREMENT for table `piece`
 --
 ALTER TABLE `piece`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `refund`
@@ -940,19 +1091,25 @@ ALTER TABLE `refund_customer`
 -- AUTO_INCREMENT for table `sale`
 --
 ALTER TABLE `sale`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT for table `sale_category`
 --
 ALTER TABLE `sale_category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `sale_meter`
 --
 ALTER TABLE `sale_meter`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
+-- AUTO_INCREMENT for table `sale_piece`
+--
+ALTER TABLE `sale_piece`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `staff`
@@ -982,7 +1139,7 @@ ALTER TABLE `teams`
 -- AUTO_INCREMENT for table `user_tokens`
 --
 ALTER TABLE `user_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `work_daily`
