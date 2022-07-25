@@ -140,6 +140,7 @@ if (post("add_invoice")){
 <div class="container mb-5 p-5" style="background:#E7F6F2;border-radius:10px" id="item_cat">
 
 
+<?php if($is_admin == "1") {?>  
 
 <div class="d-flex justify-content-around text-center">
 
@@ -168,6 +169,8 @@ if (post("add_invoice")){
 
 
 </div>
+
+<?php }?>
 
 
 <div class="d-flex justify-content-center text-center " style="align-items:center" id="row__cat_id_1">
@@ -212,7 +215,7 @@ if (post("add_invoice")){
     
 
 
-
+<?php if($is_admin == "1") {?>  
 <div class="d-flex justify-content-around mt-3 flex-wrap">
     <a  id="add_more"  class="btn btn-success pb-1 pt-1" >
 
@@ -234,6 +237,8 @@ if (post("add_invoice")){
 
 
 </div>
+
+<?php }?>
 
 <div class=" container-fluid px-5 d-flex justify-content-around mt-3 flex-wrap" style="align-items:center">
 <div class="form-group ">

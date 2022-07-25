@@ -243,8 +243,10 @@ if (empty($data)) {
                 <th>کۆی گشتی نرخ</th>
                 <th>بەروار</th>
                 <th>پرنتکردن</th>
+                <?php if($is_admin == "1") {?>  
                 <th>گۆڕانکاری</th>
                 <th>سڕینەوە</th> 
+                <?php }?>
             </tr>
         </thead>
         <tbody>
@@ -288,9 +290,10 @@ if (empty($data)) {
           <td><?=$invoiceDetails['price']?></td>
           <td><?=$invoiceDetails['date']?></td>
           <td><a href="print_invoice.php?print_type=<?=$invoiceDetails['type']?>&&invoice_id=<?=$invoiceDetails['id']?>"><i class="fa fa-print"></i></a></td>
+          <?php if($is_admin == "1") {?>  
           <td><a href="<?=$invoiceDetails['type']?>_invoice.php?invoice_id=<?=$invoiceDetails['id']?>"><i class="fa fa-edit"></i></a></td>
           <td><a href="#" data-toggle="modal" data-target="#delete<?php echo $invoiceDetails['id'] ?>"><i class="fa fa-trash-alt"></i></a></td>
-        
+          <?php }?>
       </tr>
 
 

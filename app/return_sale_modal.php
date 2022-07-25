@@ -17,8 +17,9 @@
             <th scope="col">نرخی ماوە</th>
            
             <th scope="col">شۆفێر</th>
+            <?php if($is_admin == "1") {?>  
             <th scope="col"><i class="fas fa-trash"></i> سڕینەوە</th>
-
+            <?php }?>
 
 
         </tr>
@@ -137,13 +138,15 @@ $sum_discount+=$discount;
                 ?>
             </td>
 
-    <td> 
+    <?php if($is_admin == "1") {?>  
+            <td> 
         <form method="post" action="customer_detail.php?id=<?=$user_id?>">
             <input type="hidden" name="id" value="<?=$id?>">
             <input type="hidden" name="userId" value="<?=$user_id?>">
             <button type="submit" name="delete_return_sale" class="btn btn-danger" > <i class="fas fa-trash"></i> سڕینەوە</button>
         </form>   
        </td>
+       <?php }?>
         
         </tr>
         <?php } ?>

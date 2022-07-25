@@ -1,8 +1,10 @@
 <?php require_once('header.php'); ?>
 
 
-<div class="container mt-5 p-5">
-  <div class="row p-2">
+<div class="container mt-5 p-5 ">
+  <div class="row d-flex justify-content-center p-2">
+
+
     <div class="card shadow col-md-4 m-2 text-center ">
     <div>
       <h4 class="text-dark mt-3"> زانیارییەکانی سیستەم    </h4>
@@ -65,9 +67,12 @@
     </div>
   </div>
 
+  
+      </div>
+      </div>
 
 
-    <div class="card shadow col-md-3 m-2 text-center ">
+    <!-- <div class="card shadow col-md-3 m-2 text-center ">
     <div>
       <h4 class="text-dark mt-3"> زانیارییەکانی سیستەم    </h4>
     </div>
@@ -86,7 +91,7 @@
     </button>
       </form>
     </div>
-  </div>
+  </div> -->
 
    
 

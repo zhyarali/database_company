@@ -1,7 +1,10 @@
 <?php require_once('header.php'); ?>
 <div class="container-fluid mt-5">
 <div class="row col-md-10 m-auto" >
+
+<?php if($is_admin == "1") {?>  
   <button class="btn btn-success mb-2 container col-md-2 s-20" data-toggle="modal" data-target="#add"> زیادکردن  <i class="fas fa-user-plus s-20"></i></button>
+  <?php }?>
 
 
  <div class="table-responsive">
@@ -12,7 +15,11 @@
                 <th> ناوی بەکارهێنەر    </th>
                 <th> ناوی سیانی    </th>
                 <th>  جۆر   </th>
-                <th> Action      </th>
+                <?php if($is_admin == "1") {?>  
+                  <th> Action      </th>
+                  
+                <?php }?>
+                
             </tr>
         </thead>
         <tbody>
@@ -43,13 +50,14 @@ if($type == "1") {
 <?php 
 if($type == "0") {
 ?>
-    بەکارهێنەری ئاسایی
+     ئەدمین
       <?php
 }
      ?>
 
               
       </td>
+      <?php if($is_admin == "1") {?>  
         <td>
         <button class="btn btn-danger text-light delbtn btn-sm" data-toggle="modal" data-target="#delete<?php echo $u['id'] ?>" >
         <i class="fa fa-trash s-14"></i>
@@ -58,6 +66,7 @@ if($type == "0") {
         <i class="fa fa-edit s-14"></i>
         </button>          
         </td>
+        <?php }?>
       </tr>
       
 <!-- delete modal -->
@@ -117,8 +126,8 @@ if($type == "0") {
      ناوی بەکارهێنەر
       <input type="text" placeholder="uname " class="form-control col-md-10 mx-auto" name="uname" value="<?=$name;?> " readonly  required="">
     </div>
-    <button type="submit" name="edituser"  class="btn btn-warning btn-block"> گۆڕین بۆ بەکارهێنەری ئاسایی   </button>
-    <button type="submit" name="edituserr"  class="btn btn-success btn-block"> گۆڕین بۆ بەڕێوبەری گشتی   </button>
+    <button type="submit" name="edituser"  class="btn btn-dark "> گۆڕین بۆ  ئەدمین   </button>
+    <button type="submit" name="edituserr"  class="btn btn-success "> گۆڕین بۆ بەڕێوبەری گشتی   </button>
   </form>
       </div>
       </div>

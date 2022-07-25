@@ -9,6 +9,7 @@
 </div>
 
 
+<?php if($is_admin == "1") {?>  
 <div class="d-flex justify-content-around mt-3 flex-wrap">
     <a  href="sale_helka_add.php"  class="btn btn-success pb-1 pt-1" >
 
@@ -18,6 +19,7 @@
 
     </a>
 </div>
+<?php }?>
 
 
 <div class="container-fluid mt-2">
@@ -33,13 +35,15 @@
                 <th>کۆی گشتی نرخ</th>
                 <th>بەروار</th>
                 <th>پرنتکردن</th>
+                <?php if($is_admin == "1") {?>  
                 <th>گۆڕانکاری</th>
                 <th>سڕینەوە</th>
+                <?php }?>
             </tr>
         </thead>
         <tbody>
 <?php 
-                 $invoiceList =show("SELECT * from invoice WHERE type='sale_helka' ORDER BY date DESC");
+                 $invoiceList =show("SELECT * from invoice WHERE type='sale_helka'  ORDER BY date DESC");
 
                  foreach($invoiceList as $invoiceDetails){
                  $invoiceDate = date("d/M/Y, H:i:s", strtotime($invoiceDetails["date"]));
@@ -52,7 +56,7 @@
               
           
             <?php  
-              $dealer_id=$invoiceDetails['dealer_id'];         
+              $dealer_id=$invoiceDetails['customer_id'];         
               $getdealer = getdata(" SELECT * FROM customer WHERE id='$dealer_id' "); ?>
              <a href="customer_detail.php?id=<?=$getdealer['id']?>">
                 <?=$getdealer['name']?>
@@ -64,9 +68,10 @@
           <td><?=$invoiceDetails['price']?></td>
           <td><?=$invoiceDetails['date']?></td>
           <td><a href="print_invoice.php?print_type=sale_helka&&invoice_id=<?=$invoiceDetails['id']?>"><i class="fa fa-print"></i></a></td>
+          <?php if($is_admin == "1") {?>  
           <td><a href="sale_helka_invoice.php?invoice_id=<?=$invoiceDetails['id']?>"><i class="fa fa-edit"></i></a></td>
           <td><a href="#" data-toggle="modal" data-target="#delete<?php echo $invoiceDetails['id'] ?>"><i class="fa fa-trash-alt"></i></a></td>
-        
+          <?php }?>
       </tr>
 
 

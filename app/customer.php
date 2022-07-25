@@ -23,12 +23,13 @@
 </div>
 
 
-<div class="container-fluid  mt-2 d-flex justify-content-around">
+<?php if($is_admin == "1") {?>  
+<div class="container-fluid  mt-2 d-flex justify-content-center">
     <a data-toggle="modal" data-target="#add" class="btn  btn-success s-16"><i class="fa fa-dollar-sign"></i> 
         زیادکردنی کڕیارەکان</a>
 
-        <div onclick="window.print()" class="btn s-16  btn-dark "><i class="fas fa-print" style="font-size:18px"></i> پرنتکردن</div>
 </div>
+<?php }?>
 
 
 <div class="container-fluid mt-2">
@@ -45,7 +46,9 @@
       <th scope="col">ژمارە مۆبایل</th>
       <th>جۆری دراو</th>
       <th scope="col">تێبینی</th>
+      <?php if($is_admin == "1") {?>  
       <th scope="col">Action</th>
+      <?php }?>
     </tr>
 </thead>    
 
@@ -82,7 +85,7 @@
             <td><?=$phone;?></td>
             <td><?=$currency_type;?></td>
             <td><?=$note;?></td>
-
+            <?php if($is_admin == "1") {?>  
       <td>
           <i class="fa fa-trash s-20 cursor" data-toggle="modal"
               data-target="#delete<?php echo $customer['id'] ?>"></i>
@@ -90,6 +93,7 @@
               data-target="#edit<?php echo $customer['id'] ?>"></i>
           <!-- <i class="fa fa-print cursor s-20" data-toggle="modal" data-target="#print" ></i>            -->
       </td>
+      <?php }?>
 
         <!-- edit -->
 

@@ -61,6 +61,8 @@ direct("buy_3alaf_add.php");
 
 <form method="post" action="">
 
+<?php if($is_admin == "1") {?>  
+
 <div class="d-flex justify-content-around mt-3 flex-wrap">
     <a  id="add_more"  class="btn btn-success pb-1 pt-1" >
 
@@ -77,6 +79,8 @@ direct("buy_3alaf_add.php");
 
     </button>
 </div>
+
+<?php }?>
 
 <div class=" container-fluid px-5 d-flex justify-content-around mt-3 flex-wrap" style="align-items:center">
 <div class="form-group ">

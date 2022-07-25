@@ -9,6 +9,7 @@
 </div>
 
 
+<?php if($is_admin == "1") {?>  
 <div class="d-flex justify-content-around mt-3 flex-wrap">
     <a  href="buy_qa3a_add.php"  class="btn btn-success pb-1 pt-1" >
 
@@ -18,6 +19,7 @@
 
     </a>
 </div>
+<?php }?>
 
 
 <div class="container-fluid mt-2">
@@ -33,8 +35,10 @@
                 <th>کۆی گشتی نرخ</th>
                 <th>بەروار</th>
                 <th>پرنتکردن</th>
+                <?php if($is_admin == "1") {?>  
                 <th>گۆڕانکاری</th>
                 <th>سڕینەوە</th>
+                <?php }?>
             </tr>
         </thead>
         <tbody>
@@ -64,9 +68,10 @@
           <td><?=$invoiceDetails['price']?></td>
           <td><?=$invoiceDetails['date']?></td>
           <td><a href="print_invoice.php?print_type=buy_qa3a&&invoice_id=<?=$invoiceDetails['id']?>"><i class="fa fa-print"></i></a></td>
+          <?php if($is_admin == "1") {?>  
           <td><a href="buy_qa3a_invoice.php?invoice_id=<?=$invoiceDetails['id']?>"><i class="fa fa-edit"></i></a></td>
           <td><a href="#" data-toggle="modal" data-target="#delete<?php echo $invoiceDetails['id'] ?>"><i class="fa fa-trash-alt"></i></a></td>
-        
+        <?php }?>
       </tr>
 
 

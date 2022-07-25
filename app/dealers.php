@@ -45,7 +45,9 @@
       <th scope="col">ژمارە مۆبایل</th>
       <th scope="col">جۆری دراو</th>
       <th scope="col">تێبینی</th>
+      <?php if($is_admin == "1") {?>  
       <th scope="col">Action</th>
+      <?php }?>
     </tr>
 </thead>    
 
@@ -83,6 +85,7 @@
             <td><?=$currency_type;?></td>
             <td><?=$note;?></td>
 
+            <?php if($is_admin == "1") {?>  
       <td>
           <i class="fa fa-trash s-20 cursor" data-toggle="modal"
               data-target="#delete<?php echo $dealer['id'] ?>"></i>
@@ -90,6 +93,7 @@
               data-target="#edit<?php echo $dealer['id'] ?>"></i>
           <!-- <i class="fa fa-print cursor s-20" data-toggle="modal" data-target="#print" ></i>            -->
       </td>
+      <?php }?>
 
         <!-- edit -->
 
