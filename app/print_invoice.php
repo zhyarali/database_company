@@ -37,25 +37,50 @@ $print_type=$_GET['print_type'];
 </style>
 
 
+
+<?php 
+
+$company_invoice=getdata("SELECT * FROM company_invoice");
+$phone_name=$company_invoice['name'];
+$phone_title=$company_invoice['title'];
+$phone_desc=$company_invoice['description'];
+$phone_address=$company_invoice['address'];
+$phone_avatar=$company_invoice['image'];
+
+?>
+
+
+
 <div style="display:flex;justify-content:space-around;align-items:center;margin-top:20px">
     
 
     <div  style="text-align:center">
-        <h5>کۆمپانیای ئارام</h5>
-        <h5 style="margin-top:20px">بۆ کێلگەی پەلەوەری و بینای ئاسن</h5>
-        <h5 style="margin-top:20px">ئارام : 07501200241 - 07714550600</h5>
-        <h5 style="margin-top:20px">ئاکام : 07501200238 - 07514550600</h5>
+        <h5><?=$phone_name?></h5>
+        <h5 style="margin-top:20px"><?=$phone_desc?></h5>
+
+        <?php 
+
+        $phones=show("SELECT * FROM invoice_phone");
+
+        foreach($phones as $phone){
+
+        ?>
+
+        <h5 style="margin-top:20px"><?=$phone['name']?></h5>
+
+        <?php } ?>  
+
     </div>
 
 <div style="text-align:center">
-<img src="../assets/img/appLogo.PNG" width="350px">
+<img src="../assets/img/company_invoice/<?=$phone_avatar;?>" width="350px">
 </div>
 
 
 <div style="text-align:center">
 <h5>بەروار : <?php echo date("d - m - Y"); ?></h5>
-    <h5 style="margin-top:20px"s>پسولەی پڕۆژەی ستافەکان</h5>
-    <h5 style="margin-top:20px">ناونیشان : سلێمانی - ڕانیە - دەربەند</h5>
+    <h5 style="margin-top:20px"><?=$phone_title?></h5>
+    <h5 style="margin-top:20px"><?=$phone_address?></h5>
 </div>
 
 
