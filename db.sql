@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 25, 2022 at 04:52 PM
+-- Generation Time: Jul 26, 2022 at 02:20 AM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 8.0.7
 
@@ -42,10 +42,10 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`id`, `uname`, `pass`, `type`, `name`, `avatar`) VALUES
 (11, 'zarda', '526eeeda337d4f5c42efe210c81ccd4f', '1', 'زەردە دیڤ', '60fed6be33a022.03406613.png'),
-(12, 'admin', '21232f297a57a5a743894a0e4a801fc3', '1', 'ئەدمین', '60feda87d180d2.94392251.png'),
 (13, 'zhyar ufffffffffff', 'a9f744f1e591a1f0a8075ed40231ff0d', '0', '3alm', '61081638e214d1.40387889.jpg'),
 (14, 'rzwan', '827ccb0eea8a706c4c34a16891f84e7b', '0', 'rzwan jalal', '61f31cebd4e3a8.86096203.jpg'),
-(15, 'zhyar', '202cb962ac59075b964b07152d234b70', '1', 'zhyar', '622607be2bb072.78967756.jpg');
+(15, 'zhyar', '202cb962ac59075b964b07152d234b70', '1', 'zhyar', '622607be2bb072.78967756.jpg'),
+(16, 'admin', '202cb962ac59075b964b07152d234b70', '0', 'admin', '62df06b41ffa88.70985174.jpg');
 
 -- --------------------------------------------------------
 
@@ -121,10 +121,10 @@ INSERT INTO `buy` (`id`, `invoice_id`, `dealer_id`, `cost_t`, `cost_co`, `num`, 
 (17, 32, 2, '10000', '20000', '2', 'سپی', '20000', '2022-07-25', '1000', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'sdsds'),
 (18, 17, 2, '10000', '20000', '2', 'hahahha', '20000', '2022-07-25', '1000', '0', 'دانە', 'عەلەف', 'sss', '2', 8, '3alaf', 1, '                                                                                edfe                                                            '),
 (19, 17, 2, '10000', '100000', '10', 'yyyyyyyyyyyyyyyyy', '20000', '2022-07-25', '1000', '0', 'دانە', 'عەلەف', 'sss', '2', 8, '3alaf', 1, '                                                                                edfe                                                            '),
-(20, 31, 4, '10000', '30000', '4', '', '20000', '2022-07-25', '', '10000', 'دانە', 'qa3a', '', '', 0, 'qa3a', 1, '                asasasas            '),
-(21, 31, 4, '90000', '530000', '6', '', '20000', '2022-07-25', '', '10000', 'دانە', 'qa3a', '', '', 0, 'qa3a', 1, '                asasasas            '),
 (26, 30, 3, '10000', '30000', '3', '', '20000', '2022-07-25', '', '0', 'دانە', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, '                                                sdsdsdsd                                    '),
-(27, 30, 3, '90000', '540000', '6', '', '20000', '2022-07-25', '', '0', 'دانە', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, '                                                sdsdsdsd                                    ');
+(27, 30, 3, '90000', '540000', '6', '', '20000', '2022-07-25', '', '0', 'دانە', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, '                                                sdsdsdsd                                    '),
+(28, 31, 2, '10000', '30000', '4', 'سپی', '20000', '2022-07-25', '1000', '10000', 'دانە', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, '                                asasasas                        '),
+(29, 31, 2, '90000', '530000', '6', 'سپی', '20000', '2022-07-25', '1000', '10000', 'دانە', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, '                                asasasas                        ');
 
 -- --------------------------------------------------------
 
@@ -160,6 +160,28 @@ INSERT INTO `client` (`id`, `name`, `image`, `phone`, `date_start`, `work_place`
 (17, 'tetete', '621fd46c94ce15.67118911.jpg', '07501520479', '2022-03-02', '3', '30000', 1, 'tman', 0),
 (18, 'hmmm', '6220a8e45af789.31943332.jpg', '07501236788', '2022-03-03', 'کۆمپانیا', '0', 0, 'tman', 500000),
 (19, 'rozhana', '6220a9655fc825.72057094.jpg', '07501236788', '2022-03-03', '1', '20000', 1, 'dollar', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `company_invoice`
+--
+
+CREATE TABLE `company_invoice` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `company_invoice`
+--
+
+INSERT INTO `company_invoice` (`id`, `name`, `description`, `title`, `address`, `image`) VALUES
+(1, 'کۆمپانیای ئارام', 'بۆ کێلگەی پەلەوەری و بینای ئاسن', 'پسولەی پڕۆژەی ستافەکان', 'سلێمانی - ڕانیە - دەربەند', '62df30dd4112d7.30738864.png');
 
 -- --------------------------------------------------------
 
@@ -344,10 +366,10 @@ CREATE TABLE `invoice` (
 
 INSERT INTO `invoice` (`id`, `date`, `price`, `type`, `note`, `status`, `dealer_id`, `customer_id`) VALUES
 (1, '2022-07-25 03:10:40', 40000, 'buy_helka', 'همممممممممممممم', 1, 1, 0),
-(2, '2022-07-25 03:10:36', 22000, 'buy_qa3a', '                                                                                                sdsdsd                                                                        ', -1, 0, 0),
+(2, '2022-07-25 21:26:23', 0, 'buy_qa3a', '                                                                                                                sdsdsd                                                                                    ', -1, 5, 0),
 (3, '2022-07-25 03:10:33', 34000, 'buy_helka', 'dsfsd', 1, 3, 0),
 (4, '2022-07-25 03:10:29', 50000, 'buy_asn', 'asasasa', 1, 6, 0),
-(6, '2022-07-25 03:11:49', 42000, 'sale_helka', '                    ffffffffffffffffffff        ', 1, 0, 2),
+(6, '2022-07-25 21:45:05', 0, 'sale_helka', '                                    ffffffffffffffffffff                    ', 1, 0, 2),
 (10, '2022-07-25 03:11:49', 0, 'sale_helka', '                            ', 1, 0, 2),
 (11, '2022-07-25 03:11:49', 0, 'sale_asn', '                                sdsdsdsdsdsd                        ', 1, 0, 2),
 (13, '2022-07-25 03:11:49', 0, 'sale_3alaf', '                                                                                                                                                                                                                                                                                                                sdsd                                                                                                                                                                                                                                    ', 1, 0, 2),
@@ -367,9 +389,28 @@ INSERT INTO `invoice` (`id`, `date`, `price`, `type`, `note`, `status`, `dealer_
 (27, '2022-07-25 03:08:50', 20000, 'buy_qa3a', 'hjhjhjhjh', 1, 2, 0),
 (28, '2022-07-25 03:09:17', 20000, 'sale_qa3a', 'sdsd', -1, 0, 2),
 (30, '2022-07-25 03:06:02', 0, 'buy_qa3a', '                                                sdsdsdsd                                    ', 1, 3, 0),
-(31, '2022-07-25 03:08:38', 0, 'buy_qa3a', '                asasasas            ', 1, 4, 0),
+(31, '2022-07-25 21:27:41', 560000, 'buy_qa3a', '                                asasasas                        ', 1, 2, 0),
 (32, '2022-07-25 02:10:57', 20000, 'buy_helka', 'sdsds', 1, 2, 0),
 (33, '2022-07-25 03:06:29', 20000, 'sale_qa3a', 'sdsdsd', 1, 0, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `invoice_phone`
+--
+
+CREATE TABLE `invoice_phone` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `invoice_phone`
+--
+
+INSERT INTO `invoice_phone` (`id`, `name`) VALUES
+(3, 'ئارام : 07501200241 - 07714550600'),
+(5, 'ئاکام : 07501200238 - 07514550600');
 
 -- --------------------------------------------------------
 
@@ -536,9 +577,6 @@ INSERT INTO `sale` (`id`, `invoice_id`, `customer_id`, `cost_t`, `cost_co`, `num
 (48, 19, 3, '10000', '20000', '2', 'france', '20000', '2022-07-21', '0', 'کیلۆ', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, 'null', '                                                dsdsdsd                                    '),
 (49, 10, 4, '10000', '230000', '23', 'hahahha', '20000', '2022-07-21', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                            '),
 (51, 20, 3, '10000', '50000', '5', 'سپی', '20000', '2022-07-22', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                            '),
-(53, 6, 2, '10000', '20000', '2', 'سپی', '20000', '2022-07-22', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                    ffffffffffffffffffff        '),
-(54, 6, 2, '10000', '20000', '2', 'سپی', '10000', '2022-07-22', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                    ffffffffffffffffffff        '),
-(55, 6, 2, '2000', '2000', '1', 'سپی', '1000', '2022-07-22', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                    ffffffffffffffffffff        '),
 (59, 0, 3, '10000', '20000', '2', 'yyyyyyyyyyyyyyyyy', '20000', '2022-07-22', '0', 'دانە', 'عەلەف', 'هەولێر', '2', 6, '3alaf', 1, 'null', '                sdsdsd            '),
 (60, 28, 3, '40000', '40000', '1', 'hahahha', '20000', '2022-07-22', '0', 'دانە', 'عەلەف', 'هەولێر', '2', 6, '3alaf', 1, 'null', '                sdsdsd            '),
 (61, 0, 3, '90000', '270000', '3', 'yyyyyyyyyyyyyyyyy', '20000', '2022-07-22', '0', 'تەن', 'عەلەف', 'هەولێر', '3', 6, '3alaf', 1, 'null', '                sdsdsd            '),
@@ -553,7 +591,10 @@ INSERT INTO `sale` (`id`, `invoice_id`, `customer_id`, `cost_t`, `cost_co`, `num
 (84, 23, 4, '10000', '30000', '3', 'سپی', '20000', '2022-07-25', '0', 'دانە', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, 'null', '                                                                dfdfdfd                                                '),
 (85, 23, 4, '90000', '89000', '1', 'تورکی', '20000', '2022-07-25', '1000', 'کیلۆ', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, 'null', '                                                                dfdfdfd                                                '),
 (86, 23, 4, '10000', '80000', '8', 'سپی', '20000', '2022-07-25', '0', 'تەن', 'ئاسن', 'هەولێر', '', 0, 'asn', 1, 'null', '                                                                dfdfdfd                                                '),
-(87, 33, 4, '10000', '20000', '2', 'sale_qa3a', '20000', '2022-07-25', '0', 'مەتر', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, 'null', 'sdsdsd');
+(87, 33, 4, '10000', '20000', '2', 'sale_qa3a', '20000', '2022-07-25', '0', 'مەتر', 'qa3a', 'هەولێر', '', 0, 'qa3a', 1, 'null', 'sdsdsd'),
+(88, 6, 2, '10000', '20000', '2', 'سپی', '20000', '2022-07-25', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                                    ffffffffffffffffffff                    '),
+(89, 6, 2, '10000', '20000', '2', 'سپی', '10000', '2022-07-25', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                                    ffffffffffffffffffff                    '),
+(90, 6, 2, '2000', '2000', '1', 'سپی', '1000', '2022-07-25', '0', 'دانە', 'هێلکە', '', '', 0, 'helka', 1, 'null', '                                    ffffffffffffffffffff                    ');
 
 -- --------------------------------------------------------
 
@@ -573,7 +614,7 @@ CREATE TABLE `sale_category` (
 
 INSERT INTO `sale_category` (`id`, `name`, `invoice_id`) VALUES
 (13, 'tawezeh', 27),
-(14, 'hmmm', 27),
+(14, 'hmm', 27),
 (15, 'nweee', 28);
 
 -- --------------------------------------------------------
@@ -709,7 +750,7 @@ CREATE TABLE `system` (
 --
 
 INSERT INTO `system` (`id`, `name`, `avatar`) VALUES
-(1, 'سیستەمی کۆمپانیای هۆگر', '60ff3af1e57b71.29844427.png');
+(1, 'سیستەمی کۆمپانیای هۆگر', '62df13cd3a37e9.89325240.jpg');
 
 -- --------------------------------------------------------
 
@@ -748,7 +789,6 @@ CREATE TABLE `user_tokens` (
 --
 
 INSERT INTO `user_tokens` (`token`, `user_id`, `id`) VALUES
-('7fdccc40bf7ddbc9b15dd69a84979e386108169952411', 12, 16),
 ('803e66cf58328d996f8fe6b8443f691d611e6f05e1215', 11, 17),
 ('5841582af603866bc63248daefcc952e614f52a093c7b', 12, 18),
 ('80401f1fc07c03d1221d72b75195e42c61f31d0f348e7', 14, 19),
@@ -761,7 +801,9 @@ INSERT INTO `user_tokens` (`token`, `user_id`, `id`) VALUES
 ('06b42e58b0515daa2ff59413020e7c2362c741bf3b8a6', 11, 26),
 ('88b42b9f30865a8c7411b1518f9d02e562d80a8244e69', 11, 27),
 ('dc8f50a67b40d8e94910197ba567f94662d80abff2a21', 15, 28),
-('049b294dab94853a6182073e0f15bb9062dbe22e25be7', 15, 29);
+('049b294dab94853a6182073e0f15bb9062dbe22e25be7', 15, 29),
+('40875a0bc9e4173be78afea1133080d262df06c65e142', 16, 30),
+('ee190fb342fd9cb66a275b0ad01db93562df138f01806', 15, 31);
 
 -- --------------------------------------------------------
 
@@ -850,6 +892,12 @@ ALTER TABLE `client`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `company_invoice`
+--
+ALTER TABLE `company_invoice`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `currency`
 --
 ALTER TABLE `currency`
@@ -889,6 +937,12 @@ ALTER TABLE `driver_work`
 -- Indexes for table `invoice`
 --
 ALTER TABLE `invoice`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `invoice_phone`
+--
+ALTER TABLE `invoice_phone`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -995,7 +1049,7 @@ ALTER TABLE `xarjy`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `budget`
@@ -1007,13 +1061,19 @@ ALTER TABLE `budget`
 -- AUTO_INCREMENT for table `buy`
 --
 ALTER TABLE `buy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `client`
 --
 ALTER TABLE `client`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `company_invoice`
+--
+ALTER TABLE `company_invoice`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `currency`
@@ -1058,6 +1118,12 @@ ALTER TABLE `invoice`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
+-- AUTO_INCREMENT for table `invoice_phone`
+--
+ALTER TABLE `invoice_phone`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `parts`
 --
 ALTER TABLE `parts`
@@ -1091,7 +1157,7 @@ ALTER TABLE `refund_customer`
 -- AUTO_INCREMENT for table `sale`
 --
 ALTER TABLE `sale`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT for table `sale_category`
@@ -1139,7 +1205,7 @@ ALTER TABLE `teams`
 -- AUTO_INCREMENT for table `user_tokens`
 --
 ALTER TABLE `user_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `work_daily`
