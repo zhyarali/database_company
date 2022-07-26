@@ -1134,7 +1134,7 @@ if($print_type=="sale_helka"){
     $invoice_id=$_GET['invoice_id'];
 
     $getInvoice = getdata(" SELECT * FROM invoice WHERE id='$invoice_id' ");
-    $dealer_id=$getInvoice['dealer_id'];
+    $dealer_id=$getInvoice['customer_id'];
 ?>
 
 <div class=" container-fluid px-5 d-flex justify-content-between mt-6 flex-wrap" style="align-items:center">
@@ -1356,7 +1356,7 @@ if($print_type=="sale_asn"){
     $invoice_id=$_GET['invoice_id'];
 
     $getInvoice = getdata(" SELECT * FROM invoice WHERE id='$invoice_id' ");
-    $dealer_id=$getInvoice['dealer_id'];
+    $dealer_id=$getInvoice['customer_id'];
 ?>
 
 <div class=" container-fluid px-5 d-flex justify-content-between mt-6 flex-wrap" style="align-items:center">
@@ -1604,7 +1604,7 @@ if($print_type=="sale_qa3a"){
     $invoice_id=$_GET['invoice_id'];
 
     $getInvoice = getdata(" SELECT * FROM invoice WHERE id='$invoice_id' ");
-    $dealer_id=$getInvoice['dealer_id'];
+    $dealer_id=$getInvoice['customer_id'];
 ?>
 
 <div class=" container-fluid px-5 d-flex justify-content-between mt-6 flex-wrap" style="align-items:center">

@@ -57,7 +57,7 @@ $dailytotal = 0;
 }
 
 
-$income=$buytotal-$saletotal;
+$income=$saletotal-$buytotal;
 $income=$income-$xarjytotal;
 $income=$income-$debttotal;
 $income=$income-$dailytotal;

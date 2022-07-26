@@ -18,23 +18,28 @@ $dealer_id=$getInvoice['dealer_id'];
 
 
 
-if (post('category_id')) {
+if (post('edit_category')) {
+
     $category_id=$_POST['category_id'];
     $piece_number=$_POST['piece_number'];
 
 
     for ($i = 0; $i < count($piece_number); $i++) {
 
-        $piece_name=$_POST['piece_name'][$i];
+        $piece_id=$_POST['piece_id'][$i]; 
+        $piece_name=$_POST['piece_name'][$i]; 
         $pieceNumber=$_POST['piece_number'][$i];
         $piece_price=$_POST['piece_price'][$i];
 
-        execute("UPDATE piece SET `name`='$piece_name',`qty`='$pieceNumber',`price`='$piece_price'  WHERE category_id='$category_id' ");
 
-    
-    }
+        execute("UPDATE piece SET `name`='$piece_name',`qty`='$pieceNumber',`price`='$piece_price'  WHERE id='$piece_id' ");
 
    
+    }
+
+
+    $_SESSION["edit_success"]="";
+    direct("buy_qa3a_invoice.php?invoice_id=$invoice_id");
   
 }
 

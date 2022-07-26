@@ -11,6 +11,7 @@ if (isset($_POST['piece'])) {
     $pieces=show("SELECT * FROM piece WHERE category_id='$catId'");    
     
     foreach ($pieces as $piece) {
+      $piece_id=$piece['id'];
       $piece_name=$piece['name'];
       $piece_number=$piece['qty'];
       $piece_price=$piece['price'];
@@ -22,6 +23,7 @@ if (isset($_POST['piece'])) {
 
 
  <input type="hidden" name="category_id" value="<?=$catId?>">
+ <input type="hidden" name="piece_id[]" value="<?=$piece_id?>">
 
 <div class="form-group mx-2">
         <label>ناوی پارچە</label>
